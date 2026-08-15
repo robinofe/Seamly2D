@@ -8343,6 +8343,10 @@ Drücken Sie die Eingabetaste, um ihn vorübergehend in die Liste aufzunehmen.</
 <context>
     <name>PatternPieceTool</name>
     <message>
+        <source>Show dependencies...</source>
+        <translation>Abhängigkeiten anzeigen...</translation>
+    </message>
+    <message>
         <source>Current seam allowance</source>
         <translation>Aktuelle Nahtzugabe</translation>
     </message>
@@ -12021,7 +12025,155 @@ wie gewohnt in SeamlyME laden können.
     </message>
 </context>
 <context>
+    <name>VToolDependency</name>
+    <message><source>Base point</source><translation>Basispunkt</translation></message>
+    <message><source>Point by length and angle</source><translation>Punkt nach Länge und Winkel</translation></message>
+    <message><source>Line</source><translation>Linie</translation></message>
+    <message><source>Point on line</source><translation>Punkt auf Linie</translation></message>
+    <message><source>Shoulder point</source><translation>Schulterpunkt</translation></message>
+    <message><source>Normal point</source><translation>Lotpunkt</translation></message>
+    <message><source>Bisector point</source><translation>Winkelhalbierendenpunkt</translation></message>
+    <message><source>Line intersection</source><translation>Linienschnittpunkt</translation></message>
+    <message><source>Spline</source><translation>Spline</translation></message>
+    <message><source>Cubic Bézier curve</source><translation>Kubische Bézierkurve</translation></message>
+    <message><source>Point on curve</source><translation>Punkt auf Kurve</translation></message>
+    <message><source>Point on arc</source><translation>Punkt auf Bogen</translation></message>
+    <message><source>Arc</source><translation>Bogen</translation></message>
+    <message><source>Arc with length</source><translation>Bogen mit Länge</translation></message>
+    <message><source>Spline path</source><translation>Splinepfad</translation></message>
+    <message><source>Cubic Bézier path</source><translation>Kubischer Bézierpfad</translation></message>
+    <message><source>Point on spline path</source><translation>Punkt auf Splinepfad</translation></message>
+    <message><source>Contact point</source><translation>Berührungspunkt</translation></message>
+    <message><source>Pattern piece</source><translation>Schnittteil</translation></message>
+    <message><source>Internal path</source><translation>Interner Pfad</translation></message>
+    <message><source>Height point</source><translation>Höhenpunkt</translation></message>
+    <message><source>Triangle point</source><translation>Dreieckspunkt</translation></message>
+    <message><source>Line/axis intersection</source><translation>Schnittpunkt Linie/Achse</translation></message>
+    <message><source>Arc intersection</source><translation>Bogenschnittpunkt</translation></message>
+    <message><source>Circle intersection</source><translation>Kreisschnittpunkt</translation></message>
+    <message><source>Curve intersection</source><translation>Kurvenschnittpunkt</translation></message>
+    <message><source>Curve/axis intersection</source><translation>Schnittpunkt Kurve/Achse</translation></message>
+    <message><source>XY intersection</source><translation>XY-Schnittpunkt</translation></message>
+    <message><source>Circle tangent point</source><translation>Kreistangentenpunkt</translation></message>
+    <message><source>Arc tangent point</source><translation>Bogentangentenpunkt</translation></message>
+    <message><source>True darts</source><translation>Abnäherausgleich</translation></message>
+    <message><source>Piece union</source><translation>Schnittteilvereinigung</translation></message>
+    <message><source>Rotation</source><translation>Drehung</translation></message>
+    <message><source>Mirror by line</source><translation>Spiegelung an Linie</translation></message>
+    <message><source>Mirror by axis</source><translation>Spiegelung an Achse</translation></message>
+    <message><source>Move</source><translation>Verschiebung</translation></message>
+    <message><source>Elliptical arc</source><translation>Ellipsenbogen</translation></message>
+    <message><source>Anchor point</source><translation>Ankerpunkt</translation></message>
+    <message><source>Inserted nodes</source><translation>Eingefügte Knoten</translation></message>
+    <message><source>Piece point node</source><translation>Punktknoten im Schnittteil</translation></message>
+    <message><source>Piece arc node</source><translation>Bogenknoten im Schnittteil</translation></message>
+    <message><source>Piece elliptical arc node</source><translation>Ellipsenbogenknoten im Schnittteil</translation></message>
+    <message><source>Piece spline node</source><translation>Splineknoten im Schnittteil</translation></message>
+    <message><source>Piece spline path node</source><translation>Splinepfadknoten im Schnittteil</translation></message>
+    <message><source>Tool</source><translation>Werkzeug</translation></message>
+    <message><source>Tool #%1</source><translation>Werkzeug Nr. %1</translation></message>
+    <message><source>base point</source><translation>Basispunkt</translation></message>
+    <message><source>first point</source><translation>erster Punkt</translation></message>
+    <message><source>second point</source><translation>zweiter Punkt</translation></message>
+    <message><source>third point</source><translation>dritter Punkt</translation></message>
+    <message><source>fourth point</source><translation>vierter Punkt</translation></message>
+    <message><source>center point</source><translation>Mittelpunkt</translation></message>
+    <message><source>circle center</source><translation>Kreismittelpunkt</translation></message>
+    <message><source>first circle center</source><translation>erster Kreismittelpunkt</translation></message>
+    <message><source>second circle center</source><translation>zweiter Kreismittelpunkt</translation></message>
+    <message><source>arc</source><translation>Bogen</translation></message>
+    <message><source>first arc</source><translation>erster Bogen</translation></message>
+    <message><source>second arc</source><translation>zweiter Bogen</translation></message>
+    <message><source>curve</source><translation>Kurve</translation></message>
+    <message><source>first curve</source><translation>erste Kurve</translation></message>
+    <message><source>second curve</source><translation>zweite Kurve</translation></message>
+    <message><source>spline</source><translation>Spline</translation></message>
+    <message><source>spline path</source><translation>Splinepfad</translation></message>
+    <message><source>path</source><translation>Pfad</translation></message>
+    <message><source>tangent point</source><translation>Tangentenpunkt</translation></message>
+    <message><source>shoulder point</source><translation>Schulterpunkt</translation></message>
+    <message><source>first axis point</source><translation>erster Achsenpunkt</translation></message>
+    <message><source>second axis point</source><translation>zweiter Achsenpunkt</translation></message>
+    <message><source>first line point</source><translation>erster Linienpunkt</translation></message>
+    <message><source>second line point</source><translation>zweiter Linienpunkt</translation></message>
+    <message><source>first point of first line</source><translation>erster Punkt der ersten Linie</translation></message>
+    <message><source>second point of first line</source><translation>zweiter Punkt der ersten Linie</translation></message>
+    <message><source>first point of second line</source><translation>erster Punkt der zweiten Linie</translation></message>
+    <message><source>second point of second line</source><translation>zweiter Punkt der zweiten Linie</translation></message>
+    <message><source>first dart point</source><translation>erster Abnäherpunkt</translation></message>
+    <message><source>second dart point</source><translation>zweiter Abnäherpunkt</translation></message>
+    <message><source>third dart point</source><translation>dritter Abnäherpunkt</translation></message>
+    <message><source>first base line point</source><translation>erster Grundlinienpunkt</translation></message>
+    <message><source>second base line point</source><translation>zweiter Grundlinienpunkt</translation></message>
+    <message><source>spline point</source><translation>Splinepunkt</translation></message>
+    <message><source>object reference</source><translation>Objektreferenz</translation></message>
+    <message><source>reference: %1</source><translation>Referenz: %1</translation></message>
+    <message><source>Custom variable</source><translation>Benutzerdefinierte Variable</translation></message>
+    <message><source>formula</source><translation>Formel</translation></message>
+    <message><source>formula: %1</source><translation>Formel: %1</translation></message>
+</context>
+<context>
     <name>VAbstractTool</name>
+    <message>
+        <source>Dependencies</source>
+        <translation>Abhängigkeiten</translation>
+    </message>
+    <message>
+        <source>Object %1</source>
+        <translation>Objekt %1</translation>
+    </message>
+    <message>
+        <source>Show all descendants</source>
+        <translation>Alle Nachfolger anzeigen</translation>
+    </message>
+    <message>
+        <source>Object</source>
+        <translation>Objekt</translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation>Typ</translation>
+    </message>
+    <message>
+        <source>Dependency</source>
+        <translation>Abhängigkeit</translation>
+    </message>
+    <message>
+        <source>Draft block</source>
+        <translation>Entwurfsblock</translation>
+    </message>
+    <message>
+        <source>Suggested action</source>
+        <translation>Vorgeschlagene Aktion</translation>
+    </message>
+    <message>
+        <source>Select dependent object</source>
+        <translation>Abhängiges Objekt auswählen</translation>
+    </message>
+    <message>
+        <source>Select the object and replace %1 in Properties</source>
+        <translation>Objekt auswählen und %1 in den Eigenschaften ersetzen</translation>
+    </message>
+    <message>
+        <source>Edit the formula</source>
+        <translation>Formel bearbeiten</translation>
+    </message>
+    <message>
+        <source>Edit the pattern piece</source>
+        <translation>Schnittteil bearbeiten</translation>
+    </message>
+    <message>
+        <source>Replace or remove the node in the pattern piece</source>
+        <translation>Knoten im Schnittteil ersetzen oder entfernen</translation>
+    </message>
+    <message>
+        <source>No dependent objects were found for %1.</source>
+        <translation>Für %1 wurden keine abhängigen Objekte gefunden.</translation>
+    </message>
+    <message>
+        <source>%1 cannot be deleted because these objects depend on it.</source>
+        <translation>%1 kann nicht gelöscht werden, weil diese Objekte davon abhängen.</translation>
+    </message>
     <message>
         <source>Confirm deletion</source>
         <translation>Löschvorgang bestätigen</translation>
@@ -12653,6 +12805,10 @@ wie gewohnt in SeamlyME laden können.
 </context>
 <context>
     <name>VDrawTool</name>
+    <message>
+        <source>Show dependencies...</source>
+        <translation>Abhängigkeiten anzeigen...</translation>
+    </message>
     <message>
         <source>Delete</source>
         <translation>Löschen</translation>

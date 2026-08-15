@@ -13,6 +13,7 @@
 
 #include "../ifc/xml/vabstractpattern.h"
 #include "../ifc/xml/vtoolrecord.h"
+#include "../vgeometry/vpointf.h"
 #include "../vpatterndb/vcontainer.h"
 #include "../vpatterndb/variables/vinternalvariable.h"
 #include "../vtools/tools/vabstracttool.h"
@@ -123,6 +124,7 @@ void TST_VToolDependency::directDependencies()
     QCOMPARE(dependencies.size(), 1);
     QCOMPARE(dependencies.at(0).id, quint32(2));
     QCOMPARE(dependencies.at(0).name, QStringLiteral("B"));
+    QCOMPARE(dependencies.at(0).reference, QStringLiteral("base point"));
     QCOMPARE(dependencies.at(0).draftBlockName, QStringLiteral("Block"));
 }
 
@@ -186,6 +188,22 @@ void TST_VToolDependency::structuredDependencies()
     const QVector<VToolDependency> pathDependencies = pattern.getDirectDependencies(6, &data);
     QCOMPARE(pathDependencies.size(), 1);
     QCOMPARE(pathDependencies.at(0).id, quint32(4));
+
+    const QString nodeXml = QStringLiteral(
+        "<pattern><draftBlock name=\"Block\"><calculation>"
+        "<point id=\"1\" name=\"A18\" type=\"single\"/>"
+        "</calculation><modeling>"
+        "<point id=\"136\" idObject=\"1\" type=\"modeling\"/>"
+        "</modeling></draftBlock></pattern>");
+    QVector<VToolRecord> nodeRecords;
+    nodeRecords << VToolRecord(1, Tool::BasePoint, QStringLiteral("Block"))
+                << VToolRecord(136, Tool::NodePoint, QStringLiteral("Block"));
+    pattern.load(nodeXml, nodeRecords);
+    data.UpdateGObject(1, new VPointF(0, 0, QStringLiteral("A18"), 0, 0));
+
+    const QVector<VToolDependency> nodeDependencies = pattern.getDirectDependencies(1, &data);
+    QCOMPARE(nodeDependencies.size(), 1);
+    QCOMPARE(nodeDependencies.at(0).name, QStringLiteral("A18"));
 }
 
 void TST_VToolDependency::recursiveFormulaDependencies()
@@ -237,6 +255,7 @@ void TST_VToolDependency::dependencyDialog()
     QString firstObject;
     QString firstType;
     QString firstReference;
+    QString firstSuggestion;
 
     QTimer::singleShot(0, qApp, [&]()
     {
@@ -257,6 +276,7 @@ void TST_VToolDependency::dependencyDialog()
                 firstObject = tree->topLevelItem(0)->text(0);
                 firstType = tree->topLevelItem(0)->text(1);
                 firstReference = tree->topLevelItem(0)->text(2);
+                firstSuggestion = tree->topLevelItem(0)->text(4);
                 tree->itemClicked(tree->topLevelItem(0), 0);
             }
         }
@@ -276,6 +296,7 @@ void TST_VToolDependency::dependencyDialog()
     QCOMPARE(firstObject, QStringLiteral("B"));
     QVERIFY(!firstType.isEmpty());
     QVERIFY(!firstReference.isEmpty());
+    QCOMPARE(firstSuggestion, QStringLiteral("Select the object and replace base point in Properties"));
     QVERIFY(!highlightSpy.isEmpty());
     QCOMPARE(highlightSpy.at(0).at(0).toUInt(), quint32(2));
     QCOMPARE(highlightSpy.at(0).at(1).toBool(), true);

@@ -142,8 +142,53 @@ QString dependencyTypeName(Tool type)
 
 QString referenceLabel(const QString &attribute)
 {
+    static const QHash<QString, const char *> labels = {
+        {QStringLiteral("basePoint"), "base point"},
+        {QStringLiteral("firstPoint"), "first point"},
+        {QStringLiteral("secondPoint"), "second point"},
+        {QStringLiteral("thirdPoint"), "third point"},
+        {QStringLiteral("point1"), "first point"},
+        {QStringLiteral("point2"), "second point"},
+        {QStringLiteral("point3"), "third point"},
+        {QStringLiteral("point4"), "fourth point"},
+        {QStringLiteral("center"), "center point"},
+        {QStringLiteral("cCenter"), "circle center"},
+        {QStringLiteral("c1Center"), "first circle center"},
+        {QStringLiteral("c2Center"), "second circle center"},
+        {QStringLiteral("arc"), "arc"},
+        {QStringLiteral("firstArc"), "first arc"},
+        {QStringLiteral("secondArc"), "second arc"},
+        {QStringLiteral("curve"), "curve"},
+        {QStringLiteral("curve1"), "first curve"},
+        {QStringLiteral("curve2"), "second curve"},
+        {QStringLiteral("spline"), "spline"},
+        {QStringLiteral("splinePath"), "spline path"},
+        {QStringLiteral("path"), "path"},
+        {QStringLiteral("tangent"), "tangent point"},
+        {QStringLiteral("pShoulder"), "shoulder point"},
+        {QStringLiteral("axisP1"), "first axis point"},
+        {QStringLiteral("axisP2"), "second axis point"},
+        {QStringLiteral("p1Line"), "first line point"},
+        {QStringLiteral("p2Line"), "second line point"},
+        {QStringLiteral("p1Line1"), "first point of first line"},
+        {QStringLiteral("p2Line1"), "second point of first line"},
+        {QStringLiteral("p1Line2"), "first point of second line"},
+        {QStringLiteral("p2Line2"), "second point of second line"},
+        {QStringLiteral("dartP1"), "first dart point"},
+        {QStringLiteral("dartP2"), "second dart point"},
+        {QStringLiteral("dartP3"), "third dart point"},
+        {QStringLiteral("baseLineP1"), "first base line point"},
+        {QStringLiteral("baseLineP2"), "second base line point"},
+        {QStringLiteral("pSpline"), "spline point"}
+    };
+
+    const auto label = labels.constFind(attribute);
+    if (label != labels.constEnd())
+    {
+        return QCoreApplication::translate("VToolDependency", label.value());
+    }
     if (attribute == QStringLiteral("idObject") || attribute == QStringLiteral("idTool") ||
-        attribute == QStringLiteral("id") || attribute == QStringLiteral("path"))
+        attribute == QStringLiteral("id"))
     {
         return QCoreApplication::translate("VToolDependency", "object reference");
     }
@@ -2054,6 +2099,19 @@ QString VAbstractPattern::dependencyToolName(const VToolRecord &record, const QD
         try
         {
             name = data->getPiecePath(record.getId()).getName();
+        }
+        catch (const VExceptionBadId &)
+        {
+        }
+    }
+    if (name.isEmpty() && (record.getTypeTool() == Tool::NodePoint || record.getTypeTool() == Tool::NodeArc ||
+                           record.getTypeTool() == Tool::NodeElArc || record.getTypeTool() == Tool::NodeSpline ||
+                           record.getTypeTool() == Tool::NodeSplinePath))
+    {
+        try
+        {
+            const quint32 objectId = GetParametrUInt(element, AttrIdObject, NULL_ID_STR);
+            name = data->GetGObject(objectId)->name();
         }
         catch (const VExceptionBadId &)
         {

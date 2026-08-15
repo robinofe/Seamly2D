@@ -70,6 +70,7 @@
 #include <QPixmap>
 #include <QPoint>
 #include <QPointF>
+#include <QPushButton>
 #include <QRectF>
 #include <QSharedPointer>
 #include <QString>
@@ -328,10 +329,16 @@ void VAbstractTool::showDependencies()
     layout->addWidget(recursive);
 
     auto *tree = new QTreeWidget(&dialog);
-    tree->setColumnCount(4);
-    tree->setHeaderLabels(QStringList() << tr("Object") << tr("Type") << tr("Dependency") << tr("Draft block"));
+    tree->setColumnCount(5);
+    tree->setHeaderLabels(QStringList() << tr("Object") << tr("Type") << tr("Dependency") << tr("Draft block")
+                                             << tr("Suggested action"));
     tree->setRootIsDecorated(false);
     layout->addWidget(tree);
+
+    quint32 selectedToolId = NULL_ID;
+    auto *buttons = new QDialogButtonBox(QDialogButtonBox::Close, &dialog);
+    auto *selectButton = buttons->addButton(tr("Select dependent object"), QDialogButtonBox::ActionRole);
+    selectButton->setEnabled(false);
 
     auto populate = [this, tree, recursive, label, objectName]()
     {
@@ -345,9 +352,24 @@ void VAbstractTool::showDependencies()
         for (const VToolDependency &dependency : dependencies)
         {
             const QString indentation(qMax(0, dependency.depth - 1) * 3, QLatin1Char(' '));
+            QString suggestion = tr("Select the object and replace %1 in Properties").arg(dependency.reference);
+            if (dependency.id == NULL_ID)
+            {
+                suggestion = tr("Edit the formula");
+            }
+            else if (dependency.type == Tool::Piece)
+            {
+                suggestion = tr("Edit the pattern piece");
+            }
+            else if (dependency.type == Tool::NodePoint || dependency.type == Tool::NodeArc ||
+                     dependency.type == Tool::NodeElArc || dependency.type == Tool::NodeSpline ||
+                     dependency.type == Tool::NodeSplinePath)
+            {
+                suggestion = tr("Replace or remove the node in the pattern piece");
+            }
             auto *item = new QTreeWidgetItem(tree, QStringList() << indentation + dependency.name
                                                                  << dependency.typeName << dependency.reference
-                                                                 << dependency.draftBlockName);
+                                                                 << dependency.draftBlockName << suggestion);
             item->setData(0, Qt::UserRole, dependency.id);
         }
         tree->resizeColumnToContents(0);
@@ -356,8 +378,10 @@ void VAbstractTool::showDependencies()
     };
 
     connect(recursive, &QCheckBox::toggled, &dialog, populate);
-    connect(tree, &QTreeWidget::itemClicked, &dialog, [this, tree](QTreeWidgetItem *item)
+    connect(tree, &QTreeWidget::itemClicked, &dialog, [this, tree, selectButton](QTreeWidgetItem *item)
     {
+        const quint32 selectedId = item->data(0, Qt::UserRole).toUInt();
+        selectButton->setEnabled(selectedId != NULL_ID);
         for (int i = 0; i < tree->topLevelItemCount(); ++i)
         {
             const quint32 id = tree->topLevelItem(i)->data(0, Qt::UserRole).toUInt();
@@ -368,7 +392,14 @@ void VAbstractTool::showDependencies()
         }
     });
 
-    auto *buttons = new QDialogButtonBox(QDialogButtonBox::Close, &dialog);
+    connect(selectButton, &QPushButton::clicked, &dialog, [&dialog, tree, &selectedToolId]()
+    {
+        if (tree->currentItem() != nullptr)
+        {
+            selectedToolId = tree->currentItem()->data(0, Qt::UserRole).toUInt();
+            dialog.accept();
+        }
+    });
     connect(buttons, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
     layout->addWidget(buttons);
 
@@ -380,6 +411,23 @@ void VAbstractTool::showDependencies()
         if (dependency.id != NULL_ID)
         {
             emit doc->ShowTool(dependency.id, false);
+        }
+    }
+
+    if (selectedToolId != NULL_ID)
+    {
+        try
+        {
+            auto *item = dynamic_cast<QGraphicsItem *>(VAbstractPattern::getTool(selectedToolId));
+            if (item != nullptr)
+            {
+                item->setSelected(true);
+                qApp->getSceneView()->itemClicked(item);
+            }
+        }
+        catch (const VExceptionBadId &)
+        {
+            // A dependency from another draft block may not be loaded in the current scene.
         }
     }
 }

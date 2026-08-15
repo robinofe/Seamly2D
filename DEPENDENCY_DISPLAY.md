@@ -18,14 +18,19 @@
 1. A read-only query in `VAbstractPattern` resolves direct dependents from the existing DOM/history, including ID
    attributes, path/node child elements, operation source items, and formula tokens. It maintains no second graph.
    Recursive lookup also follows chains through custom variables.
-2. A dependency dialog shows name, type, reference kind, and draft block. Selecting a row highlights the tool through
-   the existing `VAbstractPattern::ShowTool` signal.
+2. A dependency dialog shows name, type, the specific reference role, draft block, and a suggested next action.
+   Selecting a row highlights the tool through the existing `VAbstractPattern::ShowTool` signal. The **Select
+   dependent object** action closes the modal dialog and opens the selected tool in the existing Properties workflow,
+   whose object lists already filter points, curves, splines, and paths by compatible geometry type.
 3. **Delete** remains reachable for used draw tools and pattern pieces so `deleteTool()` can explain why it is blocked.
    The existing `isUsed()` guard remains authoritative. The base point remains a special case because deleting it
    deletes the complete draft block, including its contents.
 4. The dialog can show all descendants recursively. Recursive deletion is deliberately excluded: formulas, pieces,
    internal paths, generated operation objects, and reference-counter propagation require broader deletion-order and
    undo/redo coverage before that can be safe.
+5. Automatic replacement is not offered for pattern-piece nodes or formulas. Their stored structure contains
+   additional constraints such as contour order, node type, reverse direction, seam allowance, notches, or expression
+   tokens. The dialog directs the user to the owning piece or formula instead of applying a partial XML edit.
 
 ## Test coverage
 
