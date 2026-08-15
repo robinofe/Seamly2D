@@ -54,6 +54,7 @@
 #include <QBrush>
 #include <QDialog>
 #include <QDialogButtonBox>
+#include <QCheckBox>
 #include <QFlags>
 #include <QGraphicsEllipseItem>
 #include <QGraphicsLineItem>
@@ -61,6 +62,9 @@
 #include <QIcon>
 #include <QLineF>
 #include <QMessageBox>
+#include <QLabel>
+#include <QTreeWidget>
+#include <QVBoxLayout>
 #include <QPainter>
 #include <QPen>
 #include <QPixmap>
@@ -79,6 +83,7 @@
 #include "../vpropertyexplorer/checkablemessagebox.h"
 #include "../vwidgets/vmaingraphicsview.h"
 #include "../ifc/exception/vexception.h"
+#include "../ifc/exception/vexceptionbadid.h"
 #include "../ifc/exception/vexceptionundo.h"
 #include "../ifc/xml/vtoolrecord.h"
 #include "../undocommands/deltool.h"
@@ -287,6 +292,95 @@ void VAbstractTool::deleteTool(bool ask)
     else
     {
         qCWarning(vTool, "Can't delete, tool has children.");
+        showDependencies();
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+void VAbstractTool::showDependencies()
+{
+    QDialog dialog(qApp->getMainWindow());
+    dialog.setWindowTitle(tr("Dependencies"));
+    dialog.resize(720, 360);
+
+    auto *layout = new QVBoxLayout(&dialog);
+    QString objectName = tr("Object %1").arg(m_id);
+    try
+    {
+        objectName = getData()->GetGObject(m_id)->name();
+    }
+    catch (const VExceptionBadId &)
+    {
+        try
+        {
+            objectName = getData()->GetPiece(m_id).GetName();
+        }
+        catch (const VExceptionBadId &)
+        {
+            // Some tools, for example lines and operations, have no object stored under the tool id.
+        }
+    }
+    auto *label = new QLabel(&dialog);
+    label->setWordWrap(true);
+    layout->addWidget(label);
+
+    auto *recursive = new QCheckBox(tr("Show all descendants"), &dialog);
+    layout->addWidget(recursive);
+
+    auto *tree = new QTreeWidget(&dialog);
+    tree->setColumnCount(4);
+    tree->setHeaderLabels(QStringList() << tr("Object") << tr("Type") << tr("Dependency") << tr("Draft block"));
+    tree->setRootIsDecorated(false);
+    layout->addWidget(tree);
+
+    auto populate = [this, tree, recursive, label, objectName]()
+    {
+        tree->clear();
+        const QVector<VToolDependency> dependencies = recursive->isChecked()
+                ? doc->getDependentObjectsRecursive(m_id, getData())
+                : doc->getDirectDependencies(m_id, getData());
+        label->setText(dependencies.isEmpty()
+                           ? tr("No dependent objects were found for %1.").arg(objectName)
+                           : tr("%1 cannot be deleted because these objects depend on it.").arg(objectName));
+        for (const VToolDependency &dependency : dependencies)
+        {
+            const QString indentation(qMax(0, dependency.depth - 1) * 3, QLatin1Char(' '));
+            auto *item = new QTreeWidgetItem(tree, QStringList() << indentation + dependency.name
+                                                                 << dependency.typeName << dependency.reference
+                                                                 << dependency.draftBlockName);
+            item->setData(0, Qt::UserRole, dependency.id);
+        }
+        tree->resizeColumnToContents(0);
+        tree->resizeColumnToContents(1);
+        tree->resizeColumnToContents(2);
+    };
+
+    connect(recursive, &QCheckBox::toggled, &dialog, populate);
+    connect(tree, &QTreeWidget::itemClicked, &dialog, [this, tree](QTreeWidgetItem *item)
+    {
+        for (int i = 0; i < tree->topLevelItemCount(); ++i)
+        {
+            const quint32 id = tree->topLevelItem(i)->data(0, Qt::UserRole).toUInt();
+            if (id != NULL_ID)
+            {
+                emit doc->ShowTool(id, tree->topLevelItem(i) == item);
+            }
+        }
+    });
+
+    auto *buttons = new QDialogButtonBox(QDialogButtonBox::Close, &dialog);
+    connect(buttons, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
+    layout->addWidget(buttons);
+
+    populate();
+    dialog.exec();
+    const QVector<VToolDependency> dependencies = doc->getDependentObjectsRecursive(m_id, getData());
+    for (const VToolDependency &dependency : dependencies)
+    {
+        if (dependency.id != NULL_ID)
+        {
+            emit doc->ShowTool(dependency.id, false);
+        }
     }
 }
 

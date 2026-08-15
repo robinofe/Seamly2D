@@ -59,6 +59,7 @@
 #include <QMetaObject>
 #include <QObject>
 #include <QPair>
+#include <QSet>
 #include <QString>
 #include <QStringList>
 #include <QVector>
@@ -98,6 +99,17 @@ struct VFormulaField
     QString     attribute;
 };
 
+struct VToolDependency
+{
+    quint32 id{NULL_ID};
+    Tool    type{Tool::LAST_ONE_DO_NOT_USE};
+    QString name;
+    QString typeName;
+    QString reference;
+    QString draftBlockName;
+    int     depth{0};
+};
+
 struct GroupAttributes
 {
    QString  name;
@@ -121,6 +133,9 @@ public:
     QVector<VFormulaField>         ListExpressions() const;
     QVector<VFormulaField>         listVariableExpressions() const;
     bool                           isVariableUsed(const QStringList &variable_names) const;
+    static const QSet<QString>    &objectReferenceAttributes();
+    QVector<VToolDependency>       getDirectDependencies(quint32 toolId, const VContainer *data) const;
+    QVector<VToolDependency>       getDependentObjectsRecursive(quint32 toolId, const VContainer *data) const;
 
     virtual void                   CreateEmptyFile()=0;
 
@@ -555,6 +570,11 @@ private:
     QVector<VFormulaField> ListPathExpressions() const;
     QVector<VFormulaField> ListGrainlineExpressions(const QDomElement &element) const;
     QVector<VFormulaField> ListPieceExpressions() const;
+
+    QString                dependencyToolName(const VToolRecord &record, const QDomElement &element,
+                                              const VContainer *data) const;
+    QVector<VToolDependency> getFormulaDependencies(const QStringList &variableNames, const VContainer *data,
+                                                     const QHash<quint32, VToolRecord> &records) const;
 
     bool                   IsVariable(const QString &token) const;
     bool                   IsPostfixOperator(const QString &token) const;

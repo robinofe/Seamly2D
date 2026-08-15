@@ -247,6 +247,8 @@ void VDrawTool::ContextMenu(QGraphicsSceneContextMenuEvent *event, quint32 itemI
         actionCopyLineAngle->setVisible(false);
     }
 
+    QAction *actionDependencies = menu.addAction(VDrawTool::tr("Show dependencies..."));
+
     QAction *actionDelete = menu.addAction(QIcon::fromTheme("edit-delete"), VDrawTool::tr("Delete"));
     if (showRemove == RemoveOption::Enable)
     {
@@ -254,8 +256,12 @@ void VDrawTool::ContextMenu(QGraphicsSceneContextMenuEvent *event, quint32 itemI
         {
             if (isUsed())
             {
-                qCDebug(vTool, "Delete disabled. Tool has children.");
-                actionDelete->setEnabled(false);
+                // Deleting a base point deletes its entire draft block and is therefore not the same operation as
+                // deleting an ordinary tool. Keep the established context-menu behaviour for that special case.
+                const bool explainBlockedDeletion = tooltype != Tool::BasePoint;
+                qCDebug(vTool, "Tool has children. Delete action enabled: %s.",
+                        explainBlockedDeletion ? "true" : "false");
+                actionDelete->setEnabled(explainBlockedDeletion);
             }
             else
             {
@@ -364,6 +370,10 @@ void VDrawTool::ContextMenu(QGraphicsSceneContextMenuEvent *event, quint32 itemI
         this->setDialog();
 
         m_dialog->show();
+    }
+    else if (selectedAction == actionDependencies)
+    {
+        showDependencies();
     }
     else if (selectedAction == actionDelete)
     {

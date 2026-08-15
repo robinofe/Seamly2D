@@ -79,11 +79,78 @@
 #include <QList>
 #include <QMessageBox>
 #include <QMessageLogger>
+#include <QHash>
 #include <QSet>
 #include <QString>
 #include <QtDebug>
 
 class QDomElement;
+
+namespace
+{
+QString dependencyTypeName(Tool type)
+{
+    switch (type)
+    {
+        case Tool::BasePoint:                  return QCoreApplication::translate("VToolDependency", "Base point");
+        case Tool::EndLine:                    return QCoreApplication::translate("VToolDependency", "Point by length and angle");
+        case Tool::Line:                       return QCoreApplication::translate("VToolDependency", "Line");
+        case Tool::AlongLine:                  return QCoreApplication::translate("VToolDependency", "Point on line");
+        case Tool::ShoulderPoint:              return QCoreApplication::translate("VToolDependency", "Shoulder point");
+        case Tool::Normal:                     return QCoreApplication::translate("VToolDependency", "Normal point");
+        case Tool::Bisector:                   return QCoreApplication::translate("VToolDependency", "Bisector point");
+        case Tool::LineIntersect:              return QCoreApplication::translate("VToolDependency", "Line intersection");
+        case Tool::Spline:                     return QCoreApplication::translate("VToolDependency", "Spline");
+        case Tool::CubicBezier:                return QCoreApplication::translate("VToolDependency", "Cubic Bézier curve");
+        case Tool::CutSpline:                  return QCoreApplication::translate("VToolDependency", "Point on curve");
+        case Tool::CutArc:                     return QCoreApplication::translate("VToolDependency", "Point on arc");
+        case Tool::Arc:                        return QCoreApplication::translate("VToolDependency", "Arc");
+        case Tool::ArcWithLength:              return QCoreApplication::translate("VToolDependency", "Arc with length");
+        case Tool::SplinePath:                 return QCoreApplication::translate("VToolDependency", "Spline path");
+        case Tool::CubicBezierPath:            return QCoreApplication::translate("VToolDependency", "Cubic Bézier path");
+        case Tool::CutSplinePath:              return QCoreApplication::translate("VToolDependency", "Point on spline path");
+        case Tool::PointOfContact:             return QCoreApplication::translate("VToolDependency", "Contact point");
+        case Tool::Piece:                      return QCoreApplication::translate("VToolDependency", "Pattern piece");
+        case Tool::InternalPath:               return QCoreApplication::translate("VToolDependency", "Internal path");
+        case Tool::Height:                     return QCoreApplication::translate("VToolDependency", "Height point");
+        case Tool::Triangle:                   return QCoreApplication::translate("VToolDependency", "Triangle point");
+        case Tool::LineIntersectAxis:          return QCoreApplication::translate("VToolDependency", "Line/axis intersection");
+        case Tool::PointOfIntersectionArcs:    return QCoreApplication::translate("VToolDependency", "Arc intersection");
+        case Tool::PointOfIntersectionCircles: return QCoreApplication::translate("VToolDependency", "Circle intersection");
+        case Tool::PointOfIntersectionCurves:  return QCoreApplication::translate("VToolDependency", "Curve intersection");
+        case Tool::CurveIntersectAxis:         return QCoreApplication::translate("VToolDependency", "Curve/axis intersection");
+        case Tool::PointOfIntersection:        return QCoreApplication::translate("VToolDependency", "XY intersection");
+        case Tool::PointFromCircleAndTangent:  return QCoreApplication::translate("VToolDependency", "Circle tangent point");
+        case Tool::PointFromArcAndTangent:     return QCoreApplication::translate("VToolDependency", "Arc tangent point");
+        case Tool::TrueDarts:                  return QCoreApplication::translate("VToolDependency", "True darts");
+        case Tool::Union:                      return QCoreApplication::translate("VToolDependency", "Piece union");
+        case Tool::Rotation:                   return QCoreApplication::translate("VToolDependency", "Rotation");
+        case Tool::MirrorByLine:               return QCoreApplication::translate("VToolDependency", "Mirror by line");
+        case Tool::MirrorByAxis:               return QCoreApplication::translate("VToolDependency", "Mirror by axis");
+        case Tool::Move:                       return QCoreApplication::translate("VToolDependency", "Move");
+        case Tool::EllipticalArc:              return QCoreApplication::translate("VToolDependency", "Elliptical arc");
+        case Tool::AnchorPoint:                return QCoreApplication::translate("VToolDependency", "Anchor point");
+        case Tool::InsertNodes:                return QCoreApplication::translate("VToolDependency", "Inserted nodes");
+        case Tool::NodePoint:                  return QCoreApplication::translate("VToolDependency", "Piece point node");
+        case Tool::NodeArc:                    return QCoreApplication::translate("VToolDependency", "Piece arc node");
+        case Tool::NodeElArc:                  return QCoreApplication::translate("VToolDependency", "Piece elliptical arc node");
+        case Tool::NodeSpline:                 return QCoreApplication::translate("VToolDependency", "Piece spline node");
+        case Tool::NodeSplinePath:             return QCoreApplication::translate("VToolDependency", "Piece spline path node");
+        default:                               return QCoreApplication::translate("VToolDependency", "Tool");
+    }
+}
+
+QString referenceLabel(const QString &attribute)
+{
+    if (attribute == QStringLiteral("idObject") || attribute == QStringLiteral("idTool") ||
+        attribute == QStringLiteral("id") || attribute == QStringLiteral("path"))
+    {
+        return QCoreApplication::translate("VToolDependency", "object reference");
+    }
+    return QCoreApplication::translate("VToolDependency", "reference: %1").arg(attribute);
+}
+
+}
 
 const QString VAbstractPattern::TagPattern              = QStringLiteral("pattern");
 const QString VAbstractPattern::TagCalculation          = QStringLiteral("calculation");
@@ -1921,6 +1988,420 @@ bool VAbstractPattern::isVariableUsed(const QStringList &variable_names) const
     }
 
     return false;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+/// @brief objectReferenceAttributes returns serialized attributes that contain referenced object or tool IDs.
+//---------------------------------------------------------------------------------------------------------------------
+const QSet<QString> &VAbstractPattern::objectReferenceAttributes()
+{
+    static const QSet<QString> attributes = QSet<QString>()
+        << AttrBasePoint << AttrFirstPoint << AttrSecondPoint << AttrThirdPoint
+        << AttrCenter << AttrCCenter << AttrC1Center << AttrC2Center
+        << AttrArc << AttrFirstArc << AttrSecondArc
+        << AttrCurve << AttrCurve1 << AttrCurve2
+        << AttrPoint1 << AttrPoint2 << AttrPoint3 << AttrPoint4
+        << AttrP1Line << AttrP2Line << AttrP1Line1 << AttrP2Line1 << AttrP1Line2 << AttrP2Line2
+        << AttrAxisP1 << AttrAxisP2 << AttrTangent << AttrPShoulder
+        << AttrDartP1 << AttrDartP2 << AttrDartP3 << AttrBaseLineP1 << AttrBaseLineP2
+        << AttrIdObject << QStringLiteral("idTool") << AttrPSpline << QStringLiteral("spline")
+        << QStringLiteral("splinePath") << AttrPath
+        << QStringLiteral("centerAnchor") << QStringLiteral("topLeftAnchor")
+        << QStringLiteral("bottomRightAnchor") << QStringLiteral("topAnchorPoint")
+        << QStringLiteral("bottomAnchorPoint");
+    return attributes;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+QString VAbstractPattern::dependencyToolName(const VToolRecord &record, const QDomElement &element,
+                                             const VContainer *data) const
+{
+    QString name;
+    try
+    {
+        if (record.getTypeTool() == Tool::Piece)
+        {
+            name = data->GetPiece(record.getId()).GetName();
+        }
+        else
+        {
+            name = data->GetGObject(record.getId())->name();
+        }
+    }
+    catch (const VExceptionBadId &)
+    {
+        // Some tools, such as lines and operations, do not have a geometric object under the tool ID.
+    }
+
+    if (name.isEmpty())
+    {
+        name = element.attribute(AttrName);
+    }
+    if (name.isEmpty() && record.getTypeTool() == Tool::Line)
+    {
+        try
+        {
+            const QString first = data->GetGObject(GetParametrUInt(element, AttrFirstPoint, NULL_ID_STR))->name();
+            const QString second = data->GetGObject(GetParametrUInt(element, AttrSecondPoint, NULL_ID_STR))->name();
+            name = QStringLiteral("Line_%1_%2").arg(first, second);
+        }
+        catch (const VExceptionBadId &)
+        {
+        }
+    }
+    if (name.isEmpty() && record.getTypeTool() == Tool::InternalPath)
+    {
+        try
+        {
+            name = data->getPiecePath(record.getId()).getName();
+        }
+        catch (const VExceptionBadId &)
+        {
+        }
+    }
+    if (name.isEmpty())
+    {
+        QStringList objectNames;
+        const QHash<quint32, QSharedPointer<VGObject>> *objects = data->DataGObjects();
+        for (auto object = objects->constBegin(); object != objects->constEnd(); ++object)
+        {
+            if (object.value()->getIdTool() == record.getId() && !object.value()->name().isEmpty())
+            {
+                objectNames.append(object.value()->name());
+            }
+        }
+        objectNames.removeDuplicates();
+        name = objectNames.join(QStringLiteral(", "));
+    }
+    return name.isEmpty() ? QCoreApplication::translate("VToolDependency", "Tool #%1").arg(record.getId()) : name;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+QVector<VToolDependency> VAbstractPattern::getFormulaDependencies(
+        const QStringList &variableNames, const VContainer *data,
+        const QHash<quint32, VToolRecord> &records) const
+{
+    QVector<VToolDependency> dependencies;
+    if (variableNames.isEmpty() || data == nullptr)
+    {
+        return dependencies;
+    }
+
+    QHash<quint32, int> toolRows;
+    QHash<QString, int> variableRows;
+    const QVector<VFormulaField> expressions = ListExpressions();
+    for (int i = 0; i < expressions.size(); ++i)
+    {
+        bool usesVariable = false;
+        try
+        {
+            const QList<QString> tokens =
+                    qmu::QmuTokenParser(expressions.at(i).expression, false, false).GetTokens().values();
+            for (int j = 0; j < variableNames.size() && !usesVariable; ++j)
+            {
+                usesVariable = tokens.contains(variableNames.at(j));
+            }
+        }
+        catch (const qmu::QmuParserError &)
+        {
+            continue;
+        }
+        if (!usesVariable)
+        {
+            continue;
+        }
+
+        QDomElement owner = expressions.at(i).element;
+        while (!owner.isNull())
+        {
+            if (owner.hasAttribute(AttrId))
+            {
+                const quint32 ownerId = owner.attribute(AttrId).toUInt();
+                if (records.contains(ownerId))
+                {
+                    const QString reference = QCoreApplication::translate("VToolDependency", "formula: %1")
+                                                      .arg(expressions.at(i).attribute);
+                    if (toolRows.contains(ownerId))
+                    {
+                        VToolDependency &dependency = dependencies[toolRows.value(ownerId)];
+                        if (!dependency.reference.split(QStringLiteral(", ")).contains(reference))
+                        {
+                            dependency.reference += QStringLiteral(", ") + reference;
+                        }
+                    }
+                    else
+                    {
+                        const VToolRecord record = records.value(ownerId);
+                        VToolDependency dependency;
+                        dependency.id = ownerId;
+                        dependency.type = record.getTypeTool();
+                        dependency.name = dependencyToolName(record, owner, data);
+                        dependency.typeName = dependencyTypeName(record.getTypeTool());
+                        dependency.reference = reference;
+                        dependency.draftBlockName = record.getDraftBlockName();
+                        dependency.depth = 1;
+                        toolRows.insert(ownerId, dependencies.size());
+                        dependencies.append(dependency);
+                    }
+                    break;
+                }
+            }
+            owner = owner.parentNode().toElement();
+        }
+
+        if (owner.isNull() && expressions.at(i).element.tagName() == TagVariable)
+        {
+            const QString variableName = expressions.at(i).element.attribute(VariableName);
+            if (!variableRows.contains(variableName))
+            {
+                VToolDependency dependency;
+                dependency.id = NULL_ID;
+                dependency.type = Tool::LAST_ONE_DO_NOT_USE;
+                dependency.name = variableName;
+                dependency.typeName = QCoreApplication::translate("VToolDependency", "Custom variable");
+                dependency.reference = QCoreApplication::translate("VToolDependency", "formula");
+                dependency.depth = 1;
+                variableRows.insert(variableName, dependencies.size());
+                dependencies.append(dependency);
+            }
+        }
+    }
+
+    return dependencies;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+/// @brief getDirectDependencies returns the tools and named variables that directly reference a tool.
+///
+/// The reference counter remains the deletion authority. This query explains that state from the canonical pattern DOM
+/// and does not keep a second graph that could become stale.
+//---------------------------------------------------------------------------------------------------------------------
+QVector<VToolDependency> VAbstractPattern::getDirectDependencies(quint32 toolId, const VContainer *data) const
+{
+    QVector<VToolDependency> dependencies;
+    if (toolId == NULL_ID || data == nullptr)
+    {
+        return dependencies;
+    }
+
+    QHash<quint32, VToolRecord> records;
+    for (int i = 0; i < m_history.size(); ++i)
+    {
+        records.insert(m_history.at(i).getId(), m_history.at(i));
+    }
+
+    const QSet<QString> &referenceAttributes = objectReferenceAttributes();
+
+    auto referencesTool = [toolId, data](quint32 objectId) -> bool
+    {
+        if (objectId == NULL_ID)
+        {
+            return false;
+        }
+        if (objectId == toolId)
+        {
+            return true;
+        }
+        try
+        {
+            return data->GetGObject(objectId)->getIdTool() == toolId;
+        }
+        catch (const VExceptionBadId &)
+        {
+            return false;
+        }
+    };
+
+    QHash<quint32, int> dependencyRows;
+    auto addToolDependency = [&dependencies, &dependencyRows, data, this](const VToolRecord &record,
+                                                                         const QDomElement &element,
+                                                                         const QString &reference)
+    {
+        const quint32 id = record.getId();
+        if (dependencyRows.contains(id))
+        {
+            VToolDependency &dependency = dependencies[dependencyRows.value(id)];
+            if (!dependency.reference.split(QStringLiteral(", ")).contains(reference))
+            {
+                dependency.reference += QStringLiteral(", ") + reference;
+            }
+            return;
+        }
+
+        VToolDependency dependency;
+        dependency.id = id;
+        dependency.type = record.getTypeTool();
+        dependency.name = dependencyToolName(record, element, data);
+        dependency.typeName = dependencyTypeName(record.getTypeTool());
+        dependency.reference = reference;
+        dependency.draftBlockName = record.getDraftBlockName();
+        dependency.depth = 1;
+        dependencyRows.insert(id, dependencies.size());
+        dependencies.append(dependency);
+    };
+
+    for (int i = 0; i < m_history.size(); ++i)
+    {
+        const VToolRecord record = m_history.at(i);
+        if (record.getId() == toolId)
+        {
+            continue;
+        }
+
+        const QDomElement root = const_cast<VAbstractPattern *>(this)->elementById(record.getId());
+        if (root.isNull())
+        {
+            continue;
+        }
+
+        QList<QDomElement> elements;
+        elements.append(root);
+        while (!elements.isEmpty())
+        {
+            const QDomElement element = elements.takeFirst();
+            const QDomNamedNodeMap attributes = element.attributes();
+            for (int j = 0; j < attributes.size(); ++j)
+            {
+                const QDomAttr attribute = attributes.item(j).toAttr();
+                if (referenceAttributes.contains(attribute.name()) && referencesTool(attribute.value().toUInt()))
+                {
+                    addToolDependency(record, root, referenceLabel(attribute.name()));
+                }
+            }
+
+            if (element.tagName() == QStringLiteral("record") &&
+                element.parentNode().toElement().tagName() == QStringLiteral("anchors") &&
+                referencesTool(element.text().toUInt()))
+            {
+                addToolDependency(record, root,
+                                  QCoreApplication::translate("VToolDependency", "object reference"));
+            }
+
+            QDomElement child = element.firstChildElement();
+            while (!child.isNull())
+            {
+                elements.append(child);
+                child = child.nextSiblingElement();
+            }
+        }
+    }
+
+    QStringList variableNames;
+    const QHash<QString, QSharedPointer<VInternalVariable>> *variables = data->DataVariables();
+    for (auto i = variables->constBegin(); i != variables->constEnd(); ++i)
+    {
+        if (i.value()->Filter(toolId))
+        {
+            variableNames.append(i.key());
+        }
+    }
+
+    if (records.contains(toolId) && records.value(toolId).getTypeTool() == Tool::Line)
+    {
+        const QDomElement line = const_cast<VAbstractPattern *>(this)->elementById(toolId);
+        try
+        {
+            const QString first = data->GetGObject(GetParametrUInt(line, AttrFirstPoint, NULL_ID_STR))->name();
+            const QString second = data->GetGObject(GetParametrUInt(line, AttrSecondPoint, NULL_ID_STR))->name();
+            const QString lineName = QStringLiteral("%1_%2").arg(first, second);
+            variableNames << line_ + lineName << angleLine_ + lineName;
+        }
+        catch (const VExceptionBadId &)
+        {
+        }
+    }
+
+    const QVector<VToolDependency> formulaDependencies = getFormulaDependencies(variableNames, data, records);
+    for (int i = 0; i < formulaDependencies.size(); ++i)
+    {
+        const VToolDependency formulaDependency = formulaDependencies.at(i);
+        if (formulaDependency.id != NULL_ID && dependencyRows.contains(formulaDependency.id))
+        {
+            VToolDependency &dependency = dependencies[dependencyRows.value(formulaDependency.id)];
+            const QStringList references = formulaDependency.reference.split(QStringLiteral(", "));
+            for (int j = 0; j < references.size(); ++j)
+            {
+                if (!dependency.reference.split(QStringLiteral(", ")).contains(references.at(j)))
+                {
+                    dependency.reference += QStringLiteral(", ") + references.at(j);
+                }
+            }
+            continue;
+        }
+
+        if (formulaDependency.id != toolId)
+        {
+            if (formulaDependency.id != NULL_ID)
+            {
+                dependencyRows.insert(formulaDependency.id, dependencies.size());
+            }
+            dependencies.append(formulaDependency);
+        }
+    }
+
+    return dependencies;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+QVector<VToolDependency> VAbstractPattern::getDependentObjectsRecursive(quint32 toolId, const VContainer *data) const
+{
+    QVector<VToolDependency> result;
+    if (toolId == NULL_ID || data == nullptr)
+    {
+        return result;
+    }
+
+    QHash<quint32, VToolRecord> records;
+    for (int i = 0; i < m_history.size(); ++i)
+    {
+        records.insert(m_history.at(i).getId(), m_history.at(i));
+    }
+
+    QSet<quint32> visitedTools;
+    QSet<QString> visitedVariables;
+    QList<QPair<quint32, int>> pendingTools;
+    QList<QPair<QString, int>> pendingVariables;
+    visitedTools.insert(toolId);
+    pendingTools.append(qMakePair(toolId, 0));
+
+    while (!pendingTools.isEmpty() || !pendingVariables.isEmpty())
+    {
+        QVector<VToolDependency> children;
+        int parentDepth = 0;
+        if (!pendingTools.isEmpty())
+        {
+            const QPair<quint32, int> current = pendingTools.takeFirst();
+            children = getDirectDependencies(current.first, data);
+            parentDepth = current.second;
+        }
+        else
+        {
+            const QPair<QString, int> current = pendingVariables.takeFirst();
+            children = getFormulaDependencies(QStringList() << current.first, data, records);
+            parentDepth = current.second;
+        }
+
+        for (int i = 0; i < children.size(); ++i)
+        {
+            children[i].depth = parentDepth + 1;
+            if (children.at(i).id != NULL_ID)
+            {
+                if (!visitedTools.contains(children.at(i).id))
+                {
+                    visitedTools.insert(children.at(i).id);
+                    result.append(children.at(i));
+                    pendingTools.append(qMakePair(children.at(i).id, children.at(i).depth));
+                }
+            }
+            else if (!children.at(i).name.isEmpty() && !visitedVariables.contains(children.at(i).name))
+            {
+                visitedVariables.insert(children.at(i).name);
+                result.append(children.at(i));
+                pendingVariables.append(qMakePair(children.at(i).name, children.at(i).depth));
+            }
+        }
+    }
+    return result;
 }
 
 //---------------------------------------------------------------------------------------------------------------------

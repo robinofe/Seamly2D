@@ -52,12 +52,10 @@
 #include "savetooloptions.h"
 
 #include <QDomNode>
-#include <QStringList>
 #include <QTextStream>
 
 #include "../vmisc/def.h"
 #include "../vmisc/logging.h"
-#include "../ifc/ifcdef.h"
 #include "../ifc/xml/vabstractpattern.h"
 #include "vundocommand.h"
 
@@ -92,7 +90,7 @@ QString childElements(const QDomElement &element)
 ///
 /// The reference counters that guard deletion are only set when a tool is created during a full parse.
 /// When an option change replaces a referenced object the counters become stale, so the caller has to
-/// request a full parse to rebuild them. See issue #1521.
+/// request a full parse to rebuild them.
 ///
 /// @param oldXml tool element before the change.
 /// @param newXml tool element after the change.
@@ -101,21 +99,10 @@ QString childElements(const QDomElement &element)
 
 bool referencesChanged(const QDomElement &oldXml, const QDomElement &newXml)
 {
-    // Attributes of the draw tools that store the id of another object.
-    static const QStringList reference_attributes = QStringList()
-        << AttrBasePoint << AttrFirstPoint << AttrSecondPoint << AttrThirdPoint
-        << AttrCenter << AttrCCenter << AttrC1Center << AttrC2Center
-        << AttrArc << AttrFirstArc << AttrSecondArc
-        << AttrCurve << AttrCurve1 << AttrCurve2
-        << AttrPoint1 << AttrPoint2 << AttrPoint3 << AttrPoint4
-        << AttrP1Line << AttrP2Line << AttrP1Line1 << AttrP2Line1 << AttrP1Line2 << AttrP2Line2
-        << AttrAxisP1 << AttrAxisP2 << AttrTangent << AttrPShoulder
-        << AttrDartP1 << AttrDartP2 << AttrDartP3
-        << AttrBaseLineP1 << AttrBaseLineP2;
-
-    for (int i = 0; i < reference_attributes.size(); ++i)
+    const QSet<QString> &referenceAttributes = VAbstractPattern::objectReferenceAttributes();
+    for (auto attribute = referenceAttributes.constBegin(); attribute != referenceAttributes.constEnd(); ++attribute)
     {
-        if (oldXml.attribute(reference_attributes.at(i)) != newXml.attribute(reference_attributes.at(i)))
+        if (oldXml.attribute(*attribute) != newXml.attribute(*attribute))
         {
             return true;
         }
@@ -150,7 +137,7 @@ void SaveToolOptions::undo()
 
         if (referencesChanged(oldXml, newXml))
         {
-            // A referenced object changed. Only a full parse rebuilds the reference counters. See issue #1521.
+            // A referenced object changed. Only a full parse rebuilds the reference counters.
             emit NeedFullParsing();
         }
         else
@@ -177,7 +164,7 @@ void SaveToolOptions::redo()
 
         if (referencesChanged(oldXml, newXml))
         {
-            // A referenced object changed. Only a full parse rebuilds the reference counters. See issue #1521.
+            // A referenced object changed. Only a full parse rebuilds the reference counters.
             emit NeedFullParsing();
         }
         else

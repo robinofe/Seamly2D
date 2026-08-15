@@ -162,6 +162,7 @@ protected:
      */
     virtual void                 RemoveReferens() {}
     virtual void                 deleteTool(bool ask = true);
+    void                         showDependencies();
     static int                   ConfirmDeletion();
 
     template <typename T>

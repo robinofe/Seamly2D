@@ -1210,8 +1210,10 @@ void PatternPieceTool::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     QAction *rename = menu.addAction(tr("Rename...") + "\tF2");
     rename->setEnabled(lock);
 
+    QAction *showDependenciesAction = menu.addAction(tr("Show dependencies..."));
+
     QAction *deletePiece = menu.addAction(QIcon::fromTheme("edit-delete"), tr("Delete") + "\tDel");
-    _referens > 0 ? deletePiece->setEnabled(false) : deletePiece->setEnabled(true);
+    // Keep Delete reachable for an unlocked dependent piece so deleteTool() can explain what blocks deletion.
     deletePiece->setEnabled(lock);
 
     QAction *selectedAction = menu.exec(event->screenPos());
@@ -1262,6 +1264,10 @@ void PatternPieceTool::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     else if (selectedAction == rename)
     {
         renamePiece(piece);
+    }
+    else if (selectedAction == showDependenciesAction)
+    {
+        showDependencies();
     }
     else if (selectedAction == deletePiece)
     {
@@ -2086,6 +2092,13 @@ void PatternPieceTool::initializeAnchorPoints(const VPiece &piece)
 //---------------------------------------------------------------------------------------------------------------------
 void PatternPieceTool::deleteTool(bool ask)
 {
+    if (isUsed())
+    {
+        qCWarning(vTool, "Can't delete pattern piece, tool has children.");
+        showDependencies();
+        return;
+    }
+
     QScopedPointer<DeletePiece> cmd(new DeletePiece(doc, m_id, VAbstractTool::data.GetPiece(m_id)));
     if (ask)
     {
