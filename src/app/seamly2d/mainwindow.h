@@ -236,6 +236,7 @@ private slots:
     void handleInsertNodesTool(bool checked);
 
     void handleImageTool();
+    void handleReferenceLengthTool();
 
     void handlePatternPieceTool(bool checked);
     void handleUnionTool(bool checked);

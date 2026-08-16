@@ -12,6 +12,8 @@
   draft-block location, while `VContainer` supplies names and maps object IDs back to their creating tool IDs.
 - A full parse rebuilds the counters. `SaveToolOptions` requests a full parse when a stored object reference changes,
   preventing stale counters after editing or undo/redo.
+- Internal-path edits update both sides of the counter change: removed nodes are decremented and newly referenced nodes
+  are incremented, with the inverse operations on Undo.
 
 ## Patch design
 
@@ -19,18 +21,24 @@
    attributes, path/node child elements, operation source items, and formula tokens. It maintains no second graph.
    Recursive lookup also follows chains through custom variables.
 2. A dependency dialog shows name, type, the specific reference role, draft block, and a suggested next action.
-   Selecting a row highlights the tool through the existing `VAbstractPattern::ShowTool` signal. The **Select
-   dependent object** action closes the modal dialog and opens the selected tool in the existing Properties workflow,
-   whose object lists already filter points, curves, splines, and paths by compatible geometry type.
+   Selecting a row highlights the tool through the existing `VAbstractPattern::ShowTool` signal. The available action
+   is chosen after selection: open Properties, edit the piece, remove a piece section, or replace it. After a guided
+   piece action closes, the dependency dialog opens again with the updated result.
 3. **Delete** remains reachable for used draw tools and pattern pieces so `deleteTool()` can explain why it is blocked.
    The existing `isUsed()` guard remains authoritative. The base point remains a special case because deleting it
    deletes the complete draft block, including its contents.
 4. The dialog can show all descendants recursively. Recursive deletion is deliberately excluded: formulas, pieces,
    internal paths, generated operation objects, and reference-counter propagation require broader deletion-order and
    undo/redo coverage before that can be safe.
-5. Automatic replacement is not offered for pattern-piece nodes or formulas. Their stored structure contains
-   additional constraints such as contour order, node type, reverse direction, seam allowance, notches, or expression
-   tokens. The dialog directs the user to the owning piece or formula instead of applying a partial XML edit.
+5. Piece contours and internal paths use a separate guided replacement. One or more adjacent entries can be replaced
+   by a different number of points, lines, curves, or splines, including removal without replacement. The old path is
+   retained until the candidate passes continuity, direction, and point checks, then one undoable command swaps it.
+   This staging provides the safe part of a freeze workflow without storing a permanently detached piece state.
+6. History marks independent roots, unused geometry, and dependent objects. Clicking a row keeps using the existing
+   scene highlight, so independent construction geometry is visible both as a list and in the draft.
+7. Reference lengths are non-printing drafting aids. Their length uses the standard formula variables, and their
+   position can be free, attached to a point, or placed along a line with free, horizontal, vertical, or line-aligned
+   orientation.
 
 ## Test coverage
 
@@ -40,3 +48,5 @@
 - dependency dialog population, recursive toggle, and highlight signal
 - full-parse requests when an edited tool replaces a referenced object in an attribute or child element
 - lite-parse preservation for changes that do not affect references
+- flexible piece-path section replacement, collapse, and removal
+- reference-length formula discovery

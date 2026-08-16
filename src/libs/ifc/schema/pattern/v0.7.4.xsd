@@ -730,6 +730,26 @@
                   </xs:sequence>
                 </xs:complexType>
               </xs:element>
+              <xs:element name="referenceLines" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="referenceLine" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="id" type="xs:unsignedInt" use="required"/>
+                        <xs:attribute name="name" type="xs:string" use="required"/>
+                        <xs:attribute name="formula" type="xs:string" use="required"/>
+                        <xs:attribute name="xPos" type="xs:double" use="required"/>
+                        <xs:attribute name="yPos" type="xs:double" use="required"/>
+                        <xs:attribute name="rotation" type="xs:double" use="required"/>
+                        <xs:attribute name="anchorObject" type="xs:unsignedInt" use="required"/>
+                        <xs:attribute name="anchorPosition" type="xs:double" use="required"/>
+                        <xs:attribute name="orientation" type="xs:string" use="required"/>
+                        <xs:attribute name="visible" type="xs:boolean" use="required"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
             </xs:sequence>
             <xs:attribute name="name" type="xs:string"/>
           </xs:complexType>

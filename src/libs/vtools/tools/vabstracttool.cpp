@@ -59,6 +59,7 @@
 #include <QGraphicsEllipseItem>
 #include <QGraphicsLineItem>
 #include <QHash>
+#include <QHBoxLayout>
 #include <QIcon>
 #include <QLineF>
 #include <QMessageBox>
@@ -75,6 +76,7 @@
 #include <QSharedPointer>
 #include <QString>
 #include <QStyle>
+#include <QTimer>
 #include <QUndoStack>
 #include <QVector>
 #include <new>
@@ -88,6 +90,7 @@
 #include "../ifc/exception/vexceptionundo.h"
 #include "../ifc/xml/vtoolrecord.h"
 #include "../undocommands/deltool.h"
+#include "pattern_piece_tool.h"
 #include "../vgeometry/../ifc/ifcdef.h"
 #include "../vgeometry/vgeometrydef.h"
 #include "../vgeometry/vgobject.h"
@@ -300,6 +303,15 @@ void VAbstractTool::deleteTool(bool ask)
 //---------------------------------------------------------------------------------------------------------------------
 void VAbstractTool::showDependencies()
 {
+    enum class DependencyAction
+    {
+        None,
+        Select,
+        EditPiece,
+        ReplaceNode,
+        RemoveNode
+    };
+
     QDialog dialog(qApp->getMainWindow());
     dialog.setWindowTitle(tr("Dependencies"));
     dialog.resize(720, 360);
@@ -336,13 +348,49 @@ void VAbstractTool::showDependencies()
     layout->addWidget(tree);
 
     quint32 selectedToolId = NULL_ID;
-    auto *buttons = new QDialogButtonBox(QDialogButtonBox::Close, &dialog);
-    auto *selectButton = buttons->addButton(tr("Select dependent object"), QDialogButtonBox::ActionRole);
-    selectButton->setEnabled(false);
+    Tool selectedToolType = Tool::LAST_ONE_DO_NOT_USE;
+    DependencyAction selectedAction = DependencyAction::None;
 
-    auto populate = [this, tree, recursive, label, objectName]()
+    auto *actionLabel = new QLabel(tr("Select an object to see the available next steps."), &dialog);
+    actionLabel->setWordWrap(true);
+    layout->addWidget(actionLabel);
+
+    auto *actionLayout = new QHBoxLayout;
+    auto *selectButton = new QPushButton(tr("Open properties"), &dialog);
+    auto *replaceButton = new QPushButton(tr("Replace contour section..."), &dialog);
+    auto *removeButton = new QPushButton(tr("Remove from pattern piece..."), &dialog);
+    auto *editPieceButton = new QPushButton(tr("Edit pattern piece"), &dialog);
+    selectButton->setObjectName(QStringLiteral("dependencyOpenPropertiesButton"));
+    replaceButton->setObjectName(QStringLiteral("dependencyReplaceNodeButton"));
+    removeButton->setObjectName(QStringLiteral("dependencyRemoveNodeButton"));
+    editPieceButton->setObjectName(QStringLiteral("dependencyEditPieceButton"));
+    actionLayout->addWidget(selectButton);
+    actionLayout->addWidget(replaceButton);
+    actionLayout->addWidget(removeButton);
+    actionLayout->addWidget(editPieceButton);
+    actionLayout->addStretch();
+    layout->addLayout(actionLayout);
+
+    selectButton->hide();
+    replaceButton->hide();
+    removeButton->hide();
+    editPieceButton->hide();
+
+    auto *buttons = new QDialogButtonBox(QDialogButtonBox::Close, &dialog);
+
+    auto clearActions = [this, actionLabel, selectButton, replaceButton, removeButton, editPieceButton]()
+    {
+        actionLabel->setText(tr("Select an object to see the available next steps."));
+        selectButton->hide();
+        replaceButton->hide();
+        removeButton->hide();
+        editPieceButton->hide();
+    };
+
+    auto populate = [this, tree, recursive, label, objectName, clearActions]()
     {
         tree->clear();
+        clearActions();
         const QVector<VToolDependency> dependencies = recursive->isChecked()
                 ? doc->getDependentObjectsRecursive(m_id, getData())
                 : doc->getDirectDependencies(m_id, getData());
@@ -371,6 +419,7 @@ void VAbstractTool::showDependencies()
                                                                  << dependency.typeName << dependency.reference
                                                                  << dependency.draftBlockName << suggestion);
             item->setData(0, Qt::UserRole, dependency.id);
+            item->setData(0, Qt::UserRole + 1, static_cast<int>(dependency.type));
         }
         tree->resizeColumnToContents(0);
         tree->resizeColumnToContents(1);
@@ -378,10 +427,27 @@ void VAbstractTool::showDependencies()
     };
 
     connect(recursive, &QCheckBox::toggled, &dialog, populate);
-    connect(tree, &QTreeWidget::itemClicked, &dialog, [this, tree, selectButton](QTreeWidgetItem *item)
+    connect(tree, &QTreeWidget::itemClicked, &dialog,
+            [this, tree, actionLabel, selectButton, replaceButton, removeButton, editPieceButton,
+             &selectedToolId, &selectedToolType](QTreeWidgetItem *item)
     {
-        const quint32 selectedId = item->data(0, Qt::UserRole).toUInt();
-        selectButton->setEnabled(selectedId != NULL_ID);
+        selectedToolId = item->data(0, Qt::UserRole).toUInt();
+        selectedToolType = static_cast<Tool>(item->data(0, Qt::UserRole + 1).toInt());
+        const bool isNode = selectedToolType == Tool::NodePoint || selectedToolType == Tool::NodeArc ||
+                            selectedToolType == Tool::NodeElArc || selectedToolType == Tool::NodeSpline ||
+                            selectedToolType == Tool::NodeSplinePath;
+
+        selectButton->setVisible(selectedToolId != NULL_ID && !isNode && selectedToolType != Tool::Piece);
+        replaceButton->setVisible(isNode);
+        removeButton->setVisible(isNode);
+        editPieceButton->setVisible(isNode || selectedToolType == Tool::Piece);
+        actionLabel->setText(isNode
+                                 ? tr("This node or an adjacent section can be replaced by one or more points and curves. Changes can be undone.")
+                                 : selectedToolType == Tool::Piece
+                                       ? tr("Open the pattern piece to change the references listed above.")
+                                       : selectedToolId == NULL_ID
+                                             ? tr("Open the formula editor for this variable and replace the reference there.")
+                                             : tr("Open Properties and replace the referenced object."));
         for (int i = 0; i < tree->topLevelItemCount(); ++i)
         {
             const quint32 id = tree->topLevelItem(i)->data(0, Qt::UserRole).toUInt();
@@ -392,13 +458,25 @@ void VAbstractTool::showDependencies()
         }
     });
 
-    connect(selectButton, &QPushButton::clicked, &dialog, [&dialog, tree, &selectedToolId]()
+    connect(selectButton, &QPushButton::clicked, &dialog, [&dialog, &selectedAction]()
     {
-        if (tree->currentItem() != nullptr)
-        {
-            selectedToolId = tree->currentItem()->data(0, Qt::UserRole).toUInt();
-            dialog.accept();
-        }
+        selectedAction = DependencyAction::Select;
+        dialog.accept();
+    });
+    connect(replaceButton, &QPushButton::clicked, &dialog, [&dialog, &selectedAction]()
+    {
+        selectedAction = DependencyAction::ReplaceNode;
+        dialog.accept();
+    });
+    connect(removeButton, &QPushButton::clicked, &dialog, [&dialog, &selectedAction]()
+    {
+        selectedAction = DependencyAction::RemoveNode;
+        dialog.accept();
+    });
+    connect(editPieceButton, &QPushButton::clicked, &dialog, [&dialog, &selectedAction]()
+    {
+        selectedAction = DependencyAction::EditPiece;
+        dialog.accept();
     });
     connect(buttons, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
     layout->addWidget(buttons);
@@ -414,7 +492,72 @@ void VAbstractTool::showDependencies()
         }
     }
 
-    if (selectedToolId != NULL_ID)
+    quint32 selectedPathId = NULL_ID;
+    auto findPieceTool = [this, selectedToolId, selectedToolType, &selectedPathId]() -> PatternPieceTool *
+    {
+        quint32 pieceId = selectedToolType == Tool::Piece ? selectedToolId : NULL_ID;
+        if (pieceId == NULL_ID)
+        {
+            const QVector<VToolDependency> dependencies = doc->getDirectDependencies(selectedToolId, getData());
+            for (const VToolDependency &dependency : dependencies)
+            {
+                if (dependency.type == Tool::Piece)
+                {
+                    pieceId = dependency.id;
+                    break;
+                }
+                if (dependency.type == Tool::InternalPath)
+                {
+                    selectedPathId = dependency.id;
+                    pieceId = getData()->pieceIdOfPath(selectedPathId);
+                    break;
+                }
+            }
+        }
+
+        if (pieceId == NULL_ID)
+        {
+            return nullptr;
+        }
+        try
+        {
+            return qobject_cast<PatternPieceTool *>(VAbstractPattern::getTool(pieceId));
+        }
+        catch (const VExceptionBadId &)
+        {
+            return nullptr;
+        }
+    };
+
+    if (selectedAction == DependencyAction::ReplaceNode || selectedAction == DependencyAction::RemoveNode ||
+        selectedAction == DependencyAction::EditPiece)
+    {
+        PatternPieceTool *pieceTool = findPieceTool();
+        if (pieceTool == nullptr)
+        {
+            QMessageBox::information(qApp->getMainWindow(), tr("Dependencies"),
+                                     tr("The pattern piece is in another draft block. Open that draft block and try again."));
+            return;
+        }
+
+        if (selectedAction == DependencyAction::ReplaceNode || selectedAction == DependencyAction::RemoveNode)
+        {
+            pieceTool->replacePieceNode(selectedToolId, selectedPathId,
+                                        selectedAction == DependencyAction::RemoveNode);
+            QTimer::singleShot(0, this, [this]() { showDependencies(); });
+            return;
+        }
+
+        connect(pieceTool, &PatternPieceTool::piecePropertiesClosed, this, [this, pieceTool]()
+        {
+            disconnect(pieceTool, &PatternPieceTool::piecePropertiesClosed, this, nullptr);
+            QTimer::singleShot(0, this, [this]() { showDependencies(); });
+        });
+        pieceTool->editPieceProperties(selectedToolType == Tool::Piece ? NULL_ID : selectedToolId);
+        return;
+    }
+
+    if (selectedAction == DependencyAction::Select && selectedToolId != NULL_ID)
     {
         try
         {

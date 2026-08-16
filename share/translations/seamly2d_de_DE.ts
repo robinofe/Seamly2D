@@ -8526,6 +8526,34 @@ Drücken Sie die Eingabetaste, um ihn vorübergehend in die Liste aufzunehmen.</
         <source>Delete Node</source>
         <translation>Knoten löschen</translation>
     </message>
+    <message>
+        <source>Replace node</source>
+        <translation>Knoten ersetzen</translation>
+    </message>
+    <message>
+        <source>Unlock the pattern piece before replacing a node.</source>
+        <translation>Entsperren Sie das Schnittteil, bevor Sie einen Knoten ersetzen.</translation>
+    </message>
+    <message>
+        <source>No compatible replacement is available in this draft block.</source>
+        <translation>In diesem Entwurfsblock ist kein passender Ersatz verfügbar.</translation>
+    </message>
+    <message>
+        <source>Replace %1 with:</source>
+        <translation>%1 ersetzen durch:</translation>
+    </message>
+    <message>
+        <source>Replace %1 with %2 in pattern piece %3?</source>
+        <translation>%1 im Schnittteil %3 durch %2 ersetzen?</translation>
+    </message>
+    <message>
+        <source>Replace pattern piece node</source>
+        <translation>Knoten im Schnittteil ersetzen</translation>
+    </message>
+    <message>
+        <source>This replacement would make the main path invalid. The pattern piece was not changed.</source>
+        <translation>Durch diesen Ersatz würde der Hauptpfad ungültig. Das Schnittteil wurde nicht geändert.</translation>
+    </message>
 </context>
 <context>
     <name>PenToolBar</name>
@@ -12400,6 +12428,46 @@ wie gewohnt in SeamlyME laden können.
         <source>Beige</source>
         <translation>Beige</translation>
     </message>
+    <message>
+        <source>Select an object to see the available next steps.</source>
+        <translation>Wählen Sie ein Objekt aus, um die möglichen nächsten Schritte anzuzeigen.</translation>
+    </message>
+    <message>
+        <source>Open properties</source>
+        <translation>Eigenschaften öffnen</translation>
+    </message>
+    <message>
+        <source>Replace in pattern piece...</source>
+        <translation>Im Schnittteil ersetzen...</translation>
+    </message>
+    <message>
+        <source>Remove from pattern piece...</source>
+        <translation>Aus Schnittteil entfernen...</translation>
+    </message>
+    <message>
+        <source>Edit pattern piece</source>
+        <translation>Schnittteil bearbeiten</translation>
+    </message>
+    <message>
+        <source>This node can be replaced with a compatible object or removed from its pattern piece. Changes can be undone.</source>
+        <translation>Dieser Knoten kann durch ein passendes Objekt ersetzt oder aus dem Schnittteil entfernt werden. Änderungen können rückgängig gemacht werden.</translation>
+    </message>
+    <message>
+        <source>Open the pattern piece to change the references listed above.</source>
+        <translation>Öffnen Sie das Schnittteil, um die oben angeführten Referenzen zu ändern.</translation>
+    </message>
+    <message>
+        <source>Open the formula editor for this variable and replace the reference there.</source>
+        <translation>Öffnen Sie den Formeleditor für diese Variable und ersetzen Sie dort die Referenz.</translation>
+    </message>
+    <message>
+        <source>Open Properties and replace the referenced object.</source>
+        <translation>Öffnen Sie die Eigenschaften und ersetzen Sie dort das referenzierte Objekt.</translation>
+    </message>
+    <message>
+        <source>The pattern piece is in another draft block. Open that draft block and try again.</source>
+        <translation>Das Schnittteil befindet sich in einem anderen Entwurfsblock. Öffnen Sie diesen Entwurfsblock und versuchen Sie es erneut.</translation>
+    </message>
 </context>
 <context>
     <name>VCommandLine</name>
@@ -14059,6 +14127,10 @@ wie gewohnt in SeamlyME laden können.
         <source>Curve length:</source>
         <translation>Kurvenlänge:</translation>
     </message>
+    <message>
+        <source>Calculated length:</source>
+        <translation>Berechnete Länge:</translation>
+    </message>
 </context>
 <context>
     <name>VToolPointFromArcAndTangent</name>
@@ -15618,5 +15690,77 @@ Example: fmod(3.3;2) = 1.3</comment>
         <source>Information</source>
         <translation>Information</translation>
     </message>
+</context>
+<context>
+    <name>AddReferenceLine</name>
+    <message><source>add reference length</source><translation>Referenzlänge hinzufügen</translation></message>
+</context>
+<context>
+    <name>EditFormulaDialog</name>
+    <message><source>Press Ctrl+Space to complete a measurement or variable name.</source><translation>Strg+Leertaste drücken, um einen Maß- oder Variablennamen zu vervollständigen.</translation></message>
+</context>
+<context>
+    <name>HistoryDialog</name>
+    <message><source>Independent, unused</source><translation>Unabhängig, unbenutzt</translation></message>
+    <message><source>Independent root</source><translation>Unabhängiges Ausgangsobjekt</translation></message>
+    <message><source>Dependent, unused</source><translation>Abhängig, unbenutzt</translation></message>
+    <message><source>Dependent</source><translation>Abhängig</translation></message>
+    <message><source>%1 direct parent(s), %2 direct dependent object(s)</source><translation>%1 direkte Vorgänger, %2 direkt abhängige Objekte</translation></message>
+    <message><source>Dependency status</source><translation>Abhängigkeitsstatus</translation></message>
+</context>
+<context>
+    <name>MainWindow</name>
+    <message><source>Add Reference Length...</source><translation>Referenzlänge hinzufügen...</translation></message>
+    <message><source>Add a non-printing reference length</source><translation>Eine nicht druckende Referenzlänge hinzufügen</translation></message>
+    <message><source>Reference length</source><translation>Referenzlänge</translation></message>
+</context>
+<context>
+    <name>PatternPieceTool</name>
+    <message><source>Replace pattern piece section</source><translation>Schnittteilabschnitt ersetzen</translation></message>
+    <message><source>Select one or more adjacent entries of the old contour, then build the replacement section in contour order. Straight edges are represented by their end points.</source><translation>Einen oder mehrere benachbarte Einträge der alten Kontur auswählen und anschließend den Ersatzabschnitt in Konturreihenfolge aufbauen. Gerade Kanten werden durch ihre Endpunkte dargestellt.</translation></message>
+    <message><source>Section to replace</source><translation>Zu ersetzender Abschnitt</translation></message>
+    <message><source>Available geometry</source><translation>Verfügbare Geometrie</translation></message>
+    <message><source>Add to replacement</source><translation>Zum Ersatz hinzufügen</translation></message>
+    <message><source>New section (in contour order)</source><translation>Neuer Abschnitt (in Konturreihenfolge)</translation></message>
+    <message><source>Remove the selected section without replacement</source><translation>Ausgewählten Abschnitt ersatzlos entfernen</translation></message>
+    <message><source>Move up</source><translation>Nach oben</translation></message>
+    <message><source>Move down</source><translation>Nach unten</translation></message>
+    <message><source>Reverse curve direction</source><translation>Kurvenrichtung umkehren</translation></message>
+    <message><source> (reversed)</source><translation> (umgekehrt)</translation></message>
+    <message><source>Select one adjacent old section and add replacement geometry, or choose to remove it.</source><translation>Einen zusammenhängenden alten Abschnitt auswählen und Ersatzgeometrie hinzufügen oder den Abschnitt zum Entfernen markieren.</translation></message>
+    <message><source>The number of contour entries changes. Seam allowance formulas at the section boundaries will be kept, but intermediate corner and notch settings cannot be transferred unambiguously. Continue?</source><translation>Die Anzahl der Kontureinträge ändert sich. Nahtzugabenformeln an den Abschnittsgrenzen bleiben erhalten, Einstellungen für dazwischenliegende Ecken und Knipse können jedoch nicht eindeutig übertragen werden. Fortfahren?</translation></message>
+    <message><source>The selected section and its corner, notch, and seam allowance settings will be removed. Continue?</source><translation>Der ausgewählte Abschnitt und seine Einstellungen für Ecken, Knipse und Nahtzugabe werden entfernt. Fortfahren?</translation></message>
+    <message><source>The replacement does not form a valid continuous path. The pattern piece was not changed.</source><translation>Der Ersatz ergibt keinen gültigen zusammenhängenden Pfad. Das Schnittteil wurde nicht geändert.</translation></message>
+    <message><source>Replace pattern piece path section</source><translation>Pfadabschnitt im Schnittteil ersetzen</translation></message>
+</context>
+<context>
+    <name>ReferenceLineDialog</name>
+    <message><source>Reference length</source><translation>Referenzlänge</translation></message>
+    <message><source>Open formula editor</source><translation>Formeleditor öffnen</translation></message>
+    <message><source>No anchor (freely movable)</source><translation>Keine Bindung (frei verschiebbar)</translation></message>
+    <message><source>Point: %1</source><translation>Punkt: %1</translation></message>
+    <message><source>Line: %1 - %2</source><translation>Linie: %1 - %2</translation></message>
+    <message><source>Free angle</source><translation>Freier Winkel</translation></message>
+    <message><source>Horizontal</source><translation>Horizontal</translation></message>
+    <message><source>Vertical</source><translation>Vertikal</translation></message>
+    <message><source>Along anchored line</source><translation>Entlang der gebundenen Linie</translation></message>
+    <message><source>Length formula:</source><translation>Längenformel:</translation></message>
+    <message><source>Attach to:</source><translation>Binden an:</translation></message>
+    <message><source>Position on line:</source><translation>Position auf der Linie:</translation></message>
+    <message><source>Orientation:</source><translation>Ausrichtung:</translation></message>
+    <message><source>Enter a valid formula with a result greater than zero.</source><translation>Eine gültige Formel mit einem Ergebnis größer als null eingeben.</translation></message>
+</context>
+<context>
+    <name>ReferenceLineTool</name>
+    <message><source>Invalid formula</source><translation>Ungültige Formel</translation></message>
+    <message><source>%1: invalid formula</source><translation>%1: ungültige Formel</translation></message>
+    <message><source>Delete reference length</source><translation>Referenzlänge löschen</translation></message>
+    <message><source>Delete this reference length?</source><translation>Diese Referenzlänge löschen?</translation></message>
+    <message><source>Edit reference length...</source><translation>Referenzlänge bearbeiten...</translation></message>
+</context>
+<context>
+    <name>VAbstractTool</name>
+    <message><source>Replace contour section...</source><translation>Konturabschnitt ersetzen...</translation></message>
+    <message><source>This node or an adjacent section can be replaced by one or more points and curves. Changes can be undone.</source><translation>Dieser Knoten oder ein benachbarter Abschnitt kann durch einen oder mehrere Punkte und Kurven ersetzt werden. Änderungen können rückgängig gemacht werden.</translation></message>
 </context>
 </TS>

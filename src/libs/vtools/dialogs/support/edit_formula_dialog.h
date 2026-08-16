@@ -68,6 +68,7 @@ enum VariableTab {Measurements=0, Custom=1, LineLengths= 2, LineAngles=3, CurveL
 
 template <class T> class QSharedPointer;
 class MeasurementVariable;
+class QCompleter;
 
 namespace Ui
 {
@@ -118,6 +119,7 @@ protected:
     virtual void closeEvent(QCloseEvent *event) override;
     virtual void showEvent( QShowEvent *event ) override;
     virtual void resizeEvent(QResizeEvent *event) override;
+    virtual bool eventFilter(QObject *object, QEvent *event) override;
 
 private slots:
     void         filterVariables(const QString &filter);
@@ -133,8 +135,12 @@ private:
     QString      m_postfix;
     bool         m_restoreCursor;
     quint16      m_source;
+    QCompleter  *m_variableCompleter;
 
     void         initializeVariables();
+    void         initializeVariableCompleter();
+    void         insertCompletion(const QString &completion);
+    QString      completionPrefix() const;
 
     template <class key, class val>
     void         showVariable(const QMap<key, val> &var);

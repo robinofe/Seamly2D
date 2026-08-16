@@ -89,6 +89,7 @@ public:
 
     VPiece                      GetPiece() const;
     void                        SetPiece(const VPiece &piece);
+    bool                        selectMainPathNode(quint32 nodeId, bool removeNode = false);
 
     QString                     getSeamAllowanceWidthFormula() const;
 

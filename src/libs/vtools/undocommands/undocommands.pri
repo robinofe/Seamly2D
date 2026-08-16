@@ -29,6 +29,7 @@ HEADERS += \
     $$PWD/label/moveabstractlabel.h \
     $$PWD/addpiece.h \
     $$PWD/addimage.h \
+    $$PWD/addreferenceline.h \
     $$PWD/deletepiece.h \
     $$PWD/movepiece.h \
     $$PWD/savepieceoptions.h \
@@ -63,9 +64,9 @@ SOURCES += \
     $$PWD/label/moveabstractlabel.cpp \
     $$PWD/addpiece.cpp \
     $$PWD/addimage.cpp \
+    $$PWD/addreferenceline.cpp \
     $$PWD/deletepiece.cpp \
     $$PWD/movepiece.cpp \
     $$PWD/savepieceoptions.cpp \
     $$PWD/togglepieceinlayout.cpp \
     $$PWD/savepiecepathoptions.cpp
-

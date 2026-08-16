@@ -236,6 +236,8 @@ const QString VAbstractPattern::TagLine                 = QStringLiteral("line")
 
 const QString VAbstractPattern::TagDraftImages          = QStringLiteral("images");
 const QString VAbstractPattern::TagDraftImage           = QStringLiteral("image");
+const QString VAbstractPattern::TagReferenceLines       = QStringLiteral("referenceLines");
+const QString VAbstractPattern::TagReferenceLine        = QStringLiteral("referenceLine");
 const QString VAbstractPattern::AttrId                  = QStringLiteral("id");
 const QString VAbstractPattern::AttrFilename            = QStringLiteral("filename");
 const QString VAbstractPattern::AttrLocked              = QStringLiteral("locked");
@@ -253,6 +255,8 @@ const QString VAbstractPattern::AttrSource              = QStringLiteral("src");
 const QString VAbstractPattern::AttrXOffset             = QStringLiteral("xOffset");
 const QString VAbstractPattern::AttrYOffset             = QStringLiteral("yOffset");
 const QString VAbstractPattern::AttrBasepoint           = QStringLiteral("basepoint");
+const QString VAbstractPattern::AttrAnchorObject        = QStringLiteral("anchorObject");
+const QString VAbstractPattern::AttrAnchorPosition      = QStringLiteral("anchorPosition");
 
 
 const QString VAbstractPattern::AttrName                = QStringLiteral("name");
@@ -1972,6 +1976,11 @@ QVector<VFormulaField> VAbstractPattern::ListExpressions() const
     list << ListOperationExpressions();
     list << ListPathExpressions();
     list << ListPieceExpressions();
+    const QDomNodeList referenceLines = elementsByTagName(TagReferenceLine);
+    for (int i = 0; i < referenceLines.size(); ++i)
+    {
+        ReadExpressionAttribute(list, referenceLines.at(i).toElement(), VariableFormula);
+    }
 
     return list;
 }
@@ -2308,6 +2317,14 @@ QVector<VToolDependency> VAbstractPattern::getDirectDependencies(quint32 toolId,
 
         const QDomElement root = const_cast<VAbstractPattern *>(this)->elementById(record.getId());
         if (root.isNull())
+        {
+            continue;
+        }
+
+        if ((record.getTypeTool() == Tool::NodePoint || record.getTypeTool() == Tool::NodeArc ||
+             record.getTypeTool() == Tool::NodeElArc || record.getTypeTool() == Tool::NodeSpline ||
+             record.getTypeTool() == Tool::NodeSplinePath) &&
+            GetParametrUsage(root, QStringLiteral("inUse")) == NodeUsage::NotInUse)
         {
             continue;
         }
@@ -2826,10 +2843,35 @@ QDomElement VAbstractPattern::createDraftImages()
         if (backgroundImages.isNull())
         {
             backgroundImages = createElement(TagDraftImages);
-            draftBlock.appendChild(backgroundImages);
+            const QDomElement referenceLines = draftBlock.firstChildElement(TagReferenceLines);
+            if (referenceLines.isNull())
+            {
+                draftBlock.appendChild(backgroundImages);
+            }
+            else
+            {
+                draftBlock.insertBefore(backgroundImages, referenceLines);
+            }
         }
 
         return backgroundImages;
+    }
+    return QDomElement();
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+QDomElement VAbstractPattern::createReferenceLines()
+{
+    QDomElement draftBlock;
+    if (getActiveDraftElement(draftBlock))
+    {
+        QDomElement referenceLines = draftBlock.firstChildElement(TagReferenceLines);
+        if (referenceLines.isNull())
+        {
+            referenceLines = createElement(TagReferenceLines);
+            draftBlock.appendChild(referenceLines);
+        }
+        return referenceLines;
     }
     return QDomElement();
 }
@@ -3780,6 +3822,30 @@ ImageItem *VAbstractPattern::getBackgroundImage(qint32 id)
 void VAbstractPattern::clearBackgroundImageMap()
 {
     m_imageMap.clear();
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+ReferenceLineTool *VAbstractPattern::getReferenceLine(qint32 id)
+{
+    return m_referenceLineMap.value(id);
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+void VAbstractPattern::addReferenceLine(qint32 id, ReferenceLineTool *item)
+{
+    m_referenceLineMap.insert(id, item);
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+void VAbstractPattern::removeReferenceLine(qint32 id)
+{
+    m_referenceLineMap.remove(id);
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+void VAbstractPattern::clearReferenceLineMap()
+{
+    m_referenceLineMap.clear();
 }
 
 //---------------------------------------------------------------------------------------------------------------------

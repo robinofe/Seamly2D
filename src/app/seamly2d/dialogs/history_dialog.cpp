@@ -78,7 +78,7 @@
 #include <QScrollBar>
 
 // We need this enum in case we will add or delete a column. It also makes code more readable.
-enum {CursorColumn = 0, IdColumn, NameColumn, DescColumn, LengthColumn, AngleColumn};
+enum {CursorColumn = 0, IdColumn, NameColumn, DescColumn, LengthColumn, AngleColumn, DependencyStatusColumn};
 
 //---------------------------------------------------------------------------------------------------------------------
 /// @brief HistoryDialog create dialog
@@ -258,6 +258,20 @@ void HistoryDialog::fillTable()
     header->setSectionResizeMode(DescColumn, QHeaderView::Stretch);
 
     QVector<VToolRecord> history = m_doc->getBlockHistory();
+    QHash<quint32, int> parentCounts;
+    QHash<quint32, int> childCounts;
+    for (const VToolRecord &record : history)
+    {
+        const QVector<VToolDependency> dependencies = m_doc->getDirectDependencies(record.getId(), data);
+        childCounts.insert(record.getId(), dependencies.size());
+        for (const VToolDependency &dependency : dependencies)
+        {
+            if (dependency.id != NULL_ID)
+            {
+                parentCounts[dependency.id]++;
+            }
+        }
+    }
     qint32 currentRow = -1;
     qint32 count = 0;
     ui->tableWidget->setRowCount(history.size());//Set Row count to number of Tool history records
@@ -317,6 +331,40 @@ void HistoryDialog::fillTable()
                 ui->tableWidget->setColumnWidth(AngleColumn, 120);
                 ui->tableWidget->setItem(currentRow, AngleColumn, item); //6th column is Tool angle formula
                 ui->tableWidget->resizeRowToContents(currentRow);
+            }
+
+            {
+                const int parents = parentCounts.value(rowData.id);
+                const int children = childCounts.value(rowData.id);
+                QString status;
+                QColor color;
+                if (parents == 0 && children == 0)
+                {
+                    status = tr("Independent, unused");
+                    color = QColor(180, 120, 0);
+                }
+                else if (parents == 0)
+                {
+                    status = tr("Independent root");
+                    color = QColor(0, 125, 70);
+                }
+                else if (children == 0)
+                {
+                    status = tr("Dependent, unused");
+                    color = QColor(120, 120, 120);
+                }
+                else
+                {
+                    status = tr("Dependent");
+                    color = QColor(45, 95, 170);
+                }
+
+                auto *item = new QTableWidgetItem(status);
+                item->setToolTip(tr("%1 direct parent(s), %2 direct dependent object(s)").arg(parents).arg(children));
+                item->setForeground(color);
+                item->setFlags(item->flags() ^ Qt::ItemIsEditable);
+                ui->tableWidget->setColumnWidth(DependencyStatusColumn, 150);
+                ui->tableWidget->setItem(currentRow, DependencyStatusColumn, item);
             }
             ++count;
         }
@@ -725,6 +773,7 @@ void HistoryDialog::initializeTable()
     ui->tableWidget->setHorizontalHeaderItem(DescColumn, new QTableWidgetItem(tr("Description")));
     ui->tableWidget->setHorizontalHeaderItem(LengthColumn, new QTableWidgetItem(tr("Radius / Length")));
     ui->tableWidget->setHorizontalHeaderItem(AngleColumn, new QTableWidgetItem(tr("Angle")));
+    ui->tableWidget->setHorizontalHeaderItem(DependencyStatusColumn, new QTableWidgetItem(tr("Dependency status")));
 }
 
 //---------------------------------------------------------------------------------------------------------------------

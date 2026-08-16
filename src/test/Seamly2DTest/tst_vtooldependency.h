@@ -23,7 +23,12 @@ private slots:
     void directDependencies();
     void recursiveDependencies();
     void structuredDependencies();
+    void unusedNodeDependencies();
     void recursiveFormulaDependencies();
+    void referenceLengthFormulaIsTracked();
+    void referenceLengthSchema();
+    void referenceLengthUndo();
+    void internalPathReferenceCounts();
     void dependencyDialog();
     void referenceChangeRequestsFullParse();
     void childReferenceChangeRequestsFullParse();

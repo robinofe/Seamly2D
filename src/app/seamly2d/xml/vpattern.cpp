@@ -56,6 +56,7 @@
 #include "../vtools/tools/drawTools/drawtools.h"
 #include "../vtools/tools/nodeDetails/nodedetails.h"
 #include "../tools/images/image_tool.h"
+#include "../tools/reference_lines/reference_line_tool.h"
 #include "../ifc/exception/vexceptionobjecterror.h"
 #include "../ifc/exception/vexceptionwrongid.h"
 #include "../ifc/exception/vexceptionconversionerror.h"
@@ -701,7 +702,8 @@ VNodeDetail VPattern::parsePieceNode(const QDomElement &domElement) const
 
 void VPattern::parseDraftBlockElement(const QDomNode &node, const Document &parse)
 {
-    QStringList tags = QStringList() << TagCalculation << TagModeling << TagPieces << TagGroups << TagDraftImages;
+    QStringList tags = QStringList() << TagCalculation << TagModeling << TagPieces << TagGroups << TagDraftImages
+                                    << TagReferenceLines;
     QDomNode domNode = node.firstChild();
     while (domNode.isNull() == false)
     {
@@ -732,6 +734,10 @@ void VPattern::parseDraftBlockElement(const QDomNode &node, const Document &pars
                     case 4: // TagDraftImages
                         qCDebug(vXML, "Tag draft images.");
                         parseDraftImages(domElement, parse);
+                        break;
+                    case 5: // TagReferenceLines
+                        qCDebug(vXML, "Tag reference lines.");
+                        parseReferenceLines(domElement, parse);
                         break;
                     default:
                         VException e(tr("Wrong tag name '%1'.").arg(domElement.tagName()));
@@ -849,6 +855,46 @@ void VPattern::parseDraftImages(const QDomNode &node, const Document &parse)
                 throw e;
             }
         }
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+void VPattern::parseReferenceLines(const QDomNode &node, const Document &parse)
+{
+    const QDomNodeList nodeList = node.childNodes();
+    for (qint32 i = 0; i < nodeList.size(); ++i)
+    {
+        QDomElement element = nodeList.at(i).toElement();
+        if (!element.isNull() && element.tagName() == TagReferenceLine)
+        {
+            parseReferenceLineElement(element, parse);
+        }
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+void VPattern::parseReferenceLineElement(QDomElement &domElement, const Document &parse)
+{
+    ReferenceLineData referenceLine;
+    referenceLine.id = getParameterId(domElement);
+    referenceLine.name = GetParametrString(domElement, AttrName, tr("Reference length"));
+    referenceLine.formula = GetParametrString(domElement, VariableFormula, QStringLiteral("10"));
+    referenceLine.xPos = GetParametrDouble(domElement, AttrXPos, "0.0");
+    referenceLine.yPos = GetParametrDouble(domElement, AttrYPos, "0.0");
+    referenceLine.angle = GetParametrDouble(domElement, AttrRotation, "0.0");
+    referenceLine.anchorObject = GetParametrUInt(domElement, AttrAnchorObject, NULL_ID_STR);
+    referenceLine.anchorPosition = GetParametrDouble(domElement, AttrAnchorPosition, "0.5");
+    referenceLine.orientation = GetParametrString(domElement, AttrOrientation, QStringLiteral("free"));
+    referenceLine.visible = getParameterBool(domElement, AttrVisible, trueStr);
+    VContainer::UpdateId(referenceLine.id);
+
+    if (parse == Document::FullParse)
+    {
+        new ReferenceLineTool(this, data, draftScene, referenceLine);
+    }
+    else if (ReferenceLineTool *item = getReferenceLine(referenceLine.id))
+    {
+        item->updateReferenceLine(referenceLine);
     }
 }
 
@@ -4113,6 +4159,7 @@ void VPattern::PrepareForParse(const Document &parse)
         m_activeDraftBlock.clear();
         patternPieces.clear();
         clearBackgroundImageMap();
+        clearReferenceLineMap();
 
         qDeleteAll(toolsOnRemove);//Remove all invisible on a scene objects.
         toolsOnRemove.clear();

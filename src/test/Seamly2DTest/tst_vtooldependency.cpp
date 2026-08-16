@@ -12,15 +12,22 @@
 #include "tst_vtooldependency.h"
 
 #include "../ifc/xml/vabstractpattern.h"
+#include "../ifc/xml/vpatternconverter.h"
 #include "../ifc/xml/vtoolrecord.h"
 #include "../vgeometry/vpointf.h"
 #include "../vpatterndb/vcontainer.h"
+#include "../vpatterndb/vpiecenode.h"
 #include "../vpatterndb/variables/vinternalvariable.h"
 #include "../vtools/tools/vabstracttool.h"
+#include "../vtools/undocommands/addreferenceline.h"
+#include "../vtools/undocommands/savepiecepathoptions.h"
 #include "../vtools/undocommands/savetooloptions.h"
 
 #include <QCheckBox>
 #include <QDialog>
+#include <QPushButton>
+#include <QTemporaryFile>
+#include <QTextStream>
 #include <QTreeWidget>
 #include <QtTest>
 
@@ -32,6 +39,7 @@ public:
     void load(const QString &xml, const QVector<VToolRecord> &records = QVector<VToolRecord>())
     {
         QVERIFY(setContent(xml));
+        m_activeDraftBlock = QStringLiteral("Block");
         m_history.clear();
         if (records.isEmpty())
         {
@@ -46,13 +54,16 @@ public:
     }
 
     void CreateEmptyFile() override {}
-    void IncrementReferens(quint32) const override {}
-    void DecrementReferens(quint32) const override {}
+    void IncrementReferens(quint32 id) const override { increments.append(id); }
+    void DecrementReferens(quint32 id) const override { decrements.append(id); }
     QStringList GetCurrentAlphabet() const override { return QStringList(); }
     QString GenerateLabel(const LabelType &, const QString & = QString()) const override { return QString(); }
     QString GenerateSuffix(const QString &) const override { return QString(); }
     void UpdateToolData(const quint32 &, VContainer *) override {}
     void LiteParseTree(const Document &) override {}
+
+    mutable QVector<quint32> increments;
+    mutable QVector<quint32> decrements;
 };
 
 class ToolVariable : public VInternalVariable
@@ -206,6 +217,27 @@ void TST_VToolDependency::structuredDependencies()
     QCOMPARE(nodeDependencies.at(0).name, QStringLiteral("A18"));
 }
 
+void TST_VToolDependency::unusedNodeDependencies()
+{
+    const QString xml = QStringLiteral(
+        "<pattern><draftBlock name=\"Block\"><calculation>"
+        "<point id=\"1\" name=\"A18\" type=\"single\"/>"
+        "</calculation><modeling>"
+        "<point id=\"136\" idObject=\"1\" type=\"modeling\" inUse=\"false\"/>"
+        "</modeling></draftBlock></pattern>");
+    QVector<VToolRecord> records;
+    records << VToolRecord(1, Tool::BasePoint, QStringLiteral("Block"))
+            << VToolRecord(136, Tool::NodePoint, QStringLiteral("Block"));
+
+    DependencyPattern pattern;
+    pattern.load(xml, records);
+    const Unit unit = Unit::Cm;
+    VContainer data(nullptr, &unit);
+    data.UpdateGObject(1, new VPointF(0, 0, QStringLiteral("A18"), 0, 0));
+
+    QVERIFY(pattern.getDirectDependencies(1, &data).isEmpty());
+}
+
 void TST_VToolDependency::recursiveFormulaDependencies()
 {
     const QString xml = QStringLiteral(
@@ -240,6 +272,133 @@ void TST_VToolDependency::recursiveFormulaDependencies()
     QCOMPARE(recursive.at(1).depth, 2);
 }
 
+void TST_VToolDependency::referenceLengthFormulaIsTracked()
+{
+    const QString xml = QStringLiteral(
+        "<pattern><draftBlock name=\"Block\"><calculation/>"
+        "<referenceLines><referenceLine id=\"10\" formula=\"@waist + 2\"/></referenceLines>"
+        "</draftBlock></pattern>");
+    DependencyPattern pattern;
+    pattern.load(xml, {VToolRecord(1, Tool::BasePoint, QStringLiteral("Block"))});
+
+    const QVector<VFormulaField> expressions = pattern.ListExpressions();
+    bool found = false;
+    for (const VFormulaField &field : expressions)
+    {
+        if (field.element.tagName() == VAbstractPattern::TagReferenceLine)
+        {
+            QCOMPARE(field.expression, QStringLiteral("@waist + 2"));
+            QCOMPARE(field.attribute, VAbstractPattern::VariableFormula);
+            found = true;
+        }
+    }
+    QVERIFY(found);
+}
+
+void TST_VToolDependency::referenceLengthSchema()
+{
+    const QString sample = QStringLiteral(SRCDIR "../../app/share/samples/patterns/trousers.sm2d");
+    QFile sampleFile(sample);
+    QVERIFY(sampleFile.open(QIODevice::ReadOnly));
+    QTemporaryFile source;
+    QVERIFY(source.open());
+    QCOMPARE(source.write(sampleFile.readAll()), sampleFile.size());
+    source.flush();
+    sampleFile.close();
+
+    VPatternConverter converter(source.fileName());
+    QFile converted(converter.Convert());
+    QVERIFY(converted.open(QIODevice::ReadOnly));
+
+    QDomDocument pattern;
+    QVERIFY(pattern.setContent(&converted));
+    converted.close();
+
+    QDomElement draftBlock = pattern.elementsByTagName(VAbstractPattern::TagDraftBlock).at(0).toElement();
+    QVERIFY(!draftBlock.isNull());
+    QDomElement referenceLines = pattern.createElement(VAbstractPattern::TagReferenceLines);
+    QDomElement referenceLine = pattern.createElement(VAbstractPattern::TagReferenceLine);
+    referenceLine.setAttribute(QStringLiteral("id"), QStringLiteral("900000"));
+    referenceLine.setAttribute(QStringLiteral("name"), QStringLiteral("Hip check"));
+    referenceLine.setAttribute(QStringLiteral("formula"), QStringLiteral("@hip"));
+    referenceLine.setAttribute(QStringLiteral("xPos"), QStringLiteral("10"));
+    referenceLine.setAttribute(QStringLiteral("yPos"), QStringLiteral("20"));
+    referenceLine.setAttribute(QStringLiteral("rotation"), QStringLiteral("0"));
+    referenceLine.setAttribute(QStringLiteral("anchorObject"), QStringLiteral("0"));
+    referenceLine.setAttribute(QStringLiteral("anchorPosition"), QStringLiteral("0.5"));
+    referenceLine.setAttribute(QStringLiteral("orientation"), QStringLiteral("horizontal"));
+    referenceLine.setAttribute(QStringLiteral("visible"), QStringLiteral("true"));
+    referenceLines.appendChild(referenceLine);
+    draftBlock.appendChild(referenceLines);
+
+    QTemporaryFile file;
+    QVERIFY(file.open());
+    QTextStream output(&file);
+    pattern.save(output, 4);
+    output.flush();
+    file.flush();
+
+    bool valid = true;
+    try
+    {
+        VDomDocument::ValidateXML(VPatternConverter::CurrentSchema, file.fileName());
+    }
+    catch (...)
+    {
+        valid = false;
+    }
+    QVERIFY(valid);
+}
+
+void TST_VToolDependency::referenceLengthUndo()
+{
+    DependencyPattern pattern;
+    pattern.load(QStringLiteral(
+        "<pattern><draftBlock name=\"Block\"><calculation/><referenceLines/></draftBlock></pattern>"));
+
+    QDomElement element = pattern.createElement(VAbstractPattern::TagReferenceLine);
+    element.setAttribute(QStringLiteral("id"), QStringLiteral("10"));
+    element.setAttribute(QStringLiteral("name"), QStringLiteral("Hip check"));
+    element.setAttribute(QStringLiteral("formula"), QStringLiteral("@hip"));
+
+    AddReferenceLine command(element, &pattern);
+    command.redo();
+    QVERIFY(!pattern.elementById(10, VAbstractPattern::TagReferenceLine).isNull());
+
+    command.undo();
+    QVERIFY(pattern.elementById(10, VAbstractPattern::TagReferenceLine).isNull());
+
+    command.redo();
+    QVERIFY(!pattern.elementById(10, VAbstractPattern::TagReferenceLine).isNull());
+}
+
+void TST_VToolDependency::internalPathReferenceCounts()
+{
+    DependencyPattern pattern;
+    pattern.load(QStringLiteral(
+        "<pattern><draftBlock name=\"Block\"><calculation/><modeling>"
+        "<path id=\"6\"><nodes/></path></modeling></draftBlock></pattern>"),
+        {VToolRecord(6, Tool::InternalPath, QStringLiteral("Block"))});
+    const Unit unit = Unit::Cm;
+    VContainer data(nullptr, &unit);
+
+    VPiecePath oldPath;
+    oldPath.Append(VPieceNode(1, Tool::NodePoint));
+    VPiecePath newPath;
+    newPath.Append(VPieceNode(2, Tool::NodePoint));
+
+    SavePiecePathOptions command(NULL_ID, oldPath, newPath, &pattern, &data, 6);
+    command.redo();
+    QCOMPARE(pattern.increments, QVector<quint32>{2});
+    QCOMPARE(pattern.decrements, QVector<quint32>{1});
+
+    pattern.increments.clear();
+    pattern.decrements.clear();
+    command.undo();
+    QCOMPARE(pattern.increments, QVector<quint32>{1});
+    QCOMPARE(pattern.decrements, QVector<quint32>{2});
+}
+
 void TST_VToolDependency::dependencyDialog()
 {
     DependencyPattern pattern;
@@ -256,6 +415,8 @@ void TST_VToolDependency::dependencyDialog()
     QString firstType;
     QString firstReference;
     QString firstSuggestion;
+    bool openPropertiesShown = false;
+    bool replaceNodeShown = false;
 
     QTimer::singleShot(0, qApp, [&]()
     {
@@ -278,6 +439,12 @@ void TST_VToolDependency::dependencyDialog()
                 firstReference = tree->topLevelItem(0)->text(2);
                 firstSuggestion = tree->topLevelItem(0)->text(4);
                 tree->itemClicked(tree->topLevelItem(0), 0);
+                auto *openButton = dialog->findChild<QPushButton *>(
+                    QStringLiteral("dependencyOpenPropertiesButton"));
+                auto *replaceButton = dialog->findChild<QPushButton *>(
+                    QStringLiteral("dependencyReplaceNodeButton"));
+                openPropertiesShown = openButton != nullptr && !openButton->isHidden();
+                replaceNodeShown = replaceButton != nullptr && !replaceButton->isHidden();
             }
         }
         if (recursive != nullptr)
@@ -297,6 +464,8 @@ void TST_VToolDependency::dependencyDialog()
     QVERIFY(!firstType.isEmpty());
     QVERIFY(!firstReference.isEmpty());
     QCOMPARE(firstSuggestion, QStringLiteral("Select the object and replace base point in Properties"));
+    QVERIFY(openPropertiesShown);
+    QVERIFY(!replaceNodeShown);
     QVERIFY(!highlightSpy.isEmpty());
     QCOMPARE(highlightSpy.at(0).at(0).toUInt(), quint32(2));
     QCOMPARE(highlightSpy.at(0).at(1).toBool(), true);

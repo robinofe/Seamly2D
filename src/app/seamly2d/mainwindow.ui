@@ -247,6 +247,7 @@
      </property>
      <addaction name="lineTool_Action"/>
      <addaction name="lineIntersect_Action"/>
+     <addaction name="referenceLength_Action"/>
     </widget>
     <widget class="QMenu" name="curves_Menu">
      <property name="title">
@@ -4813,6 +4814,17 @@
    </property>
    <property name="shortcut">
     <string notr="true">Alt+I</string>
+   </property>
+  </action>
+  <action name="referenceLength_Action">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Add Reference Length...</string>
+   </property>
+   <property name="toolTip">
+    <string>Add a non-printing reference length</string>
    </property>
   </action>
   <action name="previousDraftBlock_Action">

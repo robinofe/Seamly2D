@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core testlib gui printsupport xml 
+QT       += core testlib gui printsupport multimedia xml
 
 TARGET = Seamly2DTests
 

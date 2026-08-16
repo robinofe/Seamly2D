@@ -149,6 +149,8 @@ private:
     void           ParseDraftStage(const QDomNode &node, const Document &parse, const Draw &stage);
     void           parseDraftImages(const QDomNode &node, const Document &parse);
     void           parseImageElement(QDomElement &domElement, const Document &parse);
+    void           parseReferenceLines(const QDomNode &node, const Document &parse);
+    void           parseReferenceLineElement(QDomElement &domElement, const Document &parse);
     void           parsePieceElement(QDomElement &domElement, const Document &parse);
     void           parsePieceNodes(const QDomElement &domElement, VPiece &piece, qreal width, bool closed) const;
     void           ParsePieceDataTag(const QDomElement &domElement, VPiece &piece) const;

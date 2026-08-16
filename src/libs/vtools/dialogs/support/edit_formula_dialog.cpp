@@ -57,6 +57,7 @@
 #include <QAbstractItemView>
 #include <QApplication>
 #include <QCheckBox>
+#include <QCompleter>
 #include <QCursor>
 #include <QDialog>
 #include <QFont>
@@ -76,6 +77,7 @@
 #include <QTableWidgetItem>
 #include <QTextCursor>
 #include <QToolButton>
+#include <QScrollBar>
 #include <QWidget>
 #include <Qt>
 #include <new>
@@ -118,6 +120,7 @@ EditFormulaDialog::EditFormulaDialog(const VContainer *data, const quint32 &tool
     , m_postfix(QString())
     , m_restoreCursor(false)
     , m_source(source)
+    , m_variableCompleter(nullptr)
 {
     ui->setupUi(this);
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
@@ -136,6 +139,7 @@ EditFormulaDialog::EditFormulaDialog(const VContainer *data, const quint32 &tool
     setDialogPosition();
 
     initializeVariables();
+    initializeVariableCompleter();
     initializeFormulaUi(ui);
     ui->plainTextEditFormula->installEventFilter(this);
     ui->menuTab_ListWidget->setCurrentRow(VariableTab::Measurements);
@@ -204,6 +208,101 @@ EditFormulaDialog::~EditFormulaDialog()
     }
 #endif
     delete ui;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+void EditFormulaDialog::initializeVariableCompleter()
+{
+    QStringList variableNames;
+    const auto variables = data->DataVariables();
+    variableNames.reserve(variables->size());
+    for (auto i = variables->constBegin(); i != variables->constEnd(); ++i)
+    {
+        if (i.value()->Filter(toolId) == false)
+        {
+            variableNames.append(data->getTranslateVariables()->VarToUser(i.key()));
+        }
+    }
+    variableNames.removeDuplicates();
+    variableNames.sort(Qt::CaseInsensitive);
+
+    m_variableCompleter = new QCompleter(variableNames, this);
+    m_variableCompleter->setWidget(ui->plainTextEditFormula);
+    m_variableCompleter->setCaseSensitivity(Qt::CaseInsensitive);
+    m_variableCompleter->setCompletionMode(QCompleter::PopupCompletion);
+    m_variableCompleter->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
+
+    connect(m_variableCompleter, qOverload<const QString &>(&QCompleter::activated),
+            this, &EditFormulaDialog::insertCompletion);
+    ui->plainTextEditFormula->setToolTip(
+        tr("Press Ctrl+Space to complete a measurement or variable name."));
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+QString EditFormulaDialog::completionPrefix() const
+{
+    const QTextCursor cursor = ui->plainTextEditFormula->textCursor();
+    const QString text = ui->plainTextEditFormula->toPlainText();
+    int start = cursor.position();
+    while (start > 0)
+    {
+        const QChar character = text.at(start - 1);
+        if (!character.isLetterOrNumber() && character != QLatin1Char('_') && character != QLatin1Char('#') &&
+            character != QLatin1Char('@'))
+        {
+            break;
+        }
+        --start;
+    }
+    return text.mid(start, cursor.position() - start);
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+void EditFormulaDialog::insertCompletion(const QString &completion)
+{
+    QTextCursor cursor = ui->plainTextEditFormula->textCursor();
+    const QString prefix = completionPrefix();
+    cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor, prefix.length());
+    cursor.insertText(completion);
+    ui->plainTextEditFormula->setTextCursor(cursor);
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+bool EditFormulaDialog::eventFilter(QObject *object, QEvent *event)
+{
+    if (object == ui->plainTextEditFormula && event->type() == QEvent::KeyPress)
+    {
+        auto *keyEvent = static_cast<QKeyEvent *>(event);
+        if (m_variableCompleter->popup()->isVisible())
+        {
+            switch (keyEvent->key())
+            {
+                case Qt::Key_Enter:
+                case Qt::Key_Return:
+                case Qt::Key_Escape:
+                case Qt::Key_Tab:
+                case Qt::Key_Backtab:
+                    keyEvent->ignore();
+                    return false;
+                default:
+                    break;
+            }
+        }
+
+        if (keyEvent->key() == Qt::Key_Space && keyEvent->modifiers().testFlag(Qt::ControlModifier))
+        {
+            m_variableCompleter->setCompletionPrefix(completionPrefix());
+            m_variableCompleter->popup()->setCurrentIndex(m_variableCompleter->completionModel()->index(0, 0));
+
+            QRect popupRect = ui->plainTextEditFormula->cursorRect();
+            popupRect.setWidth(m_variableCompleter->popup()->sizeHintForColumn(0) +
+                               m_variableCompleter->popup()->verticalScrollBar()->sizeHint().width());
+            m_variableCompleter->complete(popupRect);
+            return true;
+        }
+    }
+
+    return DialogTool::eventFilter(object, event);
 }
 
 //---------------------------------------------------------------------------------------------------------------------

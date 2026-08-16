@@ -238,6 +238,23 @@ struct DraftImage
 Q_DECLARE_METATYPE(DraftImage)
 Q_DECLARE_TYPEINFO(DraftImage, Q_MOVABLE_TYPE);
 
+struct ReferenceLineData
+{
+    quint32 id{0};
+    QString name;
+    QString formula{QStringLiteral("10")};
+    qreal xPos{0.0};
+    qreal yPos{0.0};
+    qreal angle{0.0};
+    quint32 anchorObject{0};
+    qreal anchorPosition{0.5};
+    QString orientation{QStringLiteral("free")};
+    bool visible{true};
+};
+
+Q_DECLARE_METATYPE(ReferenceLineData)
+Q_DECLARE_TYPEINFO(ReferenceLineData, Q_MOVABLE_TYPE);
+
 enum class Direction : unsigned char
 {
     Forward = 0, // Default

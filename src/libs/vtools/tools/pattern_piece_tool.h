@@ -140,7 +140,11 @@ public slots:
     void                 updatePieceLabel();
     void                 updatePatternLabel();
     void                 updateGrainline();
-    void                 editPieceProperties();
+    void                 editPieceProperties(quint32 nodeId = NULL_ID, bool removeNode = false);
+    bool                 replacePieceNode(quint32 nodeId, quint32 pathId = NULL_ID, bool removeSection = false);
+
+signals:
+    void                 piecePropertiesClosed();
 
 protected slots:
     void                 saveMovePiece(const QPointF &ptPos);

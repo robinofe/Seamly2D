@@ -90,6 +90,7 @@ public:
 
     QVector<VPieceNode> getNodes() const;
     void                setNodes(const QVector<VPieceNode> &nodes);
+    bool                replaceSection(int first, int count, const QVector<VPieceNode> &replacement);
     QVector<VPieceNode> removeNode(const quint32 &id);
 
     PiecePathType       getType() const;

@@ -71,6 +71,7 @@
 #include "../ifc/xml/multi_size_converter.h"
 #include "../ifc/xml/vpatternconverter.h"
 #include "../tools/images/image_tool.h"
+#include "../tools/reference_lines/reference_line_tool.h"
 #include "../vformat/measurements.h"
 #include "../vgeometry/vspline.h"
 #include "../vmisc/customevents.h"
@@ -1796,6 +1797,29 @@ void MainWindow::handleImageTool()
     }
 
     ui->importImage_ToolButton->setChecked(false);
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+void MainWindow::handleReferenceLengthTool()
+{
+    ReferenceLineData referenceLine;
+    referenceLine.id = VContainer::getNextId();
+    referenceLine.name = tr("Reference length");
+    referenceLine.formula = QStringLiteral("10");
+    const QPoint viewportCenter = ui->view->viewport()->rect().center();
+    const QPointF sceneCenter = ui->view->mapToScene(viewportCenter);
+    referenceLine.xPos = sceneCenter.x();
+    referenceLine.yPos = sceneCenter.y();
+
+    auto *tool = new ReferenceLineTool(doc, pattern, draftScene, referenceLine);
+    if (tool->configure())
+    {
+        tool->addToFile();
+    }
+    else
+    {
+        delete tool;
+    }
 }
 
 //Pieces
@@ -5145,6 +5169,7 @@ void MainWindow::setToolsEnabled(bool enable)
 
     // Images
     ui->importImage_Action->setEnabled(draftTools);
+    ui->referenceLength_Action->setEnabled(draftTools);
 
     //Details
     ui->union_Action->setEnabled(pieceTools);
@@ -6245,6 +6270,7 @@ void MainWindow::createActions()
         ui->draft_ToolBox->setCurrentWidget(ui->backgroundImage_Page);
         handleImageTool();
     });
+    connect(ui->referenceLength_Action, &QAction::triggered, this, &MainWindow::handleReferenceLengthTool);
 
     //Tools->Layout submenu actions
     connect(ui->newPrintLayout_Action, &QAction::triggered, this, [this]
@@ -7277,7 +7303,19 @@ void MainWindow::exportDraftBlocksAs()
     int hScrollBar = ui->view->horizontalScrollBar()->value();
     QTransform viewTransform = ui->view->transform();
 
-    //Include all items in draft scene
+    // Reference lengths are drafting aids and must not become part of an exported draft.
+    QVector<QPair<ReferenceLineTool *, bool>> referenceLineVisibility;
+    const QList<QGraphicsItem *> sceneItems = draftScene->items();
+    for (QGraphicsItem *item : sceneItems)
+    {
+        if (auto *referenceLine = dynamic_cast<ReferenceLineTool *>(item))
+        {
+            referenceLineVisibility.append(qMakePair(referenceLine, referenceLine->isVisible()));
+            referenceLine->setVisible(false);
+        }
+    }
+
+    //Include all construction items in draft scene
     ui->view->zoomToFit();
     ui->view->repaint();
     ui->view->zoom100Percent();
@@ -7394,6 +7432,11 @@ void MainWindow::exportDraftBlocksAs()
     doc->changeActiveDraftBlock(doc->getActiveDraftBlockName(), Document::FullParse);
 
     draftScene->setOriginsVisible(qApp->Settings()->getShowAxisOrigin());
+
+    for (const auto &entry : referenceLineVisibility)
+    {
+        entry.first->setVisible(entry.second);
+    }
 
     // Restore scale, scrollbars, current active draft block
     ui->view->setTransform(viewTransform);

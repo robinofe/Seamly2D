@@ -366,6 +366,35 @@ void PatternPieceDialog::SetPiece(const VPiece &piece)
 }
 
 //---------------------------------------------------------------------------------------------------------------------
+bool PatternPieceDialog::selectMainPathNode(quint32 nodeId, bool removeNode)
+{
+    ui->pages_StackedWidget->setCurrentIndex(TabOrder::Paths);
+    ui->menuTab_ListWidget->setCurrentRow(TabOrder::Paths);
+    ui->tabWidget->setCurrentIndex(0);
+
+    for (int row = 0; row < ui->mainPath_ListWidget->count(); ++row)
+    {
+        QListWidgetItem *item = ui->mainPath_ListWidget->item(row);
+        const VPieceNode node = qvariant_cast<VPieceNode>(item->data(Qt::UserRole));
+        if (node.GetId() != nodeId)
+        {
+            continue;
+        }
+
+        ui->mainPath_ListWidget->setCurrentItem(item);
+        ui->mainPath_ListWidget->scrollToItem(item);
+        if (removeNode)
+        {
+            delete ui->mainPath_ListWidget->takeItem(row);
+            validateObjects(isMainPathValid());
+            nodeListChanged();
+        }
+        return true;
+    }
+    return false;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
 /// @brief ChosenObject adds selected object of id and type to list of path items.
 /// @param id id of object (points, arcs, splines, spline paths)
 /// @param type type of scene object

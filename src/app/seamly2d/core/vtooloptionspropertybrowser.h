@@ -182,6 +182,8 @@ private:
                            const QString &id, GOType objType);
 
     void addPropertyFormula(const QString &propertyName, const VFormula &formula, const QString &attrName);
+    void addCalculatedLength(qreal length);
+    void updateCalculatedLength(qreal length);
     void addPropertyParentPointName(const QString &pointName, const QString &propertyName,
                                     const QString &propertyAttribute);
 

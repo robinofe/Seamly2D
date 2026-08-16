@@ -276,6 +276,22 @@ void VPiecePath::setNodes(const QVector<VPieceNode> &nodes)
     d->m_nodes = nodes;
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+bool VPiecePath::replaceSection(int first, int count, const QVector<VPieceNode> &replacement)
+{
+    if (first < 0 || count <= 0 || first + count > d->m_nodes.size())
+    {
+        return false;
+    }
+
+    d->m_nodes.remove(first, count);
+    for (int index = 0; index < replacement.size(); ++index)
+    {
+        d->m_nodes.insert(first + index, replacement.at(index));
+    }
+    return true;
+}
+
 QVector<VPieceNode> VPiecePath::removeNode(const quint32 &id)
 {
     QVector<VPieceNode> nodes = getNodes();
@@ -612,11 +628,6 @@ VSAPoint VPiecePath::EndSegment(const VContainer *data, const QVector<VPieceNode
 //---------------------------------------------------------------------------------------------------------------------
 QVector<quint32> VPiecePath::MissingNodes(const VPiecePath &path) const
 {
-    if (d->m_nodes.size() == path.nodeCount()) //-V807
-    {
-        return QVector<quint32>();
-    }
-
     QSet<quint32> set1;
     for (qint32 i = 0; i < d->m_nodes.size(); ++i)
     {

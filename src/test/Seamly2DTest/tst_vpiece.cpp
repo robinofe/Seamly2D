@@ -64,6 +64,36 @@ TST_VPiece::TST_VPiece(QObject *parent)
 }
 
 //---------------------------------------------------------------------------------------------------------------------
+void TST_VPiece::ReplaceSection()
+{
+    VPiecePath path;
+    path.Append(VPieceNode(1, Tool::NodePoint));
+    path.Append(VPieceNode(2, Tool::NodeSpline));
+    path.Append(VPieceNode(3, Tool::NodePoint));
+
+    const QVector<VPieceNode> points{VPieceNode(4, Tool::NodePoint), VPieceNode(5, Tool::NodePoint),
+                                     VPieceNode(6, Tool::NodePoint), VPieceNode(7, Tool::NodePoint)};
+    QVERIFY(path.replaceSection(1, 1, points));
+    QCOMPARE(path.nodeCount(), 6);
+    QCOMPARE(path.at(0).GetId(), quint32(1));
+    QCOMPARE(path.at(1).GetId(), quint32(4));
+    QCOMPARE(path.at(4).GetId(), quint32(7));
+    QCOMPARE(path.at(5).GetId(), quint32(3));
+
+    const QVector<VPieceNode> curve{VPieceNode(8, Tool::NodeSpline)};
+    QVERIFY(path.replaceSection(1, 4, curve));
+    QCOMPARE(path.nodeCount(), 3);
+    QCOMPARE(path.at(1).GetId(), quint32(8));
+
+    QVERIFY(path.replaceSection(1, 1, {}));
+    QCOMPARE(path.nodeCount(), 2);
+
+    QVERIFY(!path.replaceSection(-1, 1, curve));
+    QVERIFY(!path.replaceSection(1, 0, curve));
+    QVERIFY(!path.replaceSection(2, 2, curve));
+}
+
+//---------------------------------------------------------------------------------------------------------------------
 void TST_VPiece::ClearLoop()
 {
     // Input data taken from real case

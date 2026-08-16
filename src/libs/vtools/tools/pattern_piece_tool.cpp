@@ -77,6 +77,7 @@
 #include "../undocommands/deletepiece.h"
 #include "../undocommands/movepiece.h"
 #include "../undocommands/savepieceoptions.h"
+#include "../undocommands/savepiecepathoptions.h"
 #include "../undocommands/togglepieceinlayout.h"
 #include "../undocommands/toggle_piecelock.h"
 #include "../vwidgets/vabstractmainwindow.h"
@@ -86,11 +87,21 @@
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsView>
+#include <QCheckBox>
+#include <QDialogButtonBox>
+#include <QHBoxLayout>
 #include <QInputDialog>
 #include <QKeyEvent>
+#include <QLabel>
+#include <QListWidget>
+#include <QMap>
 #include <QMenu>
 #include <QMessageBox>
 #include <QPainterPathStroker>
+#include <QPushButton>
+#include <QSet>
+#include <QVBoxLayout>
+#include <algorithm>
 
 // Current version of seam allowance tag need for backward compatibility
 const quint8 PatternPieceTool::pieceVersion = 2;
@@ -2214,7 +2225,7 @@ void PatternPieceTool::UpdateLabelItem(VTextGraphicsItem *labelItem, QPointF pos
 //---------------------------------------------------------------------------------------------------------------------
 /// @brief editPieceProperties - routine to edit pattern piece properties .
 //---------------------------------------------------------------------------------------------------------------------
-void PatternPieceTool::editPieceProperties()
+void PatternPieceTool::editPieceProperties(quint32 nodeId, bool removeNode)
 {
     QSharedPointer<PatternPieceDialog> dialog = QSharedPointer<PatternPieceDialog>(new PatternPieceDialog(getData(),
                                                                                    m_id, qApp->getMainWindow()));
@@ -2222,9 +2233,376 @@ void PatternPieceTool::editPieceProperties()
     m_dialog = dialog;
     m_dialog->setModal(true);
     connect(m_dialog.data(), &DialogTool::DialogClosed, this, &PatternPieceTool::FullUpdateFromGuiOk);
+    connect(m_dialog.data(), &DialogTool::DialogClosed, this, [this](int)
+    {
+        emit piecePropertiesClosed();
+    });
     connect(m_dialog.data(), &DialogTool::DialogApplied, this, &PatternPieceTool::FullUpdateFromGuiApply);
     SetDialog();
+    if (nodeId != NULL_ID)
+    {
+        dialog->selectMainPathNode(nodeId, removeNode);
+    }
     m_dialog->show();
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+bool PatternPieceTool::replacePieceNode(quint32 nodeId, quint32 pathId, bool removeSection)
+{
+    const VPiece oldPiece = VAbstractTool::data.GetPiece(m_id);
+    if (oldPiece.isLocked())
+    {
+        QMessageBox::information(qApp->getMainWindow(), tr("Replace node"),
+                                 tr("Unlock the pattern piece before replacing a node."));
+        return false;
+    }
+
+    const VPiecePath oldPath = pathId == NULL_ID ? oldPiece.GetPath() : VAbstractTool::data.getPiecePath(pathId);
+    const int initialNodeIndex = oldPath.indexOfNode(nodeId);
+    if (initialNodeIndex < 0)
+    {
+        return false;
+    }
+
+    auto nodeTypeForObject = [](GOType type) -> Tool
+    {
+        switch (type)
+        {
+            case GOType::Point:
+                return Tool::NodePoint;
+            case GOType::Arc:
+                return Tool::NodeArc;
+            case GOType::EllipticalArc:
+                return Tool::NodeElArc;
+            case GOType::Spline:
+            case GOType::CubicBezier:
+                return Tool::NodeSpline;
+            case GOType::SplinePath:
+            case GOType::CubicBezierPath:
+                return Tool::NodeSplinePath;
+            default:
+                return Tool::LAST_ONE_DO_NOT_USE;
+        }
+    };
+
+    QDialog dialog(qApp->getMainWindow());
+    dialog.setWindowTitle(tr("Replace pattern piece section"));
+    dialog.resize(780, 520);
+    auto *layout = new QVBoxLayout(&dialog);
+    auto *description = new QLabel(
+        tr("Select one or more adjacent entries of the old contour, then build the replacement section in contour order. "
+           "Straight edges are represented by their end points."), &dialog);
+    description->setWordWrap(true);
+    layout->addWidget(description);
+
+    auto *columns = new QHBoxLayout;
+    auto *oldColumn = new QVBoxLayout;
+    oldColumn->addWidget(new QLabel(tr("Section to replace"), &dialog));
+    auto *oldList = new QListWidget(&dialog);
+    oldList->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    const QVector<VPieceNode> oldNodes = oldPath.getNodes();
+    for (int index = 0; index < oldNodes.size(); ++index)
+    {
+        const VPieceNode &node = oldNodes.at(index);
+        auto *item = new QListWidgetItem(VAbstractTool::data.GetGObject(node.GetId())->name(), oldList);
+        item->setData(Qt::UserRole, index);
+        item->setData(Qt::UserRole + 1, node.GetId());
+        if (index == initialNodeIndex)
+        {
+            item->setSelected(true);
+            oldList->setCurrentItem(item);
+        }
+    }
+    oldColumn->addWidget(oldList);
+    columns->addLayout(oldColumn);
+
+    auto *availableColumn = new QVBoxLayout;
+    availableColumn->addWidget(new QLabel(tr("Available geometry"), &dialog));
+    auto *availableList = new QListWidget(&dialog);
+    const auto objects = VAbstractTool::data.DataGObjects();
+    for (auto iterator = objects->constBegin(); iterator != objects->constEnd(); ++iterator)
+    {
+        const QSharedPointer<VGObject> object = iterator.value();
+        const Tool nodeType = nodeTypeForObject(object->getType());
+        if (object->getMode() != Draw::Calculation || nodeType == Tool::LAST_ONE_DO_NOT_USE ||
+            object->getIdObject() != NULL_ID)
+        {
+            continue;
+        }
+        auto *item = new QListWidgetItem(object->name(), availableList);
+        item->setData(Qt::UserRole, iterator.key());
+    }
+    availableList->sortItems();
+    availableColumn->addWidget(availableList);
+    auto *addButton = new QPushButton(tr("Add to replacement"), &dialog);
+    availableColumn->addWidget(addButton);
+    columns->addLayout(availableColumn);
+
+    auto *replacementColumn = new QVBoxLayout;
+    replacementColumn->addWidget(new QLabel(tr("New section (in contour order)"), &dialog));
+    auto *replacementList = new QListWidget(&dialog);
+    replacementColumn->addWidget(replacementList);
+    auto *removeSectionCheck = new QCheckBox(tr("Remove the selected section without replacement"), &dialog);
+    removeSectionCheck->setChecked(removeSection);
+    replacementColumn->addWidget(removeSectionCheck);
+    auto *removeButton = new QPushButton(tr("Remove"), &dialog);
+    auto *upButton = new QPushButton(tr("Move up"), &dialog);
+    auto *downButton = new QPushButton(tr("Move down"), &dialog);
+    auto *reverseButton = new QPushButton(tr("Reverse curve direction"), &dialog);
+    replacementColumn->addWidget(removeButton);
+    replacementColumn->addWidget(upButton);
+    replacementColumn->addWidget(downButton);
+    replacementColumn->addWidget(reverseButton);
+    columns->addLayout(replacementColumn);
+    layout->addLayout(columns);
+
+    connect(oldList, &QListWidget::itemSelectionChanged, &dialog, [this, oldList]()
+    {
+        for (int row = 0; row < oldList->count(); ++row)
+        {
+            QListWidgetItem *item = oldList->item(row);
+            emit doc->ShowTool(item->data(Qt::UserRole + 1).toUInt(), item->isSelected());
+        }
+    });
+    connect(availableList, &QListWidget::currentItemChanged, &dialog,
+            [this](QListWidgetItem *current, QListWidgetItem *previous)
+    {
+        if (previous != nullptr)
+        {
+            emit doc->ShowTool(previous->data(Qt::UserRole).toUInt(), false);
+        }
+        if (current != nullptr)
+        {
+            emit doc->ShowTool(current->data(Qt::UserRole).toUInt(), true);
+        }
+    });
+
+    auto addCandidate = [availableList, replacementList]()
+    {
+        QListWidgetItem *source = availableList->currentItem();
+        if (source == nullptr)
+        {
+            return;
+        }
+        auto *item = new QListWidgetItem(source->text(), replacementList);
+        item->setData(Qt::UserRole, source->data(Qt::UserRole));
+        item->setData(Qt::UserRole + 1, false);
+        replacementList->setCurrentItem(item);
+    };
+    connect(addButton, &QPushButton::clicked, &dialog, addCandidate);
+    connect(availableList, &QListWidget::itemDoubleClicked, &dialog,
+            [addCandidate](QListWidgetItem *) { addCandidate(); });
+    connect(removeButton, &QPushButton::clicked, &dialog, [replacementList]()
+    {
+        delete replacementList->takeItem(replacementList->currentRow());
+    });
+    connect(upButton, &QPushButton::clicked, &dialog, [replacementList]()
+    {
+        const int row = replacementList->currentRow();
+        if (row > 0)
+        {
+            replacementList->insertItem(row - 1, replacementList->takeItem(row));
+            replacementList->setCurrentRow(row - 1);
+        }
+    });
+    connect(downButton, &QPushButton::clicked, &dialog, [replacementList]()
+    {
+        const int row = replacementList->currentRow();
+        if (row >= 0 && row + 1 < replacementList->count())
+        {
+            replacementList->insertItem(row + 1, replacementList->takeItem(row));
+            replacementList->setCurrentRow(row + 1);
+        }
+    });
+    connect(reverseButton, &QPushButton::clicked, &dialog, [this, replacementList]()
+    {
+        QListWidgetItem *item = replacementList->currentItem();
+        if (item == nullptr)
+        {
+            return;
+        }
+        const quint32 id = item->data(Qt::UserRole).toUInt();
+        if (VAbstractTool::data.GetGObject(id)->getType() == GOType::Point)
+        {
+            return;
+        }
+        const bool reverse = !item->data(Qt::UserRole + 1).toBool();
+        item->setData(Qt::UserRole + 1, reverse);
+        item->setText(VAbstractTool::data.GetGObject(id)->name() +
+                      (reverse ? tr(" (reversed)") : QString()));
+    });
+    connect(removeSectionCheck, &QCheckBox::toggled, &dialog,
+            [replacementList, availableList, addButton, removeButton, upButton, downButton, reverseButton](bool checked)
+    {
+        replacementList->setEnabled(!checked);
+        availableList->setEnabled(!checked);
+        addButton->setEnabled(!checked);
+        removeButton->setEnabled(!checked);
+        upButton->setEnabled(!checked);
+        downButton->setEnabled(!checked);
+        reverseButton->setEnabled(!checked);
+    });
+    emit removeSectionCheck->toggled(removeSectionCheck->isChecked());
+
+    auto *status = new QLabel(&dialog);
+    status->setWordWrap(true);
+    layout->addWidget(status);
+    auto *buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, &dialog);
+    layout->addWidget(buttons);
+    connect(buttons, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
+    connect(buttons, &QDialogButtonBox::accepted, &dialog,
+            [&dialog, oldList, replacementList, removeSectionCheck, status]()
+    {
+        QList<int> rows;
+        for (QListWidgetItem *item : oldList->selectedItems())
+        {
+            rows.append(item->data(Qt::UserRole).toInt());
+        }
+        std::sort(rows.begin(), rows.end());
+        bool contiguous = !rows.isEmpty();
+        for (int i = 1; i < rows.size(); ++i)
+        {
+            contiguous = contiguous && rows.at(i) == rows.at(i - 1) + 1;
+        }
+        if (!contiguous || (replacementList->count() == 0 && !removeSectionCheck->isChecked()))
+        {
+            status->setText(PatternPieceTool::tr(
+                "Select one adjacent old section and add replacement geometry, or choose to remove it."));
+            return;
+        }
+        dialog.accept();
+    });
+
+    const int dialogResult = dialog.exec();
+    for (int row = 0; row < oldList->count(); ++row)
+    {
+        emit doc->ShowTool(oldList->item(row)->data(Qt::UserRole + 1).toUInt(), false);
+    }
+    if (availableList->currentItem() != nullptr)
+    {
+        emit doc->ShowTool(availableList->currentItem()->data(Qt::UserRole).toUInt(), false);
+    }
+    if (dialogResult != QDialog::Accepted)
+    {
+        return false;
+    }
+
+    QList<int> selectedRows;
+    for (QListWidgetItem *item : oldList->selectedItems())
+    {
+        selectedRows.append(item->data(Qt::UserRole).toInt());
+    }
+    std::sort(selectedRows.begin(), selectedRows.end());
+    const int first = selectedRows.constFirst();
+    const int last = selectedRows.constLast();
+
+    const int replacementCount = removeSectionCheck->isChecked() ? 0 : replacementList->count();
+    const QString settingsWarning = replacementCount == 0
+        ? tr("The selected section and its corner, notch, and seam allowance settings will be removed. Continue?")
+        : tr("The number of contour entries changes. Seam allowance formulas at the section boundaries will be kept, "
+             "but intermediate corner and notch settings cannot be transferred unambiguously. Continue?");
+    if (replacementCount != last - first + 1 &&
+        QMessageBox::question(qApp->getMainWindow(), tr("Replace pattern piece section"), settingsWarning,
+                              QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel) != QMessageBox::Yes)
+    {
+        return false;
+    }
+
+    QVector<VPieceNode> replacementNodes;
+    for (int row = 0; row < replacementCount; ++row)
+    {
+        QListWidgetItem *item = replacementList->item(row);
+        const quint32 objectId = item->data(Qt::UserRole).toUInt();
+        replacementNodes.append(VPieceNode(objectId,
+                                            nodeTypeForObject(VAbstractTool::data.GetGObject(objectId)->getType()),
+                                            item->data(Qt::UserRole + 1).toBool()));
+    }
+
+    // Preserve all node settings for an unambiguous 1:1 mapping. For a changed node count, keep the seam allowance
+    // formulas at the section boundaries; settings inside the replaced section must be reviewed by the user.
+    if (replacementNodes.size() == last - first + 1)
+    {
+        for (int i = 0; i < replacementNodes.size(); ++i)
+        {
+            const quint32 objectId = replacementNodes.at(i).GetId();
+            const Tool type = replacementNodes.at(i).GetTypeTool();
+            const bool reverse = replacementNodes.at(i).GetReverse();
+            replacementNodes[i] = oldNodes.at(first + i);
+            replacementNodes[i].SetId(objectId);
+            replacementNodes[i].SetTypeTool(type);
+            replacementNodes[i].SetReverse(reverse);
+        }
+    }
+    else
+    {
+        if (!replacementNodes.isEmpty())
+        {
+            replacementNodes.first().setBeforeSAFormula(oldNodes.at(first).GetFormulaSABefore());
+            replacementNodes.last().setAfterSAFormula(oldNodes.at(last).GetFormulaSAAfter());
+        }
+    }
+
+    VPiecePath candidatePath = oldPath;
+    candidatePath.replaceSection(first, last - first + 1, replacementNodes);
+    const QVector<QPointF> candidatePoints = candidatePath.PathPoints(&(VAbstractTool::data));
+    QSet<quint32> pointIds;
+    bool uniquePoints = true;
+    for (const VPieceNode &candidateNode : candidatePath.getNodes())
+    {
+        const QSharedPointer<VGObject> object = VAbstractTool::data.GetGObject(candidateNode.GetId());
+        const quint32 objectId = object->getIdObject() == NULL_ID ? candidateNode.GetId() : object->getIdObject();
+        if (candidateNode.GetTypeTool() == Tool::NodePoint && pointIds.contains(objectId))
+        {
+            uniquePoints = false;
+            break;
+        }
+        if (candidateNode.GetTypeTool() == Tool::NodePoint)
+        {
+            pointIds.insert(objectId);
+        }
+    }
+    const bool validMainPath = pathId != NULL_ID ||
+                               (candidatePoints.count() >= 3 && VPiece::isClockwise(candidatePoints));
+    const bool validAuxiliaryPath = pathId == NULL_ID || candidatePoints.count() >= 2;
+    if (!validMainPath || !validAuxiliaryPath || !uniquePoints)
+    {
+        QMessageBox::warning(qApp->getMainWindow(), tr("Replace pattern piece section"),
+                             tr("The replacement does not form a valid continuous path. The pattern piece was not changed."));
+        return false;
+    }
+
+    QVector<VPieceNode> preparedNodes;
+    preparedNodes.reserve(replacementNodes.size());
+    for (VPieceNode replacementNode : replacementNodes)
+    {
+        const quint32 preparedId = PrepareNode(replacementNode, m_pieceScene, doc, &(VAbstractTool::data));
+        if (preparedId == NULL_ID)
+        {
+            return false;
+        }
+        replacementNode.SetId(preparedId);
+        preparedNodes.append(replacementNode);
+        initializeNode(replacementNode, m_pieceScene, &(VAbstractTool::data), doc, this);
+    }
+
+    if (pathId == NULL_ID)
+    {
+        VPiece newPiece = oldPiece;
+        newPiece.GetPath().replaceSection(first, last - first + 1, preparedNodes);
+        auto *command = new SavePieceOptions(oldPiece, newPiece, doc, m_id);
+        command->setText(tr("Replace pattern piece section"));
+        connect(command, &SavePieceOptions::NeedLiteParsing, doc, &VAbstractPattern::LiteParseTree);
+        qApp->getUndoStack()->push(command);
+    }
+    else
+    {
+        VPiecePath newPath = oldPath;
+        newPath.replaceSection(first, last - first + 1, preparedNodes);
+        auto *command = new SavePiecePathOptions(m_id, oldPath, newPath, doc, &(VAbstractTool::data), pathId);
+        command->setText(tr("Replace pattern piece path section"));
+        qApp->getUndoStack()->push(command);
+    }
+    return true;
 }
 
 //---------------------------------------------------------------------------------------------------------------------

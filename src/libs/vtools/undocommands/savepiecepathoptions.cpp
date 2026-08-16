@@ -91,6 +91,7 @@ void SavePiecePathOptions::undo()
         InternalPathTool::addNodes(doc, domElement, m_oldPath);
 
         IncrementReferences(m_oldPath.MissingNodes(m_newPath));
+        DecrementReferences(m_newPath.MissingNodes(m_oldPath));
 
         SCASSERT(m_data);
         m_data->UpdatePiecePath(nodeId, m_oldPath);
@@ -121,6 +122,7 @@ void SavePiecePathOptions::redo()
         doc->RemoveAllChildren(domElement);//Very important to clear before rewrite
         InternalPathTool::addNodes(doc, domElement, m_newPath);
 
+        IncrementReferences(m_newPath.MissingNodes(m_oldPath));
         DecrementReferences(m_oldPath.MissingNodes(m_newPath));
 
         SCASSERT(m_data);

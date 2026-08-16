@@ -76,6 +76,7 @@ class QDomElement;
 class VPiecePath;
 class VPieceNode;
 class PenToolBar;
+class ReferenceLineTool;
 
 enum class Document : char { LiteParse, LiteBlockParse, FullParse };
 enum class LabelType : char {NewPatternPiece, NewLabel};
@@ -197,6 +198,10 @@ public:
     void                           removeBackgroundImage(qint32 id);
 
     void                           clearBackgroundImageMap();
+    ReferenceLineTool             *getReferenceLine(qint32 id);
+    void                           addReferenceLine(qint32 id, ReferenceLineTool *item);
+    void                           removeReferenceLine(qint32 id);
+    void                           clearReferenceLineMap();
     void                           clearHistory();
 
     QMap<GHeights, bool>           GetGradationHeights() const;
@@ -297,6 +302,7 @@ public:
     QString                        useGroupLineWeight(quint32 toolId, QString weight);
 
     QDomElement                    createDraftImages();
+    QDomElement                    createReferenceLines();
 
     QPair<bool, QMap<quint32, quint32> > parseItemElement(const QDomElement &domElement);
 
@@ -339,6 +345,8 @@ public:
 
     static const QString TagDraftImages;
     static const QString TagDraftImage;
+    static const QString TagReferenceLines;
+    static const QString TagReferenceLine;
     static const QString AttrId;
     static const QString AttrFilename;
     static const QString AttrLocked;
@@ -356,6 +364,8 @@ public:
     static const QString AttrXOffset;
     static const QString AttrYOffset;
     static const QString AttrBasepoint;
+    static const QString AttrAnchorObject;
+    static const QString AttrAnchorPosition;
 
 
     static const QString AttrName;
@@ -534,6 +544,7 @@ protected:
     QVector<VToolRecord>      m_history;     /// @brief history history records.
     QStringList               patternPieces; /// @brief patternPieces list of patern pieces names for combobox.
     QMap<qint32, ImageItem *> m_imageMap{};  /// @brief m_imageMap stores the image items and their id.
+    QMap<qint32, ReferenceLineTool *> m_referenceLineMap{};
     mutable bool              modified;      /// @brief modified keep state of the document for cases that do not cover QUndoStack.
 
     static QHash<quint32, VDataTool*>  tools;             /// @brief tools list with pointer on tools.

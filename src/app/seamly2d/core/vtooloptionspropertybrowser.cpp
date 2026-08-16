@@ -58,6 +58,7 @@
 #include "vformulaproperty.h"
 #include "../core/application_2d.h"
 #include "../ifc/ifcdef.h"
+#include "../vgeometry/vabstractcurve.h"
 #include "../vgeometry/vcubicbezier.h"
 #include "../vgeometry/vcubicbezierpath.h"
 #include "../vmisc/def.h"
@@ -78,6 +79,11 @@
 #include <QHBoxLayout>
 #include <QDebug>
 #include <QRegularExpression>
+
+namespace
+{
+const QString calculatedLengthId = QStringLiteral("calculatedLength");
+}
 
 //---------------------------------------------------------------------------------------------------------------------
 VToolOptionsPropertyBrowser::VToolOptionsPropertyBrowser(const VContainer *data, QDockWidget *parent)
@@ -553,6 +559,27 @@ void VToolOptionsPropertyBrowser::addPropertyFormula(const QString &propertyName
     VFormulaProperty *itemLength = new VFormulaProperty(propertyName);
     itemLength->SetFormula(formula);
     addProperty(itemLength, attrName);
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+void VToolOptionsPropertyBrowser::addCalculatedLength(qreal length)
+{
+    auto *property = new VPE::VStringProperty(tr("Calculated length:"));
+    property->setValue(qApp->LocaleToString(qApp->fromPixel(length)) + QLatin1Char(' ') +
+                       UnitsToStr(qApp->patternUnit(), true));
+    property->setReadOnly(true);
+    property->setClearButtonEnable(false);
+    addProperty(property, calculatedLengthId);
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+void VToolOptionsPropertyBrowser::updateCalculatedLength(qreal length)
+{
+    if (idToProperty.contains(calculatedLengthId))
+    {
+        idToProperty[calculatedLengthId]->setValue(qApp->LocaleToString(qApp->fromPixel(length)) + QLatin1Char(' ') +
+                                                   UnitsToStr(qApp->patternUnit(), true));
+    }
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -2541,6 +2568,7 @@ void VToolOptionsPropertyBrowser::showOptionsToolArc(QGraphicsItem *item)
     addPropertyFormula(tr("Radius:"), tool->GetFormulaRadius(), AttrRadius);
     addPropertyFormula(tr("First angle:"), tool->GetFormulaF1(), AttrAngle1);
     addPropertyFormula(tr("Second angle:"), tool->GetFormulaF2(), AttrAngle2);
+    addCalculatedLength(tool->getData()->GeometricObject<VAbstractCurve>(tool->getId())->GetLength());
 
     addPropertyLabel(tr("Attributes"), AttrName);
     addPropertyLineColor(tool, tr("Color:"), AttrColor);
@@ -2563,6 +2591,7 @@ void VToolOptionsPropertyBrowser::showOptionsToolArcWithLength(QGraphicsItem *it
     addPropertyFormula(tr("Radius:"), tool->GetFormulaRadius(), AttrRadius);
     addPropertyFormula(tr("First angle:"), tool->GetFormulaF1(), AttrAngle1);
     addPropertyFormula(tr("Length:"), tool->GetFormulaLength(), AttrLength);
+    addCalculatedLength(tool->getData()->GeometricObject<VAbstractCurve>(tool->getId())->GetLength());
 
     addPropertyLabel(tr("Attributes"), AttrName);
     addPropertyLineColor(tool, tr("Color:"), AttrColor);
@@ -2696,6 +2725,9 @@ void VToolOptionsPropertyBrowser::showOptionsToolLine(QGraphicsItem *item)
     addPropertyLineName(tool, tr("Name:"), true);
     addObjectProperty(tool, tool->FirstPointName(), tr("First point:"), AttrFirstPoint, GOType::Point);
     addObjectProperty(tool, tool->SecondPointName(), tr("Second point:"), AttrSecondPoint, GOType::Point);
+
+    addPropertyLabel(tr("Geometry"), AttrName);
+    addCalculatedLength(tool->line().length());
 
     addPropertyLabel(tr("Attributes"), AttrName);
     addPropertyLineColor(tool, tr("Color:"), AttrLineColor);
@@ -2926,6 +2958,7 @@ void VToolOptionsPropertyBrowser::showOptionsToolSpline(QGraphicsItem *item)
     angle2.setToolId(tool->getId());
     angle2.setPostfix(degreeSymbol);
     addPropertyFormula(tr("C2: angle:"), angle2, AttrAngle2);
+    addCalculatedLength(spl.GetLength());
 
     addPropertyLabel(tr("Options"), AttrName);
     addPropertyEnum(tr("Smooth curve:"), {tr("No"), tr("Yes")},
@@ -2960,6 +2993,9 @@ void VToolOptionsPropertyBrowser::showOptionsToolCubicBezier(QGraphicsItem *item
     addObjectProperty(tool, spl.GetP3().name(), tr("Third point:"),  AttrPoint3, GOType::Point);
     addObjectProperty(tool, spl.GetP4().name(), tr("Fourth point:"), AttrPoint4, GOType::Point);
 
+    addPropertyLabel(tr("Geometry"), AttrName);
+    addCalculatedLength(spl.GetLength());
+
     addPropertyLabel(tr("Options"), AttrName);
     addPropertyEnum(tr("Smooth curve:"), {tr("No"), tr("Yes")},
                     tool->GetAutoSmooth() ? 1 : 0, AttrAutoSmooth);
@@ -2989,6 +3025,8 @@ void VToolOptionsPropertyBrowser::showOptionsToolSplinePath(QGraphicsItem *item)
     formView->setTitle(tr("Spline - Interactive"));
     addPropertyLabel(tr("Selection"), AttrName);
     addPropertyCurveName(tool, tr("Name:"), tr("SplPath_"), spl.FirstPoint().name(), spl.LastPoint().name(), true);
+    addPropertyLabel(tr("Geometry"), AttrName);
+    addCalculatedLength(spl.GetLength());
     addPropertyLabel(tr("Attributes"), AttrName);
     addPropertyLineColor(tool, tr("Color:"), AttrColor);
     addPropertyCurveLineType(tool, tr("Linetype:"));
@@ -3005,6 +3043,8 @@ void VToolOptionsPropertyBrowser::showOptionsToolCubicBezierPath(QGraphicsItem *
     formView->setTitle(tr("Spline - Fixed"));
     addPropertyLabel(tr("Selection"), AttrName);
     addPropertyCurveName(tool, tr("Name:"), tr("SplPath_"), spl.FirstPoint().name(), spl.LastPoint().name(), true);
+    addPropertyLabel(tr("Geometry"), AttrName);
+    addCalculatedLength(spl.GetLength());
     addPropertyLabel(tr("Attributes"), AttrName);
     addPropertyLineColor(tool, tr("Color:"), AttrColor);
     addPropertyCurveLineType(tool, tr("Linetype:"));
@@ -3147,6 +3187,7 @@ void VToolOptionsPropertyBrowser::showOptionsToolEllipticalArc(QGraphicsItem *it
     addPropertyFormula(tr("First angle:"), tool->GetFormulaF1(), AttrAngle1);
     addPropertyFormula(tr("Second angle:"), tool->GetFormulaF2(), AttrAngle2);
     addPropertyFormula(tr("Rotation angle:"), tool->GetFormulaRotationAngle(), AttrRotationAngle);
+    addCalculatedLength(tool->getData()->GeometricObject<VAbstractCurve>(tool->getId())->GetLength());
 
     addPropertyLabel(tr("Attributes"), AttrName);
     addPropertyLineColor(tool, tr("Color:"), AttrColor);
@@ -3240,6 +3281,7 @@ void VToolOptionsPropertyBrowser::updateOptionsToolAlongLine()
 void VToolOptionsPropertyBrowser::updateOptionsToolArc()
 {
     VToolArc *tool = qgraphicsitem_cast<VToolArc *>(currentItem);
+    updateCalculatedLength(tool->getData()->GeometricObject<VAbstractCurve>(tool->getId())->GetLength());
     idToProperty[AttrObjName]->setValue(tr("Arc_") + tool->CenterPointName() + "_" + QString().setNum(tool->getId()));
 
     QVariant valueRadius;
@@ -3280,6 +3322,7 @@ void VToolOptionsPropertyBrowser::updateOptionsToolArc()
 void VToolOptionsPropertyBrowser::updateOptionsToolArcWithLength()
 {
     VToolArcWithLength *tool = qgraphicsitem_cast<VToolArcWithLength *>(currentItem);
+    updateCalculatedLength(tool->getData()->GeometricObject<VAbstractCurve>(tool->getId())->GetLength());
 
     idToProperty[AttrObjName]->setValue(tr("Arc_") + tool->CenterPointName() + "_" + QString().setNum(tool->getId()));
 
@@ -3526,6 +3569,7 @@ void VToolOptionsPropertyBrowser::updateOptionsToolHeight()
 void VToolOptionsPropertyBrowser::updateOptionsToolLine()
 {
     VToolLine *tool = qgraphicsitem_cast<VToolLine *>(currentItem);
+    updateCalculatedLength(tool->line().length());
 
     idToProperty[AttrObjName]->setValue(tr("Line_") + tool->FirstPointName() + "_" + tool->SecondPointName());
 
@@ -3852,6 +3896,7 @@ void VToolOptionsPropertyBrowser::updateOptionsToolSpline()
 {
     VToolSpline *tool = qgraphicsitem_cast<VToolSpline *>(currentItem);
     const VSpline spl = tool->getSpline();
+    updateCalculatedLength(spl.GetLength());
     idToProperty[AttrObjName]->setValue(tr("Spl_") + spl.GetP1().name() + "_" + spl.GetP4().name());
 
     {
@@ -3929,6 +3974,7 @@ void VToolOptionsPropertyBrowser::updateOptionsToolCubicBezier()
 {
     VToolCubicBezier *tool = qgraphicsitem_cast<VToolCubicBezier *>(currentItem);
     const auto spl = tool->getSpline();
+    updateCalculatedLength(spl.GetLength());
     idToProperty[AttrObjName]->setValue(tr("Spl_") + spl.GetP1().name() + "_" + spl.GetP4().name());
 
     idToProperty[AttrColor]->setValue(VPE::VLineColorProperty::indexOfColor(VAbstractTool::ColorsList(),
@@ -3983,6 +4029,7 @@ void VToolOptionsPropertyBrowser::updateOptionsToolCubicBezier()
 void VToolOptionsPropertyBrowser::updateOptionsToolSplinePath()
 {
     VToolSplinePath *tool = qgraphicsitem_cast<VToolSplinePath *>(currentItem);
+    updateCalculatedLength(tool->getSplinePath().GetLength());
 
     idToProperty[AttrName]->setValue(qApp->translateVariables()->VarToUser(tool->name()));
 
@@ -4005,6 +4052,7 @@ void VToolOptionsPropertyBrowser::updateOptionsToolSplinePath()
 void VToolOptionsPropertyBrowser::updateOptionsToolCubicBezierPath()
 {
     VToolCubicBezierPath *tool = qgraphicsitem_cast<VToolCubicBezierPath *>(currentItem);
+    updateCalculatedLength(tool->getSplinePath().GetLength());
 
     idToProperty[AttrName]->setValue(qApp->translateVariables()->VarToUser(tool->name()));
 
@@ -4215,6 +4263,7 @@ void VToolOptionsPropertyBrowser::updateOptionsToolMirrorByAxis()
 void VToolOptionsPropertyBrowser::updateOptionsToolEllipticalArc()
 {
     VToolEllipticalArc *tool = qgraphicsitem_cast<VToolEllipticalArc *>(currentItem);
+    updateCalculatedLength(tool->getData()->GeometricObject<VAbstractCurve>(tool->getId())->GetLength());
 
     idToProperty[AttrObjName]->setValue(tr("Arc_") + tool->CenterPointName() + "_" + QString().setNum(tool->getId()));
 
