@@ -14,6 +14,7 @@ HEADERS += \
     $$PWD/movesplinepath.h \
     $$PWD/remove_groupitem.h \
     $$PWD/rename_draftblock.h \
+    $$PWD/replaceobjectreferences.h \
     $$PWD/savetooloptions.h \
     $$PWD/deltool.h \
     $$PWD/adddetnode.h \
@@ -49,6 +50,7 @@ SOURCES += \
     $$PWD/movesplinepath.cpp \
     $$PWD/remove_groupitem.cpp \
     $$PWD/rename_draftblock.cpp \
+    $$PWD/replaceobjectreferences.cpp \
     $$PWD/savetooloptions.cpp \
     $$PWD/deltool.cpp \
     $$PWD/adddetnode.cpp \

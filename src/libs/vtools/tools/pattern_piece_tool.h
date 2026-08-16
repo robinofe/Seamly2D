@@ -142,8 +142,10 @@ public slots:
     void                 updateGrainline();
     void                 editPieceProperties(quint32 nodeId = NULL_ID, bool removeNode = false);
     bool                 replacePieceNode(quint32 nodeId, quint32 pathId = NULL_ID, bool removeSection = false,
-                                          const QVector<quint32> &suggestedGeometry = QVector<quint32>());
-    void                 createReplacementGeometry(quint32 nodeId, quint32 pathId = NULL_ID);
+                                          const QVector<quint32> &suggestedGeometry = QVector<quint32>(),
+                                          const QVector<quint32> &selectedNodeIds = QVector<quint32>());
+    void                 createReplacementGeometry(quint32 nodeId, quint32 pathId = NULL_ID,
+                                                   const QVector<quint32> &selectedNodeIds = QVector<quint32>());
 
 signals:
     void                 piecePropertiesClosed();

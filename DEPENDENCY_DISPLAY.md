@@ -38,9 +38,17 @@
    open. The new objects are preselected for review; cancelling the guide rolls its drawing steps back through Undo.
    Detaching removes only the piece reference, so the underlying construction remains visible on the draft. This
    staging provides the safe part of a freeze workflow without storing a permanently detached piece state.
-6. History marks independent roots, unused geometry, and dependent objects. Clicking a row keeps using the existing
+6. A compatible one-to-one replacement can update every direct object reference in one undoable command. The command
+   rewrites construction-tool attributes, piece-node source objects, and piece anchors, then requests a full parse so
+   the existing reference counters are rebuilt. The confirmation lists all affected owners. Formula expressions are
+   reported but are not rewritten by name because a replacement object does not necessarily export equivalent
+   variables. One-to-many geometry remains in the guided piece-section workflow where continuity and piece settings
+   can be reviewed.
+7. The dependency list supports multiple node selection. Adjacent selected entries from the same piece path are
+   handed to the existing section replacement, allowing them to be detached or replaced together.
+8. History marks independent roots, unused geometry, and dependent objects. Clicking a row keeps using the existing
    scene highlight, so independent construction geometry is visible both as a list and in the draft.
-7. Reference lengths are non-printing drafting aids. Their length uses the standard formula variables, and their
+9. Reference lengths are non-printing drafting aids. Their length uses the standard formula variables, and their
    position can be free, attached to a point, or placed along a line with free, horizontal, vertical, or line-aligned
    orientation.
 
@@ -51,6 +59,7 @@
 - recursive formula dependencies through a custom variable
 - dependency dialog population, recursive toggle, and highlight signal
 - replacement, create, and detach actions for piece nodes
+- atomic replacement of direct construction, piece-node, and anchor references, including Undo
 - full-parse requests when an edited tool replaces a referenced object in an attribute or child element
 - lite-parse preservation for changes that do not affect references
 - flexible piece-path section replacement, collapse, and removal

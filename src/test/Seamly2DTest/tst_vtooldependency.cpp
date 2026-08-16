@@ -20,6 +20,7 @@
 #include "../vpatterndb/variables/vinternalvariable.h"
 #include "../vtools/tools/vabstracttool.h"
 #include "../vtools/undocommands/addreferenceline.h"
+#include "../vtools/undocommands/replaceobjectreferences.h"
 #include "../vtools/undocommands/savepiecepathoptions.h"
 #include "../vtools/undocommands/savetooloptions.h"
 
@@ -397,6 +398,43 @@ void TST_VToolDependency::internalPathReferenceCounts()
     command.undo();
     QCOMPARE(pattern.increments, QVector<quint32>{1});
     QCOMPARE(pattern.decrements, QVector<quint32>{2});
+}
+
+void TST_VToolDependency::replaceObjectReferences()
+{
+    const QString xml = QStringLiteral(
+        "<pattern><draftBlock name=\"Block\"><calculation>"
+        "<point id=\"1\" name=\"Old\" type=\"single\"/>"
+        "<point id=\"4\" name=\"New\" type=\"single\"/>"
+        "<point id=\"2\" name=\"Child\" type=\"endLine\" basePoint=\"1\"/>"
+        "</calculation><modeling><point id=\"136\" idObject=\"1\" type=\"modeling\"/></modeling>"
+        "<pieces><piece id=\"8\" name=\"Front\"><anchors><record>1</record></anchors></piece></pieces>"
+        "</draftBlock></pattern>");
+    DependencyPattern pattern;
+    pattern.load(xml, {VToolRecord(1, Tool::BasePoint, QStringLiteral("Block")),
+                       VToolRecord(4, Tool::BasePoint, QStringLiteral("Block")),
+                       VToolRecord(2, Tool::EndLine, QStringLiteral("Block")),
+                       VToolRecord(136, Tool::NodePoint, QStringLiteral("Block")),
+                       VToolRecord(8, Tool::Piece, QStringLiteral("Block"))});
+    const Unit unit = Unit::Cm;
+    VContainer data(nullptr, &unit);
+    data.UpdateGObject(1, new VPointF(0, 0, QStringLiteral("Old"), 0, 0));
+    data.UpdateGObject(4, new VPointF(10, 0, QStringLiteral("New"), 0, 0));
+
+    ReplaceObjectReferences command(1, 4, &pattern, &data);
+    QCOMPARE(command.changedToolCount(), 3);
+    QSignalSpy parseSpy(&command, &ReplaceObjectReferences::NeedFullParsing);
+
+    command.redo();
+    QCOMPARE(pattern.elementById(2).attribute(QStringLiteral("basePoint")), QStringLiteral("4"));
+    QCOMPARE(pattern.elementById(136).attribute(QStringLiteral("idObject")), QStringLiteral("4"));
+    QCOMPARE(pattern.elementById(8).elementsByTagName(QStringLiteral("record")).at(0).toElement().text(),
+             QStringLiteral("4"));
+
+    command.undo();
+    QCOMPARE(pattern.elementById(2).attribute(QStringLiteral("basePoint")), QStringLiteral("1"));
+    QCOMPARE(pattern.elementById(136).attribute(QStringLiteral("idObject")), QStringLiteral("1"));
+    QCOMPARE(parseSpy.count(), 2);
 }
 
 void TST_VToolDependency::dependencyDialog()

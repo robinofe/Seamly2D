@@ -76,6 +76,7 @@
 #include "../undocommands/addpiece.h"
 #include "../undocommands/deletepiece.h"
 #include "../undocommands/movepiece.h"
+#include "../undocommands/replaceobjectreferences.h"
 #include "../undocommands/savepieceoptions.h"
 #include "../undocommands/savepiecepathoptions.h"
 #include "../undocommands/togglepieceinlayout.h"
@@ -2250,7 +2251,8 @@ void PatternPieceTool::editPieceProperties(quint32 nodeId, bool removeNode)
 
 //---------------------------------------------------------------------------------------------------------------------
 bool PatternPieceTool::replacePieceNode(quint32 nodeId, quint32 pathId, bool removeSection,
-                                        const QVector<quint32> &suggestedGeometry)
+                                        const QVector<quint32> &suggestedGeometry,
+                                        const QVector<quint32> &selectedNodeIds)
 {
     const VPiece oldPiece = VAbstractTool::data.GetPiece(m_id);
     if (oldPiece.isLocked())
@@ -2310,7 +2312,7 @@ bool PatternPieceTool::replacePieceNode(quint32 nodeId, quint32 pathId, bool rem
         auto *item = new QListWidgetItem(VAbstractTool::data.GetGObject(node.GetId())->name(), oldList);
         item->setData(Qt::UserRole, index);
         item->setData(Qt::UserRole + 1, node.GetId());
-        if (index == initialNodeIndex)
+        if ((selectedNodeIds.isEmpty() && index == initialNodeIndex) || selectedNodeIds.contains(node.GetId()))
         {
             item->setSelected(true);
             oldList->setCurrentItem(item);
@@ -2348,6 +2350,12 @@ bool PatternPieceTool::replacePieceNode(quint32 nodeId, quint32 pathId, bool rem
     auto *removeSectionCheck = new QCheckBox(tr("Remove the selected section without replacement"), &dialog);
     removeSectionCheck->setChecked(removeSection);
     replacementColumn->addWidget(removeSectionCheck);
+    auto *replaceEverywhereCheck = new QCheckBox(tr("Use one replacement in every direct reference"), &dialog);
+    replaceEverywhereCheck->setChecked(true);
+    replaceEverywhereCheck->setToolTip(
+        tr("Available for a one-to-one replacement of the same geometry type. All affected tools are rebuilt and the "
+           "change can be undone."));
+    replacementColumn->addWidget(replaceEverywhereCheck);
     auto *removeButton = new QPushButton(tr("Remove"), &dialog);
     auto *upButton = new QPushButton(tr("Move up"), &dialog);
     auto *downButton = new QPushButton(tr("Move down"), &dialog);
@@ -2451,8 +2459,45 @@ bool PatternPieceTool::replacePieceNode(quint32 nodeId, quint32 pathId, bool rem
         item->setText(VAbstractTool::data.GetGObject(id)->name() +
                       (reverse ? tr(" (reversed)") : QString()));
     });
+    auto updateGlobalReplacement = [this, oldList, replacementList, replaceEverywhereCheck]()
+    {
+        const bool wasCompatible = replaceEverywhereCheck->property("compatible").toBool();
+        bool compatible = oldList->selectedItems().size() == 1 && replacementList->count() == 1;
+        if (compatible)
+        {
+            const quint32 oldNodeId = oldList->selectedItems().constFirst()->data(Qt::UserRole + 1).toUInt();
+            const quint32 newObjectId = replacementList->item(0)->data(Qt::UserRole).toUInt();
+            try
+            {
+                const QSharedPointer<VGObject> oldNode = VAbstractTool::data.GetGObject(oldNodeId);
+                const quint32 oldObjectId = oldNode->getIdObject() == NULL_ID ? oldNodeId : oldNode->getIdObject();
+                compatible = VAbstractTool::data.GetGObject(oldObjectId)->getType() ==
+                             VAbstractTool::data.GetGObject(newObjectId)->getType();
+            }
+            catch (const VExceptionBadId &)
+            {
+                compatible = false;
+            }
+        }
+        replaceEverywhereCheck->setEnabled(compatible);
+        replaceEverywhereCheck->setVisible(replacementList->isEnabled() && compatible);
+        replaceEverywhereCheck->setProperty("compatible", compatible);
+        if (compatible && !wasCompatible)
+        {
+            replaceEverywhereCheck->setChecked(true);
+        }
+        else if (!compatible)
+        {
+            replaceEverywhereCheck->setChecked(false);
+        }
+    };
+    connect(oldList, &QListWidget::itemSelectionChanged, &dialog, updateGlobalReplacement);
+    connect(replacementList->model(), &QAbstractItemModel::rowsInserted, &dialog, updateGlobalReplacement);
+    connect(replacementList->model(), &QAbstractItemModel::rowsRemoved, &dialog, updateGlobalReplacement);
+
     connect(removeSectionCheck, &QCheckBox::toggled, &dialog,
-            [replacementList, availableList, addButton, removeButton, upButton, downButton, reverseButton](bool checked)
+            [replacementList, availableList, addButton, removeButton, upButton, downButton, reverseButton,
+             replaceEverywhereCheck](bool checked)
     {
         replacementList->setEnabled(!checked);
         availableList->setEnabled(!checked);
@@ -2461,8 +2506,10 @@ bool PatternPieceTool::replacePieceNode(quint32 nodeId, quint32 pathId, bool rem
         upButton->setEnabled(!checked);
         downButton->setEnabled(!checked);
         reverseButton->setEnabled(!checked);
+        replaceEverywhereCheck->setVisible(!checked);
     });
     emit removeSectionCheck->toggled(removeSectionCheck->isChecked());
+    updateGlobalReplacement();
 
     auto *status = new QLabel(&dialog);
     status->setWordWrap(true);
@@ -2515,6 +2562,51 @@ bool PatternPieceTool::replacePieceNode(quint32 nodeId, quint32 pathId, bool rem
     std::sort(selectedRows.begin(), selectedRows.end());
     const int first = selectedRows.constFirst();
     const int last = selectedRows.constLast();
+
+    if (replaceEverywhereCheck->isChecked())
+    {
+        const quint32 oldNodeId = oldList->item(first)->data(Qt::UserRole + 1).toUInt();
+        const QSharedPointer<VGObject> oldNode = VAbstractTool::data.GetGObject(oldNodeId);
+        const quint32 oldObjectId = oldNode->getIdObject() == NULL_ID ? oldNodeId : oldNode->getIdObject();
+        const quint32 oldToolId = VAbstractTool::data.GetGObject(oldObjectId)->getIdTool();
+        const quint32 newObjectId = replacementList->item(0)->data(Qt::UserRole).toUInt();
+        const QVector<VToolDependency> affected = doc->getDirectDependencies(oldToolId, &(VAbstractTool::data));
+
+        QStringList names;
+        bool hasFormulaReference = false;
+        for (const VToolDependency &dependency : affected)
+        {
+            names.append(dependency.name);
+            hasFormulaReference = hasFormulaReference || dependency.reference.contains(tr("formula"), Qt::CaseInsensitive);
+        }
+        names.removeDuplicates();
+
+        QString message = tr("%1 direct dependent object(s) will use %2 instead. The old geometry remains on the "
+                             "draft and becomes free when no references remain.\n\nAffected: %3")
+                              .arg(affected.size())
+                              .arg(VAbstractTool::data.GetGObject(newObjectId)->name(), names.join(QStringLiteral(", ")));
+        if (hasFormulaReference)
+        {
+            message += tr("\n\nFormula references cannot be rewritten safely and will remain listed for manual review.");
+        }
+        if (QMessageBox::question(qApp->getMainWindow(), tr("Replace object everywhere"), message,
+                                  QMessageBox::Ok | QMessageBox::Cancel, QMessageBox::Cancel) != QMessageBox::Ok)
+        {
+            return false;
+        }
+
+        auto *command = new ReplaceObjectReferences(oldToolId, newObjectId, doc, &(VAbstractTool::data));
+        if (command->changedToolCount() == 0)
+        {
+            delete command;
+            QMessageBox::information(qApp->getMainWindow(), tr("Replace object everywhere"),
+                                     tr("No compatible direct object reference was found."));
+            return false;
+        }
+        connect(command, &ReplaceObjectReferences::NeedFullParsing, doc, &VAbstractPattern::NeedFullParsing);
+        qApp->getUndoStack()->push(command);
+        return true;
+    }
 
     const int replacementCount = removeSectionCheck->isChecked() ? 0 : replacementList->count();
     const QString settingsWarning = replacementCount == 0
@@ -2627,7 +2719,8 @@ bool PatternPieceTool::replacePieceNode(quint32 nodeId, quint32 pathId, bool rem
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-void PatternPieceTool::createReplacementGeometry(quint32 nodeId, quint32 pathId)
+void PatternPieceTool::createReplacementGeometry(quint32 nodeId, quint32 pathId,
+                                                 const QVector<quint32> &selectedNodeIds)
 {
     const int initialUndoIndex = qApp->getUndoStack()->index();
     QSet<quint32> existingObjects;
@@ -2682,7 +2775,7 @@ void PatternPieceTool::createReplacementGeometry(quint32 nodeId, quint32 pathId)
 
     connect(buttons, &QDialogButtonBox::rejected, guide, &QDialog::reject);
     connect(finishButton, &QPushButton::clicked, guide,
-            [guide, status, existingObjects, pieceId, nodeId, pathId]()
+            [guide, status, existingObjects, pieceId, nodeId, pathId, selectedNodeIds]()
     {
         PatternPieceTool *pieceTool = nullptr;
         try
@@ -2719,7 +2812,7 @@ void PatternPieceTool::createReplacementGeometry(quint32 nodeId, quint32 pathId)
 
         guide->setProperty("replacementHandled", true);
         guide->accept();
-        pieceTool->replacePieceNode(nodeId, pathId, false, createdGeometry);
+        pieceTool->replacePieceNode(nodeId, pathId, false, createdGeometry, selectedNodeIds);
         emit pieceTool->replacementGeometrySessionClosed();
     });
     connect(guide, &QDialog::finished, this, [this, initialUndoIndex](int)

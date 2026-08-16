@@ -343,6 +343,7 @@ void VAbstractTool::showDependencies()
 
     auto *tree = new QTreeWidget(&dialog);
     tree->setColumnCount(5);
+    tree->setSelectionMode(QAbstractItemView::ExtendedSelection);
     tree->setHeaderLabels(QStringList() << tr("Object") << tr("Type") << tr("Dependency") << tr("Draft block")
                                              << tr("Suggested action"));
     tree->setRootIsDecorated(false);
@@ -350,6 +351,7 @@ void VAbstractTool::showDependencies()
 
     quint32 selectedToolId = NULL_ID;
     Tool selectedToolType = Tool::LAST_ONE_DO_NOT_USE;
+    QVector<quint32> selectedNodeIds;
     DependencyAction selectedAction = DependencyAction::None;
 
     auto *actionLabel = new QLabel(tr("Select an object to see the available next steps."), &dialog);
@@ -435,21 +437,43 @@ void VAbstractTool::showDependencies()
     connect(recursive, &QCheckBox::toggled, &dialog, populate);
     connect(tree, &QTreeWidget::itemClicked, &dialog,
             [this, tree, actionLabel, selectButton, replaceButton, createButton, removeButton, editPieceButton,
-             &selectedToolId, &selectedToolType](QTreeWidgetItem *item)
+             &selectedToolId, &selectedToolType, &selectedNodeIds](QTreeWidgetItem *item)
     {
         selectedToolId = item->data(0, Qt::UserRole).toUInt();
         selectedToolType = static_cast<Tool>(item->data(0, Qt::UserRole + 1).toInt());
-        const bool isNode = selectedToolType == Tool::NodePoint || selectedToolType == Tool::NodeArc ||
-                            selectedToolType == Tool::NodeElArc || selectedToolType == Tool::NodeSpline ||
-                            selectedToolType == Tool::NodeSplinePath;
+        if (tree->selectedItems().isEmpty())
+        {
+            item->setSelected(true);
+        }
+        selectedNodeIds.clear();
+        bool allNodes = !tree->selectedItems().isEmpty();
+        for (QTreeWidgetItem *selectedItem : tree->selectedItems())
+        {
+            const Tool type = static_cast<Tool>(selectedItem->data(0, Qt::UserRole + 1).toInt());
+            const bool isSelectedNode = type == Tool::NodePoint || type == Tool::NodeArc ||
+                                        type == Tool::NodeElArc || type == Tool::NodeSpline ||
+                                        type == Tool::NodeSplinePath;
+            allNodes = allNodes && isSelectedNode;
+            if (isSelectedNode)
+            {
+                selectedNodeIds.append(selectedItem->data(0, Qt::UserRole).toUInt());
+            }
+        }
+        const bool isNode = allNodes;
 
         selectButton->setVisible(selectedToolId != NULL_ID && !isNode && selectedToolType != Tool::Piece);
         replaceButton->setVisible(isNode);
         createButton->setVisible(isNode);
         removeButton->setVisible(isNode);
         editPieceButton->setVisible(isNode || selectedToolType == Tool::Piece);
+        replaceButton->setText(selectedNodeIds.size() > 1 ? tr("Replace selected section...")
+                                                         : tr("Select replacement..."));
+        removeButton->setText(selectedNodeIds.size() > 1 ? tr("Detach selected section...")
+                                                        : tr("Detach from pattern piece..."));
         actionLabel->setText(isNode
-                                 ? tr("This node or an adjacent section can be replaced by one or more points and curves. Changes can be undone.")
+                                 ? selectedNodeIds.size() > 1
+                                       ? tr("The selected nodes can be detached or replaced together when they form one adjacent section.")
+                                       : tr("This node or an adjacent section can be replaced by one or more points and curves. Changes can be undone.")
                                  : selectedToolType == Tool::Piece
                                        ? tr("Open the pattern piece to change the references listed above.")
                                        : selectedToolId == NULL_ID
@@ -560,14 +584,15 @@ void VAbstractTool::showDependencies()
                 disconnect(pieceTool, &PatternPieceTool::replacementGeometrySessionClosed, this, nullptr);
                 QTimer::singleShot(0, this, [this]() { showDependencies(); });
             });
-            pieceTool->createReplacementGeometry(selectedToolId, selectedPathId);
+            pieceTool->createReplacementGeometry(selectedToolId, selectedPathId, selectedNodeIds);
             return;
         }
 
         if (selectedAction == DependencyAction::ReplaceNode || selectedAction == DependencyAction::RemoveNode)
         {
             pieceTool->replacePieceNode(selectedToolId, selectedPathId,
-                                        selectedAction == DependencyAction::RemoveNode);
+                                        selectedAction == DependencyAction::RemoveNode, QVector<quint32>(),
+                                        selectedNodeIds);
             QTimer::singleShot(0, this, [this]() { showDependencies(); });
             return;
         }
