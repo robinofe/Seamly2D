@@ -1,12 +1,12 @@
 <map id="VAbstractMirror" name="VAbstractMirror">
-<area shape="rect" id="node1" title=" " alt="" coords="107,2635,333,2888"/>
-<area shape="rect" id="node9" href="$d1/d6f/classVToolMirrorByAxis.html" title=" " alt="" coords="27,2943,205,3299"/>
-<area shape="rect" id="node10" href="$dc/d0a/classVToolMirrorByLine.html" title=" " alt="" coords="229,2936,421,3307"/>
-<area shape="rect" id="node2" href="$d7/d15/classVAbstractOperation.html" title=" " alt="" coords="101,1923,339,2587"/>
-<area shape="rect" id="node3" href="$d2/df2/classVDrawTool.html" title="The VDrawTool abstract class for all draw tool." alt="" coords="5,1328,227,1875"/>
-<area shape="rect" id="node4" href="$d4/d36/classVInteractiveTool.html" title=" " alt="" coords="11,1115,221,1280"/>
-<area shape="rect" id="node5" href="$d4/d36/classVAbstractTool.html" title="The VAbstractTool abstract class for all tools." alt="" coords="15,388,217,1067"/>
+<area shape="rect" id="node1" title=" " alt="" coords="107,2664,333,2917"/>
+<area shape="rect" id="node9" href="$d1/d6f/classVToolMirrorByAxis.html" title=" " alt="" coords="27,2973,205,3329"/>
+<area shape="rect" id="node10" href="$dc/d0a/classVToolMirrorByLine.html" title=" " alt="" coords="229,2965,421,3336"/>
+<area shape="rect" id="node2" href="$d7/d15/classVAbstractOperation.html" title=" " alt="" coords="101,1952,339,2616"/>
+<area shape="rect" id="node3" href="$d2/df2/classVDrawTool.html" title="The VDrawTool abstract class for all draw tool." alt="" coords="5,1357,227,1904"/>
+<area shape="rect" id="node4" href="$d4/d36/classVInteractiveTool.html" title=" " alt="" coords="11,1144,221,1309"/>
+<area shape="rect" id="node5" href="$d4/d36/classVAbstractTool.html" title="The VAbstractTool abstract class for all tools." alt="" coords="8,388,224,1096"/>
 <area shape="rect" id="node6" href="$d5/d68/classVDataTool.html" title="The VDataTool class need for getting access to data container of tool." alt="" coords="29,131,203,340"/>
 <area shape="rect" id="node7" title=" " alt="" coords="79,5,153,83"/>
-<area shape="rect" id="node8" title=" " alt="" coords="251,1563,397,1640"/>
+<area shape="rect" id="node8" title=" " alt="" coords="251,1592,397,1669"/>
 </map>

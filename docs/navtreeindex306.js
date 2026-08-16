@@ -1,5 +1,10 @@
 var NAVTREEINDEX306 =
 {
+"de/dcf/classXSValue.html#ad1788e787526663aeb4b99ff52567141afe38f82d56531285478e3cd39161e700":[3,0,927,8,142],
+"de/dcf/classXSValue.html#ad1788e787526663aeb4b99ff52567141afe38f82d56531285478e3cd39161e700":[3,0,927,6,97],
+"de/dcf/classXSValue.html#ad1788e787526663aeb4b99ff52567141afe38f82d56531285478e3cd39161e700":[3,0,927,6,142],
+"de/dcf/classXSValue.html#ad1788e787526663aeb4b99ff52567141afe38f82d56531285478e3cd39161e700":[3,0,927,9,7],
+"de/dcf/classXSValue.html#ad1788e787526663aeb4b99ff52567141afe38f82d56531285478e3cd39161e700":[3,0,927,6,52],
 "de/dcf/classXSValue.html#ad1788e787526663aeb4b99ff52567141afe38f82d56531285478e3cd39161e700":[3,0,927,8,97],
 "de/dcf/classXSValue.html#ad1788e787526663aeb4b99ff52567141afe38f82d56531285478e3cd39161e700":[3,0,927,6,7],
 "de/dcf/classXSValue.html#ad1788e787526663aeb4b99ff52567141afe38f82d56531285478e3cd39161e700":[3,0,927,8,7],
@@ -244,10 +249,5 @@ var NAVTREEINDEX306 =
 "de/df2/macx_2include_2xercesc_2sax2_2Attributes_8hpp_source.html":[4,0,0,1,15,0,0,0,5,0],
 "de/df2/mingw_2include_2xercesc_2util_2RefHash2KeysTableOf_8c.html":[4,0,0,1,15,1,0,0,6,52],
 "de/df2/mingw_2include_2xercesc_2util_2RefHash2KeysTableOf_8c_source.html":[4,0,0,1,15,1,0,0,6,52],
-"de/df3/classXMLGrammarDescription.html":[3,0,847],
-"de/df3/classXMLGrammarDescription.html#a1854f328aecf755a5d83d6ab2849d5da":[3,0,847,12],
-"de/df3/classXMLGrammarDescription.html#a1854f328aecf755a5d83d6ab2849d5da":[3,0,847,15],
-"de/df3/classXMLGrammarDescription.html#a1854f328aecf755a5d83d6ab2849d5da":[3,0,847,14],
-"de/df3/classXMLGrammarDescription.html#a1854f328aecf755a5d83d6ab2849d5da":[3,0,847,13],
-"de/df3/classXMLGrammarDescription.html#a638d8f89481b5bcb576a2e79f2e39a9a":[3,0,847,16]
+"de/df3/classXMLGrammarDescription.html":[3,0,847]
 };

@@ -1,5 +1,10 @@
 var NAVTREEINDEX285 =
 {
+"de/d42/msvc-arm64_2include_2xercesc_2validators_2DTD_2XMLDTDDescriptionImpl_8hpp_source.html":[4,0,0,1,15,3,0,0,7,2,8],
+"de/d42/msvc_2include_2xercesc_2validators_2schema_2SchemaGrammar_8hpp.html":[4,0,0,1,15,2,0,0,7,3,8],
+"de/d42/msvc_2include_2xercesc_2validators_2schema_2SchemaGrammar_8hpp.html#a9a2aaffde59dfea431a0ac66b2ca9fd6":[4,0,0,1,15,2,0,0,7,3,8,1],
+"de/d42/msvc_2include_2xercesc_2validators_2schema_2SchemaGrammar_8hpp_source.html":[4,0,0,1,15,2,0,0,7,3,8],
+"de/d43/macx_2include_2xercesc_2validators_2schema_2identity_2ValueStoreCache_8hpp.html":[4,0,0,1,15,0,0,0,7,3,0,10],
 "de/d43/macx_2include_2xercesc_2validators_2schema_2identity_2ValueStoreCache_8hpp_source.html":[4,0,0,1,15,0,0,0,7,3,0,10],
 "de/d44/classPatternPieceVisual.html":[3,0,389],
 "de/d44/classPatternPieceVisual.html#a273ec613732a996fed575c50bbd177bc":[3,0,389,1],
@@ -244,10 +249,5 @@ var NAVTREEINDEX285 =
 "de/d56/classSAXNotRecognizedException.html#a065915b078253ecb8d515ebb69ac60d2":[3,0,467,8],
 "de/d56/classSAXNotRecognizedException.html#a065915b078253ecb8d515ebb69ac60d2":[3,0,467,12],
 "de/d56/classSAXNotRecognizedException.html#a35222c472ae730e4fbc2a9d502b49ccc":[3,0,467,11],
-"de/d56/classSAXNotRecognizedException.html#a35222c472ae730e4fbc2a9d502b49ccc":[3,0,467,15],
-"de/d56/classSAXNotRecognizedException.html#a35222c472ae730e4fbc2a9d502b49ccc":[3,0,467,7],
-"de/d56/classSAXNotRecognizedException.html#a35222c472ae730e4fbc2a9d502b49ccc":[3,0,467,3],
-"de/d56/classSAXNotRecognizedException.html#aef8e7cd987df34c07a5ccf251df912b6":[3,0,467,14],
-"de/d56/classSAXNotRecognizedException.html#aef8e7cd987df34c07a5ccf251df912b6":[3,0,467,2],
-"de/d56/classSAXNotRecognizedException.html#aef8e7cd987df34c07a5ccf251df912b6":[3,0,467,6]
+"de/d56/classSAXNotRecognizedException.html#a35222c472ae730e4fbc2a9d502b49ccc":[3,0,467,15]
 };

@@ -1,13 +1,13 @@
 <map id="VToolHeight" name="VToolHeight">
-<area shape="rect" id="node1" title="The VToolHeight class tool for creation point of height. Help find point of projection onto line." alt="" coords="133,3311,326,3681"/>
-<area shape="rect" id="node2" href="$dc/d1d/classVToolLinePoint.html" title="The VToolLinePoint class parent for all tools what create point with line." alt="" coords="143,2833,316,3263"/>
-<area shape="rect" id="node3" href="$da/dbc/classVToolSinglePoint.html" title="The VToolSinglePoint class parent for all tools what create points." alt="" coords="116,2283,343,2785"/>
-<area shape="rect" id="node4" href="$da/da4/classVAbstractPoint.html" title=" " alt="" coords="8,1981,224,2176"/>
-<area shape="rect" id="node5" href="$d2/df2/classVDrawTool.html" title="The VDrawTool abstract class for all draw tool." alt="" coords="5,1328,227,1875"/>
-<area shape="rect" id="node6" href="$d4/d36/classVInteractiveTool.html" title=" " alt="" coords="11,1115,221,1280"/>
-<area shape="rect" id="node7" href="$d4/d36/classVAbstractTool.html" title="The VAbstractTool abstract class for all tools." alt="" coords="15,388,217,1067"/>
+<area shape="rect" id="node1" title="The VToolHeight class tool for creation point of height. Help find point of projection onto line." alt="" coords="133,3340,326,3711"/>
+<area shape="rect" id="node2" href="$dc/d1d/classVToolLinePoint.html" title="The VToolLinePoint class parent for all tools what create point with line." alt="" coords="143,2863,316,3292"/>
+<area shape="rect" id="node3" href="$da/dbc/classVToolSinglePoint.html" title="The VToolSinglePoint class parent for all tools what create points." alt="" coords="116,2312,343,2815"/>
+<area shape="rect" id="node4" href="$da/da4/classVAbstractPoint.html" title=" " alt="" coords="8,2011,224,2205"/>
+<area shape="rect" id="node5" href="$d2/df2/classVDrawTool.html" title="The VDrawTool abstract class for all draw tool." alt="" coords="5,1357,227,1904"/>
+<area shape="rect" id="node6" href="$d4/d36/classVInteractiveTool.html" title=" " alt="" coords="11,1144,221,1309"/>
+<area shape="rect" id="node7" href="$d4/d36/classVAbstractTool.html" title="The VAbstractTool abstract class for all tools." alt="" coords="8,388,224,1096"/>
 <area shape="rect" id="node8" href="$d5/d68/classVDataTool.html" title="The VDataTool class need for getting access to data container of tool." alt="" coords="29,131,203,340"/>
 <area shape="rect" id="node9" title=" " alt="" coords="79,5,153,83"/>
-<area shape="rect" id="node10" href="$dc/d3b/classVScenePoint.html" title=" " alt="" coords="249,1923,439,2235"/>
-<area shape="rect" id="node11" title=" " alt="" coords="263,1563,425,1640"/>
+<area shape="rect" id="node10" href="$dc/d3b/classVScenePoint.html" title=" " alt="" coords="249,1952,439,2264"/>
+<area shape="rect" id="node11" title=" " alt="" coords="263,1592,425,1669"/>
 </map>

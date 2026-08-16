@@ -1,5 +1,10 @@
 var NAVTREEINDEX308 =
 {
+"df/d1b/structCMDynamicBuffer.html#a00c000dd1b387adbbf402b6dbc8cd3be":[3,0,61,2],
+"df/d1b/structCMDynamicBuffer.html#a56cd0e8b0f6a61eb3587d9152db6718e":[3,0,61,0],
+"df/d1b/structCMDynamicBuffer.html#aa191db05bcc1e01e068e6775f2cf6f0d":[3,0,61,1],
+"df/d1d/mingw_2include_2xercesc_2util_2SynchronizedStringPool_8hpp.html":[4,0,0,1,15,1,0,0,6,66],
+"df/d1d/mingw_2include_2xercesc_2util_2SynchronizedStringPool_8hpp_source.html":[4,0,0,1,15,1,0,0,6,66],
 "df/d1e/image__item_8cpp.html":[4,0,0,1,3,0,2],
 "df/d1e/image__item_8cpp_source.html":[4,0,0,1,3,0,2],
 "df/d1f/classXMLAttDef.html":[3,0,812],
@@ -244,10 +249,5 @@ var NAVTREEINDEX308 =
 "df/d1f/classXMLAttDef.html#ad029f037065bfaeb991ab7855de79255a8ae2d3acb26c09adbc2545467a8b1325":[3,0,812,2,9],
 "df/d1f/classXMLAttDef.html#ad029f037065bfaeb991ab7855de79255a8ae2d3acb26c09adbc2545467a8b1325":[3,0,812,1,9],
 "df/d1f/classXMLAttDef.html#ad029f037065bfaeb991ab7855de79255a8ae2d3acb26c09adbc2545467a8b1325":[3,0,812,3,9],
-"df/d1f/classXMLAttDef.html#ad029f037065bfaeb991ab7855de79255a8ae2d3acb26c09adbc2545467a8b1325":[3,0,812,2,45],
-"df/d1f/classXMLAttDef.html#ad029f037065bfaeb991ab7855de79255a8ae2d3acb26c09adbc2545467a8b1325":[3,0,812,0,27],
-"df/d1f/classXMLAttDef.html#ad029f037065bfaeb991ab7855de79255a8ae2d3acb26c09adbc2545467a8b1325":[3,0,812,3,63],
-"df/d1f/classXMLAttDef.html#ad029f037065bfaeb991ab7855de79255a8ae2d3acb26c09adbc2545467a8b1325":[3,0,812,2,27],
-"df/d1f/classXMLAttDef.html#ad029f037065bfaeb991ab7855de79255aa063ccbf0d165af79a2173f29fd9e981":[3,0,812,2,3],
-"df/d1f/classXMLAttDef.html#ad029f037065bfaeb991ab7855de79255aa063ccbf0d165af79a2173f29fd9e981":[3,0,812,3,3]
+"df/d1f/classXMLAttDef.html#ad029f037065bfaeb991ab7855de79255a8ae2d3acb26c09adbc2545467a8b1325":[3,0,812,2,45]
 };

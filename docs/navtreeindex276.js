@@ -1,5 +1,10 @@
 var NAVTREEINDEX276 =
 {
+"dd/dfe/classVAbstractPiece.html#a6669c9189851ab34840e379eda267469":[3,0,570,26],
+"dd/dfe/classVAbstractPiece.html#a7394fb00187441c6eb0a31591e6b8998":[3,0,570,7],
+"dd/dfe/classVAbstractPiece.html#a74f7bb0de70b8e99d9b39050469844cd":[3,0,570,53],
+"dd/dfe/classVAbstractPiece.html#a79f384e68823f084101724db25a197d4":[3,0,570,46],
+"dd/dfe/classVAbstractPiece.html#a82a226f6158a666575dcfc79070c7e05":[3,0,570,17],
 "dd/dfe/classVAbstractPiece.html#a8c0bac291d03722b86ef89ee8ff8ce61":[3,0,570,14],
 "dd/dfe/classVAbstractPiece.html#a8d4c20a6c785a17240a40de2173ac3ce":[3,0,570,9],
 "dd/dfe/classVAbstractPiece.html#a8e4b8bc754d27b36d2f13ce79e09ad02":[3,0,570,40],
@@ -244,10 +249,5 @@ var NAVTREEINDEX276 =
 "de/d04/classVToolTrueDarts.html#ae8031602576f2fdd3ad0175187e873ae":[3,0,779,0],
 "de/d04/classVToolTrueDarts.html#af38196c18959de639a5948b4784aa2a7":[3,0,779,11],
 "de/d04/classVUndoCommand.html":[3,0,782],
-"de/d04/classVUndoCommand.html#a094c62c977f31edfaa0c349967868674":[3,0,782,10],
-"de/d04/classVUndoCommand.html#a0a8026a7dc4404ffb21fdfb246f9e639":[3,0,782,12],
-"de/d04/classVUndoCommand.html#a15e994d6a0d182b2dd87c846a8486c4c":[3,0,782,3],
-"de/d04/classVUndoCommand.html#a1c683bdf5029f9dfec7de8c4cd240e11":[3,0,782,4],
-"de/d04/classVUndoCommand.html#a2299d32271db3d52292a1925286d24af":[3,0,782,2],
-"de/d04/classVUndoCommand.html#a2845877511f1ab2094a6df6f909709de":[3,0,782,16]
+"de/d04/classVUndoCommand.html#a094c62c977f31edfaa0c349967868674":[3,0,782,10]
 };

@@ -114,143 +114,156 @@ $(document).ready(function(){initNavTree('dc/d24/replaceobjectreferences_8cpp_so
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="../../d0/d5b/replaceobjectreferences_8h.html">replaceobjectreferences.h</a>&quot;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;../ifc/xml/vabstractpattern.h&quot;</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;../vpatterndb/vcontainer.h&quot;</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &quot;../vgeometry/vgobject.h&quot;</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;QDomAttr&gt;</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;QDomNamedNodeMap&gt;</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &lt;QSet&gt;</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="../../d3/d51/namespaceanonymous__namespace_02replaceobjectreferences_8cpp_03.html">   22</a></span><span class="keyword">namespace</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>{</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="../../d3/d51/namespaceanonymous__namespace_02replaceobjectreferences_8cpp_03.html#a46ffe8c67719b13724533df73d0c8979">   24</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="../../d3/d51/namespaceanonymous__namespace_02replaceobjectreferences_8cpp_03.html#a46ffe8c67719b13724533df73d0c8979">replaceReferences</a>(QDomElement root, <span class="keyword">const</span> QSet&lt;quint32&gt; &amp;oldIds, quint32 newObjectId)</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>{</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="keywordtype">bool</span> changed = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <a class="code hl_class" href="../../d1/d4a/classQList.html">QList&lt;QDomElement&gt;</a> pending{root};</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keyword">const</span> QSet&lt;QString&gt; &amp;referenceAttributes = <a class="code hl_function" href="../../d8/dba/classVAbstractPattern.html#a1ea13a919f4b7c1c960363ff9e051ab2">VAbstractPattern::objectReferenceAttributes</a>();</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="keywordflow">while</span> (!pending.isEmpty())</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    {</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        QDomElement element = pending.takeFirst();</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        <span class="keyword">const</span> QDomNamedNodeMap attributes = element.attributes();</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; attributes.size(); ++i)</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        {</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>            <span class="keyword">const</span> QDomAttr attribute = attributes.item(i).toAttr();</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>            <span class="keywordflow">if</span> (referenceAttributes.contains(attribute.name()) &amp;&amp; oldIds.contains(attribute.value().toUInt()))</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>            {</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>                element.setAttribute(attribute.name(), newObjectId);</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>                changed = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>            }</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        }</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        <span class="keywordflow">if</span> (element.tagName() == QStringLiteral(<span class="stringliteral">&quot;record&quot;</span>) &amp;&amp;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>            element.parentNode().toElement().tagName() == QStringLiteral(<span class="stringliteral">&quot;anchors&quot;</span>) &amp;&amp;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>            oldIds.contains(element.text().toUInt()))</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        {</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>            QDomNode value = element.firstChild();</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>            <span class="keywordflow">if</span> (!value.isNull())</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>            {</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>                value.setNodeValue(QString::number(newObjectId));</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>                changed = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>            }</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        }</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        QDomElement child = element.firstChildElement();</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        <span class="keywordflow">while</span> (!child.isNull())</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        {</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>            pending.append(child);</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>            child = child.nextSiblingElement();</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        }</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    }</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keywordflow">return</span> changed;</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>}</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>} <span class="comment">// namespace</span></div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno"><a class="line" href="../../de/d22/classReplaceObjectReferences.html#a6a7b4c5da9a9ea37659f1815b85387a9">   67</a></span><a class="code hl_function" href="../../de/d22/classReplaceObjectReferences.html#a6a7b4c5da9a9ea37659f1815b85387a9">ReplaceObjectReferences::ReplaceObjectReferences</a>(quint32 oldToolId, quint32 newObjectId, <a class="code hl_class" href="../../d8/dba/classVAbstractPattern.html">VAbstractPattern</a> *doc,</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>                                                 <span class="keyword">const</span> <a class="code hl_class" href="../../d2/d83/classVContainer.html">VContainer</a> *data, QUndoCommand *parent)</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    : <a class="code hl_class" href="../../de/d04/classVUndoCommand.html">VUndoCommand</a>(QDomElement(), doc, parent)</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>{</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    setText(tr(<span class="stringliteral">&quot;Replace object in all direct uses&quot;</span>));</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    QSet&lt;quint32&gt; oldIds{oldToolId};</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keyword">const</span> <span class="keyword">auto</span> objects = data-&gt;<a class="code hl_function" href="../../d2/d83/classVContainer.html#abf178a7ab3e8da08b920d4706987576f">DataGObjects</a>();</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keywordtype">object</span> = objects-&gt;constBegin(); <span class="keywordtype">object</span> != objects-&gt;constEnd(); ++<span class="keywordtype">object</span>)</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    {</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        <span class="keywordflow">if</span> (<span class="keywordtype">object</span>.value()-&gt;getIdTool() == oldToolId)</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        {</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>            oldIds.insert(<span class="keywordtype">object</span>.key());</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        }</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    }</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    QSet&lt;quint32&gt; ownerIds;</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="keyword">const</span> QVector&lt;VToolDependency&gt; dependencies = <a class="code hl_variable" href="../../de/d04/classVUndoCommand.html#a59f91873c1db4adde66d943abc043fa0">doc</a>-&gt;<a class="code hl_function" href="../../d8/dba/classVAbstractPattern.html#a0b6e61a4992dffc09c4d7d9eecaa8b73">getDirectDependencies</a>(oldToolId, data);</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <a class="code hl_struct" href="../../d0/db1/structVToolDependency.html">VToolDependency</a> &amp;dependency : dependencies)</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    {</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        <span class="keywordflow">if</span> (dependency.id == <a class="code hl_define" href="../../d3/da5/ifcdef_8h.html#a59d6223ecf7b4cea9bdae1e3db83c5ff">NULL_ID</a> || ownerIds.contains(dependency.id))</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        {</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>            <span class="keywordflow">continue</span>;</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        }</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        ownerIds.insert(dependency.id);</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        <span class="keyword">const</span> QDomElement oldXml = <a class="code hl_variable" href="../../de/d04/classVUndoCommand.html#a59f91873c1db4adde66d943abc043fa0">doc</a>-&gt;<a class="code hl_function" href="../../d6/deb/classVDomDocument.html#a035e4a009f8f79f3f8e04e8aa43d56dc">elementById</a>(dependency.id);</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        <span class="keywordflow">if</span> (oldXml.isNull())</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        {</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>            <span class="keywordflow">continue</span>;</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        }</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        QDomElement newXml = oldXml.cloneNode(<span class="keyword">true</span>).toElement();</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        <span class="keywordflow">if</span> (replaceReferences(newXml, oldIds, newObjectId))</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        {</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>            <a class="code hl_variable" href="../../de/d22/classReplaceObjectReferences.html#a71c7b2a462ebbe886dd9ec3c05ac66ac">m_tools</a>.append({dependency.id, oldXml.cloneNode(<span class="keyword">true</span>).toElement(), newXml});</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        }</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    }</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>}</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno"><a class="line" href="../../de/d22/classReplaceObjectReferences.html#ae01fb78ed87d23a39106ecacc6356c71">  106</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="../../de/d22/classReplaceObjectReferences.html#ae01fb78ed87d23a39106ecacc6356c71">ReplaceObjectReferences::undo</a>()</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>{</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    <a class="code hl_function" href="../../de/d22/classReplaceObjectReferences.html#a13289dd821e1f8e70cd8359c07f863dc">apply</a>(<span class="keyword">false</span>);</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>}</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno"><a class="line" href="../../de/d22/classReplaceObjectReferences.html#a502bef6305a11de4ede7ac3f03600faa">  111</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="../../de/d22/classReplaceObjectReferences.html#a502bef6305a11de4ede7ac3f03600faa">ReplaceObjectReferences::redo</a>()</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>{</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    <a class="code hl_function" href="../../de/d22/classReplaceObjectReferences.html#a13289dd821e1f8e70cd8359c07f863dc">apply</a>(<span class="keyword">true</span>);</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>}</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno"><a class="line" href="../../de/d22/classReplaceObjectReferences.html#afcfecf2146829d37982bb31d6ebb9780">  116</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="../../de/d22/classReplaceObjectReferences.html#afcfecf2146829d37982bb31d6ebb9780">ReplaceObjectReferences::changedToolCount</a>()<span class="keyword"> const</span></div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span><span class="keyword"></span>{</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="../../de/d22/classReplaceObjectReferences.html#a71c7b2a462ebbe886dd9ec3c05ac66ac">m_tools</a>.size();</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>}</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span> </div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno"><a class="line" href="../../de/d22/classReplaceObjectReferences.html#a13289dd821e1f8e70cd8359c07f863dc">  121</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="../../de/d22/classReplaceObjectReferences.html#a13289dd821e1f8e70cd8359c07f863dc">ReplaceObjectReferences::apply</a>(<span class="keywordtype">bool</span> useNewXml)</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>{</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <a class="code hl_struct" href="../../d3/d6d/structReplaceObjectReferences_1_1ToolXml.html">ToolXml</a> &amp;tool : <a class="code hl_variable" href="../../de/d22/classReplaceObjectReferences.html#a71c7b2a462ebbe886dd9ec3c05ac66ac">m_tools</a>)</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    {</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>        QDomElement current = <a class="code hl_variable" href="../../de/d04/classVUndoCommand.html#a59f91873c1db4adde66d943abc043fa0">doc</a>-&gt;<a class="code hl_function" href="../../d6/deb/classVDomDocument.html#a035e4a009f8f79f3f8e04e8aa43d56dc">elementById</a>(tool.id);</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        <span class="keywordflow">if</span> (!current.isNull())</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        {</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>            current.parentNode().replaceChild((useNewXml ? tool.newXml : tool.oldXml).cloneNode(<span class="keyword">true</span>), current);</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        }</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    }</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    emit <a class="code hl_signal" href="../../de/d04/classVUndoCommand.html#a094c62c977f31edfaa0c349967868674">NeedFullParsing</a>();</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>}</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;../ifc/exception/vexceptionbadid.h&quot;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;../ifc/xml/vabstractpattern.h&quot;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &quot;../vpatterndb/vcontainer.h&quot;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &quot;../vgeometry/vgobject.h&quot;</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;QDomAttr&gt;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &lt;QDomNamedNodeMap&gt;</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &lt;QSet&gt;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="../../d3/d51/namespaceanonymous__namespace_02replaceobjectreferences_8cpp_03.html">   23</a></span><span class="keyword">namespace</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>{</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="../../d3/d51/namespaceanonymous__namespace_02replaceobjectreferences_8cpp_03.html#a46ffe8c67719b13724533df73d0c8979">   25</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="../../d3/d51/namespaceanonymous__namespace_02replaceobjectreferences_8cpp_03.html#a46ffe8c67719b13724533df73d0c8979">replaceReferences</a>(QDomElement root, <span class="keyword">const</span> QSet&lt;quint32&gt; &amp;oldIds, quint32 newObjectId)</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>{</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="keywordtype">bool</span> changed = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <a class="code hl_class" href="../../d1/d4a/classQList.html">QList&lt;QDomElement&gt;</a> pending{root};</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keyword">const</span> QSet&lt;QString&gt; &amp;referenceAttributes = <a class="code hl_function" href="../../d8/dba/classVAbstractPattern.html#a1ea13a919f4b7c1c960363ff9e051ab2">VAbstractPattern::objectReferenceAttributes</a>();</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="keywordflow">while</span> (!pending.isEmpty())</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    {</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        QDomElement element = pending.takeFirst();</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        <span class="keyword">const</span> QDomNamedNodeMap attributes = element.attributes();</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; attributes.size(); ++i)</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        {</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>            <span class="keyword">const</span> QDomAttr attribute = attributes.item(i).toAttr();</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>            <span class="keywordflow">if</span> (referenceAttributes.contains(attribute.name()) &amp;&amp; oldIds.contains(attribute.value().toUInt()))</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>            {</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>                element.setAttribute(attribute.name(), newObjectId);</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>                changed = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>            }</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        }</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <span class="keywordflow">if</span> (element.tagName() == QStringLiteral(<span class="stringliteral">&quot;record&quot;</span>) &amp;&amp;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>            element.parentNode().toElement().tagName() == QStringLiteral(<span class="stringliteral">&quot;anchors&quot;</span>) &amp;&amp;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>            oldIds.contains(element.text().toUInt()))</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        {</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>            QDomNode value = element.firstChild();</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>            <span class="keywordflow">if</span> (!value.isNull())</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            {</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>                value.setNodeValue(QString::number(newObjectId));</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>                changed = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>            }</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        }</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        QDomElement child = element.firstChildElement();</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <span class="keywordflow">while</span> (!child.isNull())</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        {</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>            pending.append(child);</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>            child = child.nextSiblingElement();</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        }</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    }</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="keywordflow">return</span> changed;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>}</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>} <span class="comment">// namespace</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno"><a class="line" href="../../de/d22/classReplaceObjectReferences.html#a6a7b4c5da9a9ea37659f1815b85387a9">   68</a></span><a class="code hl_function" href="../../de/d22/classReplaceObjectReferences.html#a6a7b4c5da9a9ea37659f1815b85387a9">ReplaceObjectReferences::ReplaceObjectReferences</a>(quint32 oldToolId, quint32 newObjectId, <a class="code hl_class" href="../../d8/dba/classVAbstractPattern.html">VAbstractPattern</a> *doc,</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>                                                 <span class="keyword">const</span> <a class="code hl_class" href="../../d2/d83/classVContainer.html">VContainer</a> *data, QUndoCommand *parent)</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    : <a class="code hl_class" href="../../de/d04/classVUndoCommand.html">VUndoCommand</a>(QDomElement(), doc, parent)</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>{</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    setText(tr(<span class="stringliteral">&quot;Replace object in all direct uses&quot;</span>));</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    QSet&lt;quint32&gt; oldIds{oldToolId};</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keyword">const</span> <span class="keyword">auto</span> objects = data-&gt;<a class="code hl_function" href="../../d2/d83/classVContainer.html#abf178a7ab3e8da08b920d4706987576f">DataGObjects</a>();</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keywordtype">object</span> = objects-&gt;constBegin(); <span class="keywordtype">object</span> != objects-&gt;constEnd(); ++<span class="keywordtype">object</span>)</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    {</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        <span class="keywordflow">if</span> (<span class="keywordtype">object</span>.value()-&gt;getIdTool() == oldToolId)</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        {</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            oldIds.insert(<span class="keywordtype">object</span>.key());</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        }</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    }</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    QSet&lt;quint32&gt; ownerIds;</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    quint32 replacementToolId = <a class="code hl_define" href="../../d3/da5/ifcdef_8h.html#a59d6223ecf7b4cea9bdae1e3db83c5ff">NULL_ID</a>;</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="keywordflow">try</span></div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    {</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        replacementToolId = data-&gt;<a class="code hl_function" href="../../d2/d83/classVContainer.html#a956a1e551804359b7aa46a389b4055da">GetGObject</a>(newObjectId)-&gt;getIdTool();</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    }</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <span class="keywordflow">catch</span> (<span class="keyword">const</span> <a class="code hl_class" href="../../de/da9/classVExceptionBadId.html">VExceptionBadId</a> &amp;)</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    {</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    }</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <span class="keyword">const</span> QVector&lt;VToolDependency&gt; dependencies = <a class="code hl_variable" href="../../de/d04/classVUndoCommand.html#a59f91873c1db4adde66d943abc043fa0">doc</a>-&gt;<a class="code hl_function" href="../../d8/dba/classVAbstractPattern.html#a0b6e61a4992dffc09c4d7d9eecaa8b73">getDirectDependencies</a>(oldToolId, data);</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <a class="code hl_struct" href="../../d0/db1/structVToolDependency.html">VToolDependency</a> &amp;dependency : dependencies)</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    {</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        <span class="comment">// Rewriting the replacement&#39;s own construction would create a self-reference when it was built from the old</span></div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        <span class="comment">// object. The chooser normally excludes such descendants; keep this guard in the command as well.</span></div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        <span class="keywordflow">if</span> (dependency.id == <a class="code hl_define" href="../../d3/da5/ifcdef_8h.html#a59d6223ecf7b4cea9bdae1e3db83c5ff">NULL_ID</a> || dependency.id == replacementToolId || ownerIds.contains(dependency.id))</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        {</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>            <span class="keywordflow">continue</span>;</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        }</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        ownerIds.insert(dependency.id);</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        <span class="keyword">const</span> QDomElement oldXml = <a class="code hl_variable" href="../../de/d04/classVUndoCommand.html#a59f91873c1db4adde66d943abc043fa0">doc</a>-&gt;<a class="code hl_function" href="../../d6/deb/classVDomDocument.html#a035e4a009f8f79f3f8e04e8aa43d56dc">elementById</a>(dependency.id);</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        <span class="keywordflow">if</span> (oldXml.isNull())</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        {</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>            <span class="keywordflow">continue</span>;</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        }</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        QDomElement newXml = oldXml.cloneNode(<span class="keyword">true</span>).toElement();</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        <span class="keywordflow">if</span> (replaceReferences(newXml, oldIds, newObjectId))</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        {</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>            <a class="code hl_variable" href="../../de/d22/classReplaceObjectReferences.html#a71c7b2a462ebbe886dd9ec3c05ac66ac">m_tools</a>.append({dependency.id, oldXml.cloneNode(<span class="keyword">true</span>).toElement(), newXml});</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        }</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    }</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>}</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno"><a class="line" href="../../de/d22/classReplaceObjectReferences.html#ae01fb78ed87d23a39106ecacc6356c71">  117</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="../../de/d22/classReplaceObjectReferences.html#ae01fb78ed87d23a39106ecacc6356c71">ReplaceObjectReferences::undo</a>()</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>{</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    <a class="code hl_function" href="../../de/d22/classReplaceObjectReferences.html#a13289dd821e1f8e70cd8359c07f863dc">apply</a>(<span class="keyword">false</span>);</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>}</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span> </div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno"><a class="line" href="../../de/d22/classReplaceObjectReferences.html#a502bef6305a11de4ede7ac3f03600faa">  122</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="../../de/d22/classReplaceObjectReferences.html#a502bef6305a11de4ede7ac3f03600faa">ReplaceObjectReferences::redo</a>()</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>{</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    <a class="code hl_function" href="../../de/d22/classReplaceObjectReferences.html#a13289dd821e1f8e70cd8359c07f863dc">apply</a>(<span class="keyword">true</span>);</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>}</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span> </div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno"><a class="line" href="../../de/d22/classReplaceObjectReferences.html#afcfecf2146829d37982bb31d6ebb9780">  127</a></span><span class="keywordtype">int</span> <a class="code hl_function" href="../../de/d22/classReplaceObjectReferences.html#afcfecf2146829d37982bb31d6ebb9780">ReplaceObjectReferences::changedToolCount</a>()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span><span class="keyword"></span>{</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="../../de/d22/classReplaceObjectReferences.html#a71c7b2a462ebbe886dd9ec3c05ac66ac">m_tools</a>.size();</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>}</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span> </div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno"><a class="line" href="../../de/d22/classReplaceObjectReferences.html#a13289dd821e1f8e70cd8359c07f863dc">  132</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="../../de/d22/classReplaceObjectReferences.html#a13289dd821e1f8e70cd8359c07f863dc">ReplaceObjectReferences::apply</a>(<span class="keywordtype">bool</span> useNewXml)</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>{</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <a class="code hl_struct" href="../../d3/d6d/structReplaceObjectReferences_1_1ToolXml.html">ToolXml</a> &amp;tool : <a class="code hl_variable" href="../../de/d22/classReplaceObjectReferences.html#a71c7b2a462ebbe886dd9ec3c05ac66ac">m_tools</a>)</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    {</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>        QDomElement current = <a class="code hl_variable" href="../../de/d04/classVUndoCommand.html#a59f91873c1db4adde66d943abc043fa0">doc</a>-&gt;<a class="code hl_function" href="../../d6/deb/classVDomDocument.html#a035e4a009f8f79f3f8e04e8aa43d56dc">elementById</a>(tool.id);</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>        <span class="keywordflow">if</span> (!current.isNull())</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>        {</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>            current.parentNode().replaceChild((useNewXml ? tool.newXml : tool.oldXml).cloneNode(<span class="keyword">true</span>), current);</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>        }</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>    }</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>    emit <a class="code hl_signal" href="../../de/d04/classVUndoCommand.html#a094c62c977f31edfaa0c349967868674">NeedFullParsing</a>();</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>}</div>
 <div class="ttc" id="aclassQList_html"><div class="ttname"><a href="../../d1/d4a/classQList.html">QList</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d1/d07/vlayoutpaper_8h_source.html#l00069">vlayoutpaper.h:69</a></div></div>
-<div class="ttc" id="aclassReplaceObjectReferences_html_a13289dd821e1f8e70cd8359c07f863dc"><div class="ttname"><a href="../../de/d22/classReplaceObjectReferences.html#a13289dd821e1f8e70cd8359c07f863dc">ReplaceObjectReferences::apply</a></div><div class="ttdeci">void apply(bool useNewXml)</div><div class="ttdef"><b>Definition:</b> <a href="../../dc/d24/replaceobjectreferences_8cpp_source.html#l00121">replaceobjectreferences.cpp:121</a></div></div>
-<div class="ttc" id="aclassReplaceObjectReferences_html_a502bef6305a11de4ede7ac3f03600faa"><div class="ttname"><a href="../../de/d22/classReplaceObjectReferences.html#a502bef6305a11de4ede7ac3f03600faa">ReplaceObjectReferences::redo</a></div><div class="ttdeci">void redo() override</div><div class="ttdef"><b>Definition:</b> <a href="../../dc/d24/replaceobjectreferences_8cpp_source.html#l00111">replaceobjectreferences.cpp:111</a></div></div>
-<div class="ttc" id="aclassReplaceObjectReferences_html_a6a7b4c5da9a9ea37659f1815b85387a9"><div class="ttname"><a href="../../de/d22/classReplaceObjectReferences.html#a6a7b4c5da9a9ea37659f1815b85387a9">ReplaceObjectReferences::ReplaceObjectReferences</a></div><div class="ttdeci">ReplaceObjectReferences(quint32 oldToolId, quint32 newObjectId, VAbstractPattern *doc, const VContainer *data, QUndoCommand *parent=nullptr)</div><div class="ttdef"><b>Definition:</b> <a href="../../dc/d24/replaceobjectreferences_8cpp_source.html#l00067">replaceobjectreferences.cpp:67</a></div></div>
+<div class="ttc" id="aclassReplaceObjectReferences_html_a13289dd821e1f8e70cd8359c07f863dc"><div class="ttname"><a href="../../de/d22/classReplaceObjectReferences.html#a13289dd821e1f8e70cd8359c07f863dc">ReplaceObjectReferences::apply</a></div><div class="ttdeci">void apply(bool useNewXml)</div><div class="ttdef"><b>Definition:</b> <a href="../../dc/d24/replaceobjectreferences_8cpp_source.html#l00132">replaceobjectreferences.cpp:132</a></div></div>
+<div class="ttc" id="aclassReplaceObjectReferences_html_a502bef6305a11de4ede7ac3f03600faa"><div class="ttname"><a href="../../de/d22/classReplaceObjectReferences.html#a502bef6305a11de4ede7ac3f03600faa">ReplaceObjectReferences::redo</a></div><div class="ttdeci">void redo() override</div><div class="ttdef"><b>Definition:</b> <a href="../../dc/d24/replaceobjectreferences_8cpp_source.html#l00122">replaceobjectreferences.cpp:122</a></div></div>
+<div class="ttc" id="aclassReplaceObjectReferences_html_a6a7b4c5da9a9ea37659f1815b85387a9"><div class="ttname"><a href="../../de/d22/classReplaceObjectReferences.html#a6a7b4c5da9a9ea37659f1815b85387a9">ReplaceObjectReferences::ReplaceObjectReferences</a></div><div class="ttdeci">ReplaceObjectReferences(quint32 oldToolId, quint32 newObjectId, VAbstractPattern *doc, const VContainer *data, QUndoCommand *parent=nullptr)</div><div class="ttdef"><b>Definition:</b> <a href="../../dc/d24/replaceobjectreferences_8cpp_source.html#l00068">replaceobjectreferences.cpp:68</a></div></div>
 <div class="ttc" id="aclassReplaceObjectReferences_html_a71c7b2a462ebbe886dd9ec3c05ac66ac"><div class="ttname"><a href="../../de/d22/classReplaceObjectReferences.html#a71c7b2a462ebbe886dd9ec3c05ac66ac">ReplaceObjectReferences::m_tools</a></div><div class="ttdeci">QVector&lt; ToolXml &gt; m_tools</div><div class="ttdef"><b>Definition:</b> <a href="../../d0/d5b/replaceobjectreferences_8h_source.html#l00044">replaceobjectreferences.h:44</a></div></div>
-<div class="ttc" id="aclassReplaceObjectReferences_html_ae01fb78ed87d23a39106ecacc6356c71"><div class="ttname"><a href="../../de/d22/classReplaceObjectReferences.html#ae01fb78ed87d23a39106ecacc6356c71">ReplaceObjectReferences::undo</a></div><div class="ttdeci">void undo() override</div><div class="ttdef"><b>Definition:</b> <a href="../../dc/d24/replaceobjectreferences_8cpp_source.html#l00106">replaceobjectreferences.cpp:106</a></div></div>
-<div class="ttc" id="aclassReplaceObjectReferences_html_afcfecf2146829d37982bb31d6ebb9780"><div class="ttname"><a href="../../de/d22/classReplaceObjectReferences.html#afcfecf2146829d37982bb31d6ebb9780">ReplaceObjectReferences::changedToolCount</a></div><div class="ttdeci">int changedToolCount() const</div><div class="ttdef"><b>Definition:</b> <a href="../../dc/d24/replaceobjectreferences_8cpp_source.html#l00116">replaceobjectreferences.cpp:116</a></div></div>
+<div class="ttc" id="aclassReplaceObjectReferences_html_ae01fb78ed87d23a39106ecacc6356c71"><div class="ttname"><a href="../../de/d22/classReplaceObjectReferences.html#ae01fb78ed87d23a39106ecacc6356c71">ReplaceObjectReferences::undo</a></div><div class="ttdeci">void undo() override</div><div class="ttdef"><b>Definition:</b> <a href="../../dc/d24/replaceobjectreferences_8cpp_source.html#l00117">replaceobjectreferences.cpp:117</a></div></div>
+<div class="ttc" id="aclassReplaceObjectReferences_html_afcfecf2146829d37982bb31d6ebb9780"><div class="ttname"><a href="../../de/d22/classReplaceObjectReferences.html#afcfecf2146829d37982bb31d6ebb9780">ReplaceObjectReferences::changedToolCount</a></div><div class="ttdeci">int changedToolCount() const</div><div class="ttdef"><b>Definition:</b> <a href="../../dc/d24/replaceobjectreferences_8cpp_source.html#l00127">replaceobjectreferences.cpp:127</a></div></div>
 <div class="ttc" id="aclassVAbstractPattern_html"><div class="ttname"><a href="../../d8/dba/classVAbstractPattern.html">VAbstractPattern</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d0/d89/vabstractpattern_8h_source.html#l00126">vabstractpattern.h:127</a></div></div>
 <div class="ttc" id="aclassVAbstractPattern_html_a0b6e61a4992dffc09c4d7d9eecaa8b73"><div class="ttname"><a href="../../d8/dba/classVAbstractPattern.html#a0b6e61a4992dffc09c4d7d9eecaa8b73">VAbstractPattern::getDirectDependencies</a></div><div class="ttdeci">QVector&lt; VToolDependency &gt; getDirectDependencies(quint32 toolId, const VContainer *data) const</div><div class="ttdoc">getDirectDependencies returns the tools and named variables that directly reference a tool.</div><div class="ttdef"><b>Definition:</b> <a href="../../de/d7d/vabstractpattern_8cpp_source.html#l02246">vabstractpattern.cpp:2246</a></div></div>
 <div class="ttc" id="aclassVAbstractPattern_html_a1ea13a919f4b7c1c960363ff9e051ab2"><div class="ttname"><a href="../../d8/dba/classVAbstractPattern.html#a1ea13a919f4b7c1c960363ff9e051ab2">VAbstractPattern::objectReferenceAttributes</a></div><div class="ttdeci">static const QSet&lt; QString &gt; &amp; objectReferenceAttributes()</div><div class="ttdoc">objectReferenceAttributes returns serialized attributes that contain referenced object or tool IDs.</div><div class="ttdef"><b>Definition:</b> <a href="../../de/d7d/vabstractpattern_8cpp_source.html#l02050">vabstractpattern.cpp:2050</a></div></div>
 <div class="ttc" id="aclassVContainer_html"><div class="ttname"><a href="../../d2/d83/classVContainer.html">VContainer</a></div><div class="ttdoc">Manages a collection of geometric objects, pieces, paths, and variables.</div><div class="ttdef"><b>Definition:</b> <a href="../../d3/df7/vcontainer_8h_source.html#l00262">vcontainer.h:263</a></div></div>
+<div class="ttc" id="aclassVContainer_html_a956a1e551804359b7aa46a389b4055da"><div class="ttname"><a href="../../d2/d83/classVContainer.html#a956a1e551804359b7aa46a389b4055da">VContainer::GetGObject</a></div><div class="ttdeci">const QSharedPointer&lt; VGObject &gt; GetGObject(quint32 id) const</div><div class="ttdoc">Retrieves a geometric object with the specified ID.</div><div class="ttdef"><b>Definition:</b> <a href="../../d6/d46/vcontainer_8cpp_source.html#l00199">vcontainer.cpp:199</a></div></div>
 <div class="ttc" id="aclassVContainer_html_abf178a7ab3e8da08b920d4706987576f"><div class="ttname"><a href="../../d2/d83/classVContainer.html#abf178a7ab3e8da08b920d4706987576f">VContainer::DataGObjects</a></div><div class="ttdeci">const QHash&lt; quint32, QSharedPointer&lt; VGObject &gt; &gt; * DataGObjects() const</div><div class="ttdoc">Returns a pointer to the the container of geometric objects.</div><div class="ttdef"><b>Definition:</b> <a href="../../d6/d46/vcontainer_8cpp_source.html#l01260">vcontainer.cpp:1260</a></div></div>
 <div class="ttc" id="aclassVDomDocument_html_a035e4a009f8f79f3f8e04e8aa43d56dc"><div class="ttname"><a href="../../d6/deb/classVDomDocument.html#a035e4a009f8f79f3f8e04e8aa43d56dc">VDomDocument::elementById</a></div><div class="ttdeci">QDomElement elementById(quint32 id, const QString &amp;tagName=QString())</div><div class="ttdef"><b>Definition:</b> <a href="../../d7/d49/vdomdocument_8cpp_source.html#l00167">vdomdocument.cpp:167</a></div></div>
+<div class="ttc" id="aclassVExceptionBadId_html"><div class="ttname"><a href="../../de/da9/classVExceptionBadId.html">VExceptionBadId</a></div><div class="ttdoc">The VExceptionBadId class for exception bad id.</div><div class="ttdef"><b>Definition:</b> <a href="../../d4/d13/vexceptionbadid_8h_source.html#l00065">vexceptionbadid.h:66</a></div></div>
 <div class="ttc" id="aclassVUndoCommand_html"><div class="ttname"><a href="../../de/d04/classVUndoCommand.html">VUndoCommand</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d6/dbe/vundocommand_8h_source.html#l00092">vundocommand.h:93</a></div></div>
 <div class="ttc" id="aclassVUndoCommand_html_a094c62c977f31edfaa0c349967868674"><div class="ttname"><a href="../../de/d04/classVUndoCommand.html#a094c62c977f31edfaa0c349967868674">VUndoCommand::NeedFullParsing</a></div><div class="ttdeci">void NeedFullParsing()</div></div>
 <div class="ttc" id="aclassVUndoCommand_html_a59f91873c1db4adde66d943abc043fa0"><div class="ttname"><a href="../../de/d04/classVUndoCommand.html#a59f91873c1db4adde66d943abc043fa0">VUndoCommand::doc</a></div><div class="ttdeci">VAbstractPattern * doc</div><div class="ttdef"><b>Definition:</b> <a href="../../d6/dbe/vundocommand_8h_source.html#l00106">vundocommand.h:106</a></div></div>
 <div class="ttc" id="aifcdef_8h_html_a59d6223ecf7b4cea9bdae1e3db83c5ff"><div class="ttname"><a href="../../d3/da5/ifcdef_8h.html#a59d6223ecf7b4cea9bdae1e3db83c5ff">NULL_ID</a></div><div class="ttdeci">#define NULL_ID</div><div class="ttdef"><b>Definition:</b> <a href="../../d3/da5/ifcdef_8h_source.html#l00076">ifcdef.h:76</a></div></div>
-<div class="ttc" id="anamespaceanonymous__namespace_02replaceobjectreferences_8cpp_03_html_a46ffe8c67719b13724533df73d0c8979"><div class="ttname"><a href="../../d3/d51/namespaceanonymous__namespace_02replaceobjectreferences_8cpp_03.html#a46ffe8c67719b13724533df73d0c8979">anonymous_namespace{replaceobjectreferences.cpp}::replaceReferences</a></div><div class="ttdeci">bool replaceReferences(QDomElement root, const QSet&lt; quint32 &gt; &amp;oldIds, quint32 newObjectId)</div><div class="ttdef"><b>Definition:</b> <a href="../../dc/d24/replaceobjectreferences_8cpp_source.html#l00024">replaceobjectreferences.cpp:24</a></div></div>
+<div class="ttc" id="anamespaceanonymous__namespace_02replaceobjectreferences_8cpp_03_html_a46ffe8c67719b13724533df73d0c8979"><div class="ttname"><a href="../../d3/d51/namespaceanonymous__namespace_02replaceobjectreferences_8cpp_03.html#a46ffe8c67719b13724533df73d0c8979">anonymous_namespace{replaceobjectreferences.cpp}::replaceReferences</a></div><div class="ttdeci">bool replaceReferences(QDomElement root, const QSet&lt; quint32 &gt; &amp;oldIds, quint32 newObjectId)</div><div class="ttdef"><b>Definition:</b> <a href="../../dc/d24/replaceobjectreferences_8cpp_source.html#l00025">replaceobjectreferences.cpp:25</a></div></div>
 <div class="ttc" id="areplaceobjectreferences_8h_html"><div class="ttname"><a href="../../d0/d5b/replaceobjectreferences_8h.html">replaceobjectreferences.h</a></div></div>
 <div class="ttc" id="astructReplaceObjectReferences_1_1ToolXml_html"><div class="ttname"><a href="../../d3/d6d/structReplaceObjectReferences_1_1ToolXml.html">ReplaceObjectReferences::ToolXml</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d0/d5b/replaceobjectreferences_8h_source.html#l00035">replaceobjectreferences.h:36</a></div></div>
 <div class="ttc" id="astructVToolDependency_html"><div class="ttname"><a href="../../d0/db1/structVToolDependency.html">VToolDependency</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d0/d89/vabstractpattern_8h_source.html#l00103">vabstractpattern.h:104</a></div></div>

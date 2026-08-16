@@ -1,5 +1,10 @@
 var NAVTREEINDEX317 =
 {
+"df/db4/classXTemplateSerializer.html#a25c28b2450306347c13bfe2e56c37a4b":[3,0,929,197],
+"df/db4/classXTemplateSerializer.html#a25c28b2450306347c13bfe2e56c37a4b":[3,0,929,199],
+"df/db4/classXTemplateSerializer.html#a25c28b2450306347c13bfe2e56c37a4b":[3,0,929,198],
+"df/db4/classXTemplateSerializer.html#a25c28b2450306347c13bfe2e56c37a4b":[3,0,929,196],
+"df/db4/classXTemplateSerializer.html#a2f9e9fa978ed68e7a27a1f0de721923e":[3,0,929,86],
 "df/db4/classXTemplateSerializer.html#a2f9e9fa978ed68e7a27a1f0de721923e":[3,0,929,85],
 "df/db4/classXTemplateSerializer.html#a2f9e9fa978ed68e7a27a1f0de721923e":[3,0,929,84],
 "df/db4/classXTemplateSerializer.html#a2f9e9fa978ed68e7a27a1f0de721923e":[3,0,929,87],
@@ -244,10 +249,5 @@ var NAVTREEINDEX317 =
 "df/dc1/msvc_2include_2xercesc_2util_2RefHash3KeysIdPool_8c.html":[4,0,0,1,15,2,0,0,6,54],
 "df/dc1/msvc_2include_2xercesc_2util_2RefHash3KeysIdPool_8c_source.html":[4,0,0,1,15,2,0,0,6,54],
 "df/dc3/classAbstractLayoutDialog.html":[3,0,7],
-"df/dc3/classAbstractLayoutDialog.html#a309e202c3fecafb72e69fe8fc73b724f":[3,0,7,2],
-"df/dc3/classAbstractLayoutDialog.html#a4743e2084b3b5cf4798b46d12b9759cd":[3,0,7,1],
-"df/dc3/classAbstractLayoutDialog.html#a603fab080ba0182f253b35dbb4e51f92":[3,0,7,0],
-"df/dc8/Seamly2DTest_2qttestmainlambda_8cpp.html":[4,0,0,2,2,0],
-"df/dc8/Seamly2DTest_2qttestmainlambda_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627":[4,0,0,2,2,0,1],
-"df/dc8/Seamly2DTest_2qttestmainlambda_8cpp_source.html":[4,0,0,2,2,0]
+"df/dc3/classAbstractLayoutDialog.html#a309e202c3fecafb72e69fe8fc73b724f":[3,0,7,2]
 };

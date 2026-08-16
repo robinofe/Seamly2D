@@ -1,7 +1,9 @@
 var NAVTREEINDEX112 =
 {
 "d6/d6b/classDOMDocumentTypeImpl.html#afff4b900bdcf62e16cf87875e30a507c":[3,0,167,64],
+"d6/d6b/classDOMDocumentTypeImpl.html#afff4b900bdcf62e16cf87875e30a507c":[3,0,167,67],
 "d6/d6b/classDOMDocumentTypeImpl.html#afff4b900bdcf62e16cf87875e30a507c":[3,0,167,65],
+"d6/d6b/classDOMDocumentTypeImpl.html#afff4b900bdcf62e16cf87875e30a507c":[3,0,167,66],
 "d6/d6b/classVToolBisector.html":[3,0,746],
 "d6/d6b/classVToolBisector.html#a03774901ba31118f217b74af44f0718c":[3,0,746,6],
 "d6/d6b/classVToolBisector.html#a0c09eeda900b693867ca283b6fae2042":[3,0,746,22],
@@ -247,7 +249,5 @@ var NAVTREEINDEX112 =
 "d6/d7a/classVNodePoint.html#ab5ac5301e6858527f32034d4099f604e":[3,0,702,6],
 "d6/d7a/classVNodePoint.html#abd1f994ffc06822f6ba008957125b009":[3,0,702,21],
 "d6/d7a/classVNodePoint.html#ad0e2dbce6a5834568d942e7ca91c2c38":[3,0,702,16],
-"d6/d7a/classVNodePoint.html#ad31b77e34ba05e15263909fce9e09994":[3,0,702,15],
-"d6/d7a/classVNodePoint.html#ad90c5755e355acadf0b2dba31067f6ce":[3,0,702,2],
-"d6/d7a/classVNodePoint.html#af9c2f649e2acb97ea5274a0bb446e70d":[3,0,702,8]
+"d6/d7a/classVNodePoint.html#ad31b77e34ba05e15263909fce9e09994":[3,0,702,15]
 };

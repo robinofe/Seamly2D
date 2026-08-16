@@ -1,5 +1,10 @@
 var NAVTREEINDEX318 =
 {
+"df/dc3/classAbstractLayoutDialog.html#a4743e2084b3b5cf4798b46d12b9759cd":[3,0,7,1],
+"df/dc3/classAbstractLayoutDialog.html#a603fab080ba0182f253b35dbb4e51f92":[3,0,7,0],
+"df/dc8/Seamly2DTest_2qttestmainlambda_8cpp.html":[4,0,0,2,2,0],
+"df/dc8/Seamly2DTest_2qttestmainlambda_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627":[4,0,0,2,2,0,1],
+"df/dc8/Seamly2DTest_2qttestmainlambda_8cpp_source.html":[4,0,0,2,2,0],
 "df/dc8/vtest_8cpp.html":[4,0,0,1,12,4],
 "df/dc8/vtest_8cpp_source.html":[4,0,0,1,12,4],
 "df/dc9/macx_2include_2xercesc_2dom_2impl_2DOMNodeListImpl_8hpp.html":[4,0,0,1,15,0,0,0,0,0,31],
@@ -244,10 +249,5 @@ var NAVTREEINDEX318 =
 "df/de1/classVPiecePath.html#a47675226e49878c44a1248b26f45a4cc":[3,0,718,22],
 "df/de1/classVPiecePath.html#a4deb68aafa7edcae4a8daf1ced1c24ba":[3,0,718,8],
 "df/de1/classVPiecePath.html#a504b69c93055d888b2f7016aeb18f4a4":[3,0,718,4],
-"df/de1/classVPiecePath.html#a552c6690e61b75e2b511a842e83b5d35":[3,0,718,24],
-"df/de1/classVPiecePath.html#a56e567a58cbaff5c5ec4173a35273091":[3,0,718,47],
-"df/de1/classVPiecePath.html#a5f3490b791ea9b2ba619d35fa7091341":[3,0,718,36],
-"df/de1/classVPiecePath.html#a5fef27e07553410719e5003c556005aa":[3,0,718,1],
-"df/de1/classVPiecePath.html#a64514076b2ee3b23f2926ce07c42401f":[3,0,718,15],
-"df/de1/classVPiecePath.html#a6497733c635eb09fe44a8e4d710bf481":[3,0,718,9]
+"df/de1/classVPiecePath.html#a552c6690e61b75e2b511a842e83b5d35":[3,0,718,24]
 };
