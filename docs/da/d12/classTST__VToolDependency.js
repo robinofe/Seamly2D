@@ -12,6 +12,7 @@ var classTST__VToolDependency =
     [ "referenceLengthFormulaIsTracked", "da/d12/classTST__VToolDependency.html#a8d06a7747bf458719720792a48f84731", null ],
     [ "referenceLengthSchema", "da/d12/classTST__VToolDependency.html#a39175ee7eb67edb410d837224caa4111", null ],
     [ "referenceLengthUndo", "da/d12/classTST__VToolDependency.html#a64ed8b8300f5c5c9c13060129ab5edfa", null ],
+    [ "replaceObjectReferences", "da/d12/classTST__VToolDependency.html#aa0fb585c4686f7359d9d429520771cbc", null ],
     [ "structuredDependencies", "da/d12/classTST__VToolDependency.html#a149a9e762d7a719346ed153e8cfec12a", null ],
     [ "unusedNodeDependencies", "da/d12/classTST__VToolDependency.html#a38b793b0c617531e143f4100f66c34ad", null ],
     [ "visualChangeRequestsLiteParse", "da/d12/classTST__VToolDependency.html#a4500212e33c5871e697a6b43c0595ea0", null ]

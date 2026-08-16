@@ -19,7 +19,7 @@ var searchData=
   ['oldsplinepath_16',['oldSplinePath',['../d9/de8/classMoveSplinePath.html#a69fc17853c5c4726a982d2016558b2b0',1,'MoveSplinePath']]],
   ['oldtooltype_17',['OldToolType',['../dc/d08/classVToolSplinePath.html#a337aefc086f03ba5cb0accfd83729249',1,'VToolSplinePath::OldToolType()'],['../df/d5e/classVToolSpline.html#a09f5c5f3c382affefcbf9fc8e495836a',1,'VToolSpline::OldToolType()']]],
   ['oldx_18',['oldX',['../da/df9/classMoveSPoint.html#a2e398b7e9410308e2de80a63af292971',1,'MoveSPoint']]],
-  ['oldxml_19',['oldXml',['../d6/d4d/classSaveToolOptions.html#a225fa592d5a483e4e9615433e137f916',1,'SaveToolOptions']]],
+  ['oldxml_19',['oldXml',['../d6/d4d/classSaveToolOptions.html#a225fa592d5a483e4e9615433e137f916',1,'SaveToolOptions::oldXml()'],['../d3/d6d/structReplaceObjectReferences_1_1ToolXml.html#aa8f8bb9cb20d45ea033c3bee93e041da',1,'ReplaceObjectReferences::ToolXml::oldXml()']]],
   ['oldy_20',['oldY',['../da/df9/classMoveSPoint.html#a16378c392090fda9efd14e80a6ad1bf2',1,'MoveSPoint']]],
   ['opacity_21',['opacity',['../d3/df8/structDraftImage.html#ac20434dee482b42c0427353fcdcc5166',1,'DraftImage']]],
   ['openingpattern_22',['openingPattern',['../db/dda/classVAbstractApplication.html#a0d83297b63dae585ae44f452a4752ef4',1,'VAbstractApplication']]],

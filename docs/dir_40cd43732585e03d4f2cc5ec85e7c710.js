@@ -39,6 +39,8 @@ var dir_40cd43732585e03d4f2cc5ec85e7c710 =
     [ "remove_groupitem.h", "dd/d06/remove__groupitem_8h.html", "dd/d06/remove__groupitem_8h" ],
     [ "rename_draftblock.cpp", "d9/d5e/rename__draftblock_8cpp.html", null ],
     [ "rename_draftblock.h", "d8/d7a/rename__draftblock_8h.html", "d8/d7a/rename__draftblock_8h" ],
+    [ "replaceobjectreferences.cpp", "dc/d24/replaceobjectreferences_8cpp.html", "dc/d24/replaceobjectreferences_8cpp" ],
+    [ "replaceobjectreferences.h", "d0/d5b/replaceobjectreferences_8h.html", "d0/d5b/replaceobjectreferences_8h" ],
     [ "savepieceoptions.cpp", "d1/d05/savepieceoptions_8cpp.html", null ],
     [ "savepieceoptions.h", "d2/d6b/savepieceoptions_8h.html", "d2/d6b/savepieceoptions_8h" ],
     [ "savepiecepathoptions.cpp", "dd/d3a/savepiecepathoptions_8cpp.html", null ],

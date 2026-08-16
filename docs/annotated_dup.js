@@ -526,6 +526,7 @@ var annotated_dup =
     [ "RegxUtil", "d1/d3a/classRegxUtil.html", "d1/d3a/classRegxUtil" ],
     [ "RemoveGroupItem", "d7/d18/classRemoveGroupItem.html", "d7/d18/classRemoveGroupItem" ],
     [ "RenameDraftBlock", "dd/d20/classRenameDraftBlock.html", "dd/d20/classRenameDraftBlock" ],
+    [ "ReplaceObjectReferences", "de/d22/classReplaceObjectReferences.html", "de/d22/classReplaceObjectReferences" ],
     [ "ResizeHandlesItem", "d0/de9/classResizeHandlesItem.html", "d0/de9/classResizeHandlesItem" ],
     [ "RowData", "da/d35/structRowData.html", "da/d35/structRowData" ],
     [ "SavePieceOptions", "d9/d20/classSavePieceOptions.html", "d9/d20/classSavePieceOptions" ],

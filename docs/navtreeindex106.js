@@ -1,5 +1,13 @@
 var NAVTREEINDEX106 =
 {
+"d6/d0b/def_8cpp.html#a598ba0614837d8e08bc1eee7e323f127":[4,0,0,1,8,5,38],
+"d6/d0b/def_8cpp.html#a5c953c7ed6cb697e8c24301f22793a3e":[4,0,0,1,8,5,65],
+"d6/d0b/def_8cpp.html#a5ee284ec559bdbc00fd8b7e86f468c0f":[4,0,0,1,8,5,97],
+"d6/d0b/def_8cpp.html#a615623de036744d9ae9a2828af024f8d":[4,0,0,1,8,5,58],
+"d6/d0b/def_8cpp.html#a637f43b7cda3ccf9706f7d5ffec636dc":[4,0,0,1,8,5,23],
+"d6/d0b/def_8cpp.html#a641fc487bcd1c3d00956be081d5ff649":[4,0,0,1,8,5,18],
+"d6/d0b/def_8cpp.html#a648d0adfbe92b249d55c0c580f57fd13":[4,0,0,1,8,5,126],
+"d6/d0b/def_8cpp.html#a649cee1df19c5ee54bd377e7e84f6fa0":[4,0,0,1,8,5,111],
 "d6/d0b/def_8cpp.html#a65e418ff8a3ba84e3530a4d46ac42788":[4,0,0,1,8,5,73],
 "d6/d0b/def_8cpp.html#a66765d6231f7691b11943ed0ee379fdb":[4,0,0,1,8,5,78],
 "d6/d0b/def_8cpp.html#a6784530e8d1c3c0ae7a11012c5737400":[4,0,0,1,8,5,33],
@@ -92,10 +100,10 @@ var NAVTREEINDEX106 =
 "d6/d13/msvc_2include_2xercesc_2framework_2XMLDTDDescription_8hpp_source.html":[4,0,0,1,15,2,0,0,1,20],
 "d6/d13/vpropertyset_8h.html":[4,0,0,1,11,26],
 "d6/d13/vpropertyset_8h_source.html":[4,0,0,1,11,26],
-"d6/d15/structVFormulaField.html":[3,0,629],
-"d6/d15/structVFormulaField.html#a815fd1833f3496ac20ad69cef5465897":[3,0,629,1],
-"d6/d15/structVFormulaField.html#a956c5c7f4048e2077124af233083845f":[3,0,629,0],
-"d6/d15/structVFormulaField.html#ad91a1bdc8d51df07c2dcff235d2e9edf":[3,0,629,2],
+"d6/d15/structVFormulaField.html":[3,0,630],
+"d6/d15/structVFormulaField.html#a815fd1833f3496ac20ad69cef5465897":[3,0,630,1],
+"d6/d15/structVFormulaField.html#a956c5c7f4048e2077124af233083845f":[3,0,630,0],
+"d6/d15/structVFormulaField.html#ad91a1bdc8d51df07c2dcff235d2e9edf":[3,0,630,2],
 "d6/d16/mingw_2include_2xercesc_2util_2UnsupportedEncodingException_8hpp.html":[4,0,0,1,15,1,0,0,6,72],
 "d6/d16/mingw_2include_2xercesc_2util_2UnsupportedEncodingException_8hpp_source.html":[4,0,0,1,15,1,0,0,6,72],
 "d6/d17/macx_2include_2xercesc_2util_2MsgLoaders_2InMemory_2InMemMsgLoader_8hpp.html":[4,0,0,1,15,0,0,0,6,1,0,0],
@@ -241,13 +249,5 @@ var NAVTREEINDEX106 =
 "d6/d1a/classMainWindow.html#a6e79103994b5acf3d9f1e7083709e12e":[3,0,342,66],
 "d6/d1a/classMainWindow.html#a6ef53ce1b39891be5f2d11725ed9b297":[3,0,342,237],
 "d6/d1a/classMainWindow.html#a70980af6af41301297255aab009040e6":[3,0,342,189],
-"d6/d1a/classMainWindow.html#a725b7a7668b66e227ae7255cbf5e5bad":[3,0,342,264],
-"d6/d1a/classMainWindow.html#a72696739dc54bb1489ea95c46419c3e8":[3,0,342,212],
-"d6/d1a/classMainWindow.html#a74cbbfd5122429508035746f220988a3":[3,0,342,24],
-"d6/d1a/classMainWindow.html#a7503563a09755392b59af4f3378856e7":[3,0,342,267],
-"d6/d1a/classMainWindow.html#a756e9a0e33545421d931c197f639e464":[3,0,342,134],
-"d6/d1a/classMainWindow.html#a7644b7b6a293592fa3712d3bbbfd958d":[3,0,342,280],
-"d6/d1a/classMainWindow.html#a76490c604a704b0e412a96c13b1a1397":[3,0,342,173],
-"d6/d1a/classMainWindow.html#a76dce35c814835925f2e886d479aeaf2":[3,0,342,201],
-"d6/d1a/classMainWindow.html#a77643494265991ec1ec783285b2b86a7":[3,0,342,273]
+"d6/d1a/classMainWindow.html#a725b7a7668b66e227ae7255cbf5e5bad":[3,0,342,264]
 };

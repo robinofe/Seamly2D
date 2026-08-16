@@ -167,6 +167,7 @@ var searchData=
   ['regxutil_164',['RegxUtil',['../d1/d3a/classRegxUtil.html',1,'']]],
   ['removegroupitem_165',['RemoveGroupItem',['../d7/d18/classRemoveGroupItem.html',1,'']]],
   ['renamedraftblock_166',['RenameDraftBlock',['../dd/d20/classRenameDraftBlock.html',1,'']]],
-  ['resizehandlesitem_167',['ResizeHandlesItem',['../d0/de9/classResizeHandlesItem.html',1,'']]],
-  ['rowdata_168',['RowData',['../da/d35/structRowData.html',1,'']]]
+  ['replaceobjectreferences_167',['ReplaceObjectReferences',['../de/d22/classReplaceObjectReferences.html',1,'']]],
+  ['resizehandlesitem_168',['ResizeHandlesItem',['../d0/de9/classResizeHandlesItem.html',1,'']]],
+  ['rowdata_169',['RowData',['../da/d35/structRowData.html',1,'']]]
 ];

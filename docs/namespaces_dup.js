@@ -24,6 +24,9 @@ var namespaces_dup =
       [ "initAllStringsComboBox", "d1/dbe/namespaceanonymous__namespace_02preferencespatternpage_8cpp_03.html#a97383a8b46e2afedbc957a5c56b7522f", null ]
     ] ],
     [ "anonymous_namespace{reference_line_tool.cpp}", "d6/dd0/namespaceanonymous__namespace_02reference__line__tool_8cpp_03.html", "d6/dd0/namespaceanonymous__namespace_02reference__line__tool_8cpp_03" ],
+    [ "anonymous_namespace{replaceobjectreferences.cpp}", "d3/d51/namespaceanonymous__namespace_02replaceobjectreferences_8cpp_03.html", [
+      [ "replaceReferences", "d3/d51/namespaceanonymous__namespace_02replaceobjectreferences_8cpp_03.html#a46ffe8c67719b13724533df73d0c8979", null ]
+    ] ],
     [ "anonymous_namespace{savetooloptions.cpp}", "dd/da8/namespaceanonymous__namespace_02savetooloptions_8cpp_03.html", [
       [ "childElements", "dd/da8/namespaceanonymous__namespace_02savetooloptions_8cpp_03.html#a90bc00f8429f2767711cee83fd7c5b09", null ],
       [ "referencesChanged", "dd/da8/namespaceanonymous__namespace_02savetooloptions_8cpp_03.html#a37fef8eec386cdf9b1548406ee1b6175", null ]

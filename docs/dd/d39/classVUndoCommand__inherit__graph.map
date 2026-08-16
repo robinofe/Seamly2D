@@ -1,5 +1,5 @@
 <map id="VUndoCommand" name="VUndoCommand">
-<area shape="rect" id="node1" title=" " alt="" coords="2608,131,2807,399"/>
+<area shape="rect" id="node1" title=" " alt="" coords="2691,131,2889,399"/>
 <area shape="rect" id="node4" href="$db/d26/classAddDetNode.html" title=" " alt="" coords="5,513,177,649"/>
 <area shape="rect" id="node5" href="$d2/d4d/classAddDraftBlock.html" title=" " alt="" coords="201,520,352,641"/>
 <area shape="rect" id="node6" href="$d2/d67/classAddGroup.html" title=" " alt="" coords="377,520,523,641"/>
@@ -20,17 +20,18 @@
 <area shape="rect" id="node24" href="$d9/de8/classMoveSplinePath.html" title=" " alt="" coords="3127,469,3293,693"/>
 <area shape="rect" id="node25" href="$d7/d18/classRemoveGroupItem.html" title=" " alt="" coords="3317,520,3498,641"/>
 <area shape="rect" id="node26" href="$dd/d20/classRenameDraftBlock.html" title=" " alt="" coords="3523,469,3703,693"/>
-<area shape="rect" id="node27" href="$d9/d20/classSavePieceOptions.html" title=" " alt="" coords="3727,483,3901,678"/>
-<area shape="rect" id="node28" href="$df/d94/classSavePiecePathOptions.html" title=" " alt="" coords="3926,469,4129,693"/>
-<area shape="rect" id="node29" href="$d6/d4d/classSaveToolOptions.html" title=" " alt="" coords="4153,483,4320,678"/>
-<area shape="rect" id="node30" href="$dd/d52/classSetPieceColor.html" title=" " alt="" coords="4344,469,4492,693"/>
-<area shape="rect" id="node31" href="$d2/dbe/classShowDoublePointName.html" title=" " alt="" coords="4517,483,4727,678"/>
-<area shape="rect" id="node32" href="$dc/d9b/classShowOperationPointName.html" title=" " alt="" coords="4751,491,4981,671"/>
-<area shape="rect" id="node33" href="$d8/d2c/classShowPointName.html" title=" " alt="" coords="5005,498,5170,663"/>
-<area shape="rect" id="node34" href="$dd/d47/classTogglePieceInLayout.html" title=" " alt="" coords="5195,469,5385,693"/>
-<area shape="rect" id="node35" href="$d9/d39/classTogglePieceLock.html" title=" " alt="" coords="5410,469,5575,693"/>
-<area shape="rect" id="node2" title=" " alt="" coords="2606,5,2681,83"/>
-<area shape="rect" id="node3" title=" " alt="" coords="2705,5,2838,83"/>
+<area shape="rect" id="node27" href="$de/d22/classReplaceObjectReferences.html" title=" " alt="" coords="3727,513,3941,649"/>
+<area shape="rect" id="node28" href="$d9/d20/classSavePieceOptions.html" title=" " alt="" coords="3965,483,4140,678"/>
+<area shape="rect" id="node29" href="$df/d94/classSavePiecePathOptions.html" title=" " alt="" coords="4165,469,4367,693"/>
+<area shape="rect" id="node30" href="$d6/d4d/classSaveToolOptions.html" title=" " alt="" coords="4392,483,4559,678"/>
+<area shape="rect" id="node31" href="$dd/d52/classSetPieceColor.html" title=" " alt="" coords="4583,469,4731,693"/>
+<area shape="rect" id="node32" href="$d2/dbe/classShowDoublePointName.html" title=" " alt="" coords="4755,483,4966,678"/>
+<area shape="rect" id="node33" href="$dc/d9b/classShowOperationPointName.html" title=" " alt="" coords="4990,491,5219,671"/>
+<area shape="rect" id="node34" href="$d8/d2c/classShowPointName.html" title=" " alt="" coords="5243,498,5409,663"/>
+<area shape="rect" id="node35" href="$dd/d47/classTogglePieceInLayout.html" title=" " alt="" coords="5433,469,5624,693"/>
+<area shape="rect" id="node36" href="$d9/d39/classTogglePieceLock.html" title=" " alt="" coords="5649,469,5814,693"/>
+<area shape="rect" id="node2" title=" " alt="" coords="2689,5,2763,83"/>
+<area shape="rect" id="node3" title=" " alt="" coords="2787,5,2921,83"/>
 <area shape="rect" id="node17" href="$d1/d74/classMoveDoubleLabel.html" title=" " alt="" coords="2031,763,2205,957"/>
 <area shape="rect" id="node18" href="$d7/ddb/classMoveLabel.html" title=" " alt="" coords="2229,792,2359,928"/>
 <area shape="rect" id="node19" href="$d7/d7b/classMoveOperationLabel.html" title=" " alt="" coords="2383,777,2576,943"/>
