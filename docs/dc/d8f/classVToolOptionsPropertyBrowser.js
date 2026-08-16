@@ -1,6 +1,7 @@
 var classVToolOptionsPropertyBrowser =
 [
     [ "VToolOptionsPropertyBrowser", "dc/d8f/classVToolOptionsPropertyBrowser.html#a280d9d78d6bb61b48e7f9050d9773c36", null ],
+    [ "addCalculatedLength", "dc/d8f/classVToolOptionsPropertyBrowser.html#a4c6b18c61292b5d674584385547fc39f", null ],
     [ "addObjectProperty", "dc/d8f/classVToolOptionsPropertyBrowser.html#a05d63f18be26bdbcb1896447756879d3", null ],
     [ "addProperty", "dc/d8f/classVToolOptionsPropertyBrowser.html#a446ba6076873087a68ccf6b26f9c4cab", null ],
     [ "addPropertyAxisType", "dc/d8f/classVToolOptionsPropertyBrowser.html#a6b009ff70f8d9bc66dbe198c2cb5d440", null ],
@@ -105,6 +106,7 @@ var classVToolOptionsPropertyBrowser =
     [ "showOptionsToolSplinePath", "dc/d8f/classVToolOptionsPropertyBrowser.html#a67e0a673774e12e9abdecb9d2ffa6291", null ],
     [ "showOptionsToolTriangle", "dc/d8f/classVToolOptionsPropertyBrowser.html#af230b970e74ece166b8ca89ff1a9362b", null ],
     [ "showOptionsToolTrueDarts", "dc/d8f/classVToolOptionsPropertyBrowser.html#a97808010e6799993ebdb04b34e5ee772", null ],
+    [ "updateCalculatedLength", "dc/d8f/classVToolOptionsPropertyBrowser.html#aeba407ac75a347e8103071f90525b566", null ],
     [ "updateOptions", "dc/d8f/classVToolOptionsPropertyBrowser.html#aa9e320cdbecb8f3d83f0d5e15ab4df07", null ],
     [ "updateOptionsToolAlongLine", "dc/d8f/classVToolOptionsPropertyBrowser.html#a892a8c915210adf1da9c8412634097b5", null ],
     [ "updateOptionsToolArc", "dc/d8f/classVToolOptionsPropertyBrowser.html#a16a2224cbb8c5a7b89e6c88d3c4ade0a", null ],

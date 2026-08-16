@@ -1,0 +1,27 @@
+var classReferenceLineTool =
+[
+    [ "ReferenceLineTool", "d0/d2a/classReferenceLineTool.html#a572c607b26d6e7c8f61dfec9eded19a1", null ],
+    [ "~ReferenceLineTool", "d0/d2a/classReferenceLineTool.html#a78e29dd725e71714bab1c62b3d3ec37a", null ],
+    [ "addToFile", "d0/d2a/classReferenceLineTool.html#aab1824f2085e12a7f74570500b4a1b18", null ],
+    [ "boundingRect", "d0/d2a/classReferenceLineTool.html#a0897f7e128ae8a2fbd7a8eb69fb620a5", null ],
+    [ "configure", "d0/d2a/classReferenceLineTool.html#ad03901292f3aade6dea1688a0d6e519c", null ],
+    [ "contextMenuEvent", "d0/d2a/classReferenceLineTool.html#a1c4b1e2dbe1a0f646d52f257381bd1d8", null ],
+    [ "deleteReferenceLine", "d0/d2a/classReferenceLineTool.html#ac3477c641d73cdda26588fb2b40c287e", null ],
+    [ "editReferenceLine", "d0/d2a/classReferenceLineTool.html#a01fd13912e4dacca896ee18a8ec044ce", null ],
+    [ "evaluate", "d0/d2a/classReferenceLineTool.html#a5d60083f829be61a641aad1c65bc99c4", null ],
+    [ "mouseDoubleClickEvent", "d0/d2a/classReferenceLineTool.html#a14b2552071144547615c828b3b5166b3", null ],
+    [ "mouseReleaseEvent", "d0/d2a/classReferenceLineTool.html#ae28280b4f193969ec3278b76aea9624e", null ],
+    [ "paint", "d0/d2a/classReferenceLineTool.html#a2730297e2f2b1d91a30859474d3e8091", null ],
+    [ "referenceLine", "d0/d2a/classReferenceLineTool.html#a5caac2af3cf44fc813f7ed69f90334b5", null ],
+    [ "saveChanges", "d0/d2a/classReferenceLineTool.html#a69a95f3884fbf86c58bc7b8b484a45c5", null ],
+    [ "saveOptions", "d0/d2a/classReferenceLineTool.html#ac2f027987636ac5501e7e4a10f453d48", null ],
+    [ "updateGeometry", "d0/d2a/classReferenceLineTool.html#a520d4a7e99355602a38dc0af27224b42", null ],
+    [ "updateReferenceLine", "d0/d2a/classReferenceLineTool.html#a5ea7e52d8f305855ada5d9e24bd1ac69", null ],
+    [ "m_data", "d0/d2a/classReferenceLineTool.html#a255f1277aaf729650e4c792537b81124", null ],
+    [ "m_doc", "d0/d2a/classReferenceLineTool.html#ae53222563a0f0df71e69f01985ab6106", null ],
+    [ "m_formulaValid", "d0/d2a/classReferenceLineTool.html#a693dea7875e8e0f7012d8c5bc44c19ec", null ],
+    [ "m_length", "d0/d2a/classReferenceLineTool.html#ab64e9dd38b03f11a60a8d98b7d6728bb", null ],
+    [ "m_referenceLine", "d0/d2a/classReferenceLineTool.html#a92b96f4c7cfe333f5b56e7f39699081a", null ],
+    [ "m_scene", "d0/d2a/classReferenceLineTool.html#ad6c40f984a4b96ac96b2eff60da74a26", null ],
+    [ "m_valueText", "d0/d2a/classReferenceLineTool.html#ae85c616efec6e5fa356874cbbc432fd4", null ]
+];

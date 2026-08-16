@@ -385,7 +385,8 @@ var hierarchy =
       [ "SeamlyWelcomeDialog", "d4/d8f/classSeamlyWelcomeDialog.html", null ],
       [ "ShortcutsDialog", "de/d8e/classShortcutsDialog.html", null ],
       [ "ShowInfoDialog", "da/d5b/classShowInfoDialog.html", null ],
-      [ "Utils::CheckableMessageBox", "dd/dc4/classUtils_1_1CheckableMessageBox.html", null ]
+      [ "Utils::CheckableMessageBox", "dd/dc4/classUtils_1_1CheckableMessageBox.html", null ],
+      [ "anonymous_namespace{reference_line_tool.cpp}::ReferenceLineDialog", "de/d53/classanonymous__namespace_02reference__line__tool_8cpp_03_1_1ReferenceLineDialog.html", null ]
     ] ],
     [ "QDomDocument", null, [
       [ "VDomDocument", "d6/deb/classVDomDocument.html", [
@@ -508,6 +509,7 @@ var hierarchy =
       [ "VToolLine", "dc/d2b/classVToolLine.html", null ]
     ] ],
     [ "QGraphicsObject", null, [
+      [ "ReferenceLineTool", "d0/d2a/classReferenceLineTool.html", null ],
       [ "VPieceItem", "da/d7d/classVPieceItem.html", [
         [ "VGrainlineItem", "da/d4e/classVGrainlineItem.html", null ],
         [ "VTextGraphicsItem", "d2/d41/classVTextGraphicsItem.html", null ]
@@ -610,6 +612,7 @@ var hierarchy =
     [ "QMap< int, QString >", "d0/d4c/classQMap.html", null ],
     [ "QMap< QCheckBox *, int >", "d0/d4c/classQMap.html", null ],
     [ "QMap< qint32, ImageItem * >", "d0/d4c/classQMap.html", null ],
+    [ "QMap< qint32, ReferenceLineTool * >", "d0/d4c/classQMap.html", null ],
     [ "QMap< QString, int >", "d0/d4c/classQMap.html", null ],
     [ "QMap< QString, qmu::QmuTranslation >", "d0/d4c/classQMap.html", null ],
     [ "QMap< QString, QPair< QString, QString > >", "d0/d4c/classQMap.html", null ],
@@ -742,6 +745,7 @@ var hierarchy =
         [ "AddGroupItem", "da/d3a/classAddGroupItem.html", null ],
         [ "AddImage", "df/d11/classAddImage.html", null ],
         [ "AddPiece", "dc/d9d/classAddPiece.html", null ],
+        [ "AddReferenceLine", "d8/dba/classAddReferenceLine.html", null ],
         [ "AddToCalc", "d6/db3/classAddToCalc.html", null ],
         [ "DelGroup", "d5/dbd/classDelGroup.html", null ],
         [ "DelTool", "d9/d22/classDelTool.html", null ],
@@ -890,6 +894,7 @@ var hierarchy =
     ] ],
     [ "QxtPrivateInterface< PUB, PVT >", "de/ddc/classQxtPrivateInterface.html", null ],
     [ "QxtPrivateInterface< QxtCsvModel, QxtCsvModelPrivate >", "de/ddc/classQxtPrivateInterface.html", null ],
+    [ "ReferenceLineData", "d4/de0/structReferenceLineData.html", null ],
     [ "RefHash2KeysTableBucketElem< TVal >", "db/dad/structRefHash2KeysTableBucketElem.html", null ],
     [ "RefHash2KeysTableBucketElem< IdentityConstraint >", "db/dad/structRefHash2KeysTableBucketElem.html", null ],
     [ "RefHash2KeysTableBucketElem< KeyRefPair >", "db/dad/structRefHash2KeysTableBucketElem.html", null ],

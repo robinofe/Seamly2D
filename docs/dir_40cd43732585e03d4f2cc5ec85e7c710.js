@@ -13,6 +13,8 @@ var dir_40cd43732585e03d4f2cc5ec85e7c710 =
     [ "addimage.h", "d5/dd6/addimage_8h.html", "d5/dd6/addimage_8h" ],
     [ "addpiece.cpp", "dd/d33/addpiece_8cpp.html", null ],
     [ "addpiece.h", "d2/de0/addpiece_8h.html", "d2/de0/addpiece_8h" ],
+    [ "addreferenceline.cpp", "df/da1/addreferenceline_8cpp.html", null ],
+    [ "addreferenceline.h", "d5/d5b/addreferenceline_8h.html", "d5/d5b/addreferenceline_8h" ],
     [ "addtocalc.cpp", "d4/d97/addtocalc_8cpp.html", null ],
     [ "addtocalc.h", "d1/d4c/addtocalc_8h.html", "d1/d4c/addtocalc_8h" ],
     [ "delete_draftblock.cpp", "d5/da0/delete__draftblock_8cpp.html", null ],

@@ -1,5 +1,8 @@
 var annotated_dup =
 [
+    [ "anonymous_namespace{reference_line_tool.cpp}", "d6/dd0/namespaceanonymous__namespace_02reference__line__tool_8cpp_03.html", [
+      [ "ReferenceLineDialog", "de/d53/classanonymous__namespace_02reference__line__tool_8cpp_03_1_1ReferenceLineDialog.html", "de/d53/classanonymous__namespace_02reference__line__tool_8cpp_03_1_1ReferenceLineDialog" ]
+    ] ],
     [ "anonymous_namespace{tst_vtooldependency.cpp}", "d5/da0/namespaceanonymous__namespace_02tst__vtooldependency_8cpp_03.html", [
       [ "DependencyPattern", "d2/d03/classanonymous__namespace_02tst__vtooldependency_8cpp_03_1_1DependencyPattern.html", "d2/d03/classanonymous__namespace_02tst__vtooldependency_8cpp_03_1_1DependencyPattern" ],
       [ "DependencyTool", "dc/d47/classanonymous__namespace_02tst__vtooldependency_8cpp_03_1_1DependencyTool.html", "dc/d47/classanonymous__namespace_02tst__vtooldependency_8cpp_03_1_1DependencyTool" ],
@@ -86,6 +89,7 @@ var annotated_dup =
     [ "AddGroupItem", "da/d3a/classAddGroupItem.html", "da/d3a/classAddGroupItem" ],
     [ "AddImage", "df/d11/classAddImage.html", "df/d11/classAddImage" ],
     [ "AddPiece", "dc/d9d/classAddPiece.html", "dc/d9d/classAddPiece" ],
+    [ "AddReferenceLine", "d8/dba/classAddReferenceLine.html", "d8/dba/classAddReferenceLine" ],
     [ "AddToCalc", "d6/db3/classAddToCalc.html", "d6/db3/classAddToCalc" ],
     [ "AddToGroupDialog", "d1/dde/classAddToGroupDialog.html", "d1/dde/classAddToGroupDialog" ],
     [ "AllContentModel", "d1/d0a/classAllContentModel.html", "d1/d0a/classAllContentModel" ],
@@ -503,6 +507,8 @@ var annotated_dup =
     [ "RefArrayEnumerator", "da/db4/classRefArrayEnumerator.html", "da/db4/classRefArrayEnumerator" ],
     [ "RefArrayOf", "d4/d21/classRefArrayOf.html", "d4/d21/classRefArrayOf" ],
     [ "RefArrayVectorOf", "dd/d24/classRefArrayVectorOf.html", "dd/d24/classRefArrayVectorOf" ],
+    [ "ReferenceLineData", "d4/de0/structReferenceLineData.html", "d4/de0/structReferenceLineData" ],
+    [ "ReferenceLineTool", "d0/d2a/classReferenceLineTool.html", "d0/d2a/classReferenceLineTool" ],
     [ "RefHash2KeysTableBucketElem", "db/dad/structRefHash2KeysTableBucketElem.html", "db/dad/structRefHash2KeysTableBucketElem" ],
     [ "RefHash2KeysTableOf", "df/dfa/classRefHash2KeysTableOf.html", "df/dfa/classRefHash2KeysTableOf" ],
     [ "RefHash2KeysTableOfEnumerator", "de/d54/classRefHash2KeysTableOfEnumerator.html", "de/d54/classRefHash2KeysTableOfEnumerator" ],

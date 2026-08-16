@@ -123,6 +123,7 @@ var classMainWindow =
     [ "handlePointOfIntersectionArcsTool", "d6/d1a/classMainWindow.html#a01ccbd819619fa3117587705d760e554", null ],
     [ "handlePointOfIntersectionCirclesTool", "d6/d1a/classMainWindow.html#aa6fbb62f5e23f62ee21b806b0660b428", null ],
     [ "handlePointsMenu", "d6/d1a/classMainWindow.html#a06b0c6ebc7331c724755f002f4ebbe43", null ],
+    [ "handleReferenceLengthTool", "d6/d1a/classMainWindow.html#a938587fbd81128e0f77c493241b72ef6", null ],
     [ "handleRotationTool", "d6/d1a/classMainWindow.html#a523fe1dfd26e06fe0257fafc7c710eed", null ],
     [ "handleShoulderPointTool", "d6/d1a/classMainWindow.html#a30a92754af6f28d747dab7ffa08d9924", null ],
     [ "handleSplineTool", "d6/d1a/classMainWindow.html#a6e32bd28c9b7b0740e37ab1a6c5708ff", null ],
