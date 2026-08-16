@@ -141,10 +141,13 @@ public slots:
     void                 updatePatternLabel();
     void                 updateGrainline();
     void                 editPieceProperties(quint32 nodeId = NULL_ID, bool removeNode = false);
-    bool                 replacePieceNode(quint32 nodeId, quint32 pathId = NULL_ID, bool removeSection = false);
+    bool                 replacePieceNode(quint32 nodeId, quint32 pathId = NULL_ID, bool removeSection = false,
+                                          const QVector<quint32> &suggestedGeometry = QVector<quint32>());
+    void                 createReplacementGeometry(quint32 nodeId, quint32 pathId = NULL_ID);
 
 signals:
     void                 piecePropertiesClosed();
+    void                 replacementGeometrySessionClosed();
 
 protected slots:
     void                 saveMovePiece(const QPointF &ptPos);

@@ -30,6 +30,7 @@ private slots:
     void referenceLengthUndo();
     void internalPathReferenceCounts();
     void dependencyDialog();
+    void nodeDependencyActions();
     void referenceChangeRequestsFullParse();
     void childReferenceChangeRequestsFullParse();
     void visualChangeRequestsLiteParse();

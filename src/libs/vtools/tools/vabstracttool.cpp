@@ -295,7 +295,7 @@ void VAbstractTool::deleteTool(bool ask)
     }
     else
     {
-        qCWarning(vTool, "Can't delete, tool has children.");
+        // The dependency dialog contains the reason and the available repair actions. Avoid a separate warning first.
         showDependencies();
     }
 }
@@ -309,6 +309,7 @@ void VAbstractTool::showDependencies()
         Select,
         EditPiece,
         ReplaceNode,
+        CreateReplacement,
         RemoveNode
     };
 
@@ -357,15 +358,18 @@ void VAbstractTool::showDependencies()
 
     auto *actionLayout = new QHBoxLayout;
     auto *selectButton = new QPushButton(tr("Open properties"), &dialog);
-    auto *replaceButton = new QPushButton(tr("Replace contour section..."), &dialog);
-    auto *removeButton = new QPushButton(tr("Remove from pattern piece..."), &dialog);
+    auto *replaceButton = new QPushButton(tr("Select replacement..."), &dialog);
+    auto *createButton = new QPushButton(tr("Create replacement geometry..."), &dialog);
+    auto *removeButton = new QPushButton(tr("Detach from pattern piece..."), &dialog);
     auto *editPieceButton = new QPushButton(tr("Edit pattern piece"), &dialog);
     selectButton->setObjectName(QStringLiteral("dependencyOpenPropertiesButton"));
     replaceButton->setObjectName(QStringLiteral("dependencyReplaceNodeButton"));
+    createButton->setObjectName(QStringLiteral("dependencyCreateReplacementButton"));
     removeButton->setObjectName(QStringLiteral("dependencyRemoveNodeButton"));
     editPieceButton->setObjectName(QStringLiteral("dependencyEditPieceButton"));
     actionLayout->addWidget(selectButton);
     actionLayout->addWidget(replaceButton);
+    actionLayout->addWidget(createButton);
     actionLayout->addWidget(removeButton);
     actionLayout->addWidget(editPieceButton);
     actionLayout->addStretch();
@@ -373,16 +377,18 @@ void VAbstractTool::showDependencies()
 
     selectButton->hide();
     replaceButton->hide();
+    createButton->hide();
     removeButton->hide();
     editPieceButton->hide();
 
     auto *buttons = new QDialogButtonBox(QDialogButtonBox::Close, &dialog);
 
-    auto clearActions = [this, actionLabel, selectButton, replaceButton, removeButton, editPieceButton]()
+    auto clearActions = [this, actionLabel, selectButton, replaceButton, createButton, removeButton, editPieceButton]()
     {
         actionLabel->setText(tr("Select an object to see the available next steps."));
         selectButton->hide();
         replaceButton->hide();
+        createButton->hide();
         removeButton->hide();
         editPieceButton->hide();
     };
@@ -428,7 +434,7 @@ void VAbstractTool::showDependencies()
 
     connect(recursive, &QCheckBox::toggled, &dialog, populate);
     connect(tree, &QTreeWidget::itemClicked, &dialog,
-            [this, tree, actionLabel, selectButton, replaceButton, removeButton, editPieceButton,
+            [this, tree, actionLabel, selectButton, replaceButton, createButton, removeButton, editPieceButton,
              &selectedToolId, &selectedToolType](QTreeWidgetItem *item)
     {
         selectedToolId = item->data(0, Qt::UserRole).toUInt();
@@ -439,6 +445,7 @@ void VAbstractTool::showDependencies()
 
         selectButton->setVisible(selectedToolId != NULL_ID && !isNode && selectedToolType != Tool::Piece);
         replaceButton->setVisible(isNode);
+        createButton->setVisible(isNode);
         removeButton->setVisible(isNode);
         editPieceButton->setVisible(isNode || selectedToolType == Tool::Piece);
         actionLabel->setText(isNode
@@ -466,6 +473,11 @@ void VAbstractTool::showDependencies()
     connect(replaceButton, &QPushButton::clicked, &dialog, [&dialog, &selectedAction]()
     {
         selectedAction = DependencyAction::ReplaceNode;
+        dialog.accept();
+    });
+    connect(createButton, &QPushButton::clicked, &dialog, [&dialog, &selectedAction]()
+    {
+        selectedAction = DependencyAction::CreateReplacement;
         dialog.accept();
     });
     connect(removeButton, &QPushButton::clicked, &dialog, [&dialog, &selectedAction]()
@@ -529,7 +541,8 @@ void VAbstractTool::showDependencies()
         }
     };
 
-    if (selectedAction == DependencyAction::ReplaceNode || selectedAction == DependencyAction::RemoveNode ||
+    if (selectedAction == DependencyAction::ReplaceNode || selectedAction == DependencyAction::CreateReplacement ||
+        selectedAction == DependencyAction::RemoveNode ||
         selectedAction == DependencyAction::EditPiece)
     {
         PatternPieceTool *pieceTool = findPieceTool();
@@ -537,6 +550,17 @@ void VAbstractTool::showDependencies()
         {
             QMessageBox::information(qApp->getMainWindow(), tr("Dependencies"),
                                      tr("The pattern piece is in another draft block. Open that draft block and try again."));
+            return;
+        }
+
+        if (selectedAction == DependencyAction::CreateReplacement)
+        {
+            connect(pieceTool, &PatternPieceTool::replacementGeometrySessionClosed, this, [this, pieceTool]()
+            {
+                disconnect(pieceTool, &PatternPieceTool::replacementGeometrySessionClosed, this, nullptr);
+                QTimer::singleShot(0, this, [this]() { showDependencies(); });
+            });
+            pieceTool->createReplacementGeometry(selectedToolId, selectedPathId);
             return;
         }
 

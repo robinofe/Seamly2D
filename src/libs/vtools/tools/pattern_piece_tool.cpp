@@ -100,6 +100,8 @@
 #include <QPainterPathStroker>
 #include <QPushButton>
 #include <QSet>
+#include <QToolButton>
+#include <QUndoStack>
 #include <QVBoxLayout>
 #include <algorithm>
 
@@ -2105,7 +2107,7 @@ void PatternPieceTool::deleteTool(bool ask)
 {
     if (isUsed())
     {
-        qCWarning(vTool, "Can't delete pattern piece, tool has children.");
+        // The dependency dialog already explains why deletion is blocked and offers the relevant actions.
         showDependencies();
         return;
     }
@@ -2247,7 +2249,8 @@ void PatternPieceTool::editPieceProperties(quint32 nodeId, bool removeNode)
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-bool PatternPieceTool::replacePieceNode(quint32 nodeId, quint32 pathId, bool removeSection)
+bool PatternPieceTool::replacePieceNode(quint32 nodeId, quint32 pathId, bool removeSection,
+                                        const QVector<quint32> &suggestedGeometry)
 {
     const VPiece oldPiece = VAbstractTool::data.GetPiece(m_id);
     if (oldPiece.isLocked())
@@ -2392,6 +2395,23 @@ bool PatternPieceTool::replacePieceNode(quint32 nodeId, quint32 pathId, bool rem
     connect(addButton, &QPushButton::clicked, &dialog, addCandidate);
     connect(availableList, &QListWidget::itemDoubleClicked, &dialog,
             [addCandidate](QListWidgetItem *) { addCandidate(); });
+
+    QVector<quint32> orderedSuggestions = suggestedGeometry;
+    std::sort(orderedSuggestions.begin(), orderedSuggestions.end());
+    for (quint32 objectId : orderedSuggestions)
+    {
+        for (int row = 0; row < availableList->count(); ++row)
+        {
+            QListWidgetItem *source = availableList->item(row);
+            if (source->data(Qt::UserRole).toUInt() == objectId)
+            {
+                auto *item = new QListWidgetItem(source->text(), replacementList);
+                item->setData(Qt::UserRole, source->data(Qt::UserRole));
+                item->setData(Qt::UserRole + 1, false);
+                break;
+            }
+        }
+    }
     connect(removeButton, &QPushButton::clicked, &dialog, [replacementList]()
     {
         delete replacementList->takeItem(replacementList->currentRow());
@@ -2498,7 +2518,8 @@ bool PatternPieceTool::replacePieceNode(quint32 nodeId, quint32 pathId, bool rem
 
     const int replacementCount = removeSectionCheck->isChecked() ? 0 : replacementList->count();
     const QString settingsWarning = replacementCount == 0
-        ? tr("The selected section and its corner, notch, and seam allowance settings will be removed. Continue?")
+        ? tr("The selected section will be detached from this pattern piece. Its construction geometry remains on "
+             "the draft, but its corner, notch, and seam allowance settings in this piece will be removed. Continue?")
         : tr("The number of contour entries changes. Seam allowance formulas at the section boundaries will be kept, "
              "but intermediate corner and notch settings cannot be transferred unambiguously. Continue?");
     if (replacementCount != last - first + 1 &&
@@ -2603,6 +2624,116 @@ bool PatternPieceTool::replacePieceNode(quint32 nodeId, quint32 pathId, bool rem
         qApp->getUndoStack()->push(command);
     }
     return true;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+void PatternPieceTool::createReplacementGeometry(quint32 nodeId, quint32 pathId)
+{
+    const int initialUndoIndex = qApp->getUndoStack()->index();
+    QSet<quint32> existingObjects;
+    const auto objects = VAbstractTool::data.DataGObjects();
+    for (auto iterator = objects->constBegin(); iterator != objects->constEnd(); ++iterator)
+    {
+        existingObjects.insert(iterator.key());
+    }
+
+    const quint32 pieceId = m_id;
+    auto *guide = new QDialog(qApp->getMainWindow(), Qt::Tool);
+    guide->setAttribute(Qt::WA_DeleteOnClose);
+    guide->setWindowTitle(tr("Create replacement geometry"));
+    guide->resize(520, 250);
+    auto *layout = new QVBoxLayout(guide);
+    auto *description = new QLabel(
+        tr("Create the replacement on the draft with the normal Seamly2D tools. You may start from an existing point "
+           "or first create a new anchor point. Straight contour sections are defined by their end points. When all "
+           "required points and curves exist, choose 'Use new geometry'."), guide);
+    description->setWordWrap(true);
+    layout->addWidget(description);
+
+    auto *toolLayout = new QHBoxLayout;
+    const QList<QPair<QString, QString>> tools = {
+        qMakePair(tr("New point"), QStringLiteral("pointAtDistanceAngle_ToolButton")),
+        qMakePair(tr("Line"), QStringLiteral("line_ToolButton")),
+        qMakePair(tr("Curve"), QStringLiteral("curve_ToolButton")),
+        qMakePair(tr("Spline"), QStringLiteral("spline_ToolButton")),
+        qMakePair(tr("Arc"), QStringLiteral("arc_ToolButton"))
+    };
+    for (const auto &tool : tools)
+    {
+        auto *button = new QPushButton(tool.first, guide);
+        toolLayout->addWidget(button);
+        connect(button, &QPushButton::clicked, guide, [guide, tool]()
+        {
+            if (auto *toolButton = qApp->getMainWindow()->findChild<QToolButton *>(tool.second))
+            {
+                toolButton->click();
+                guide->raise();
+            }
+        });
+    }
+    layout->addLayout(toolLayout);
+
+    auto *status = new QLabel(tr("Newly created usable geometry will be offered as the replacement."), guide);
+    status->setWordWrap(true);
+    layout->addWidget(status);
+    auto *buttons = new QDialogButtonBox(QDialogButtonBox::Cancel, guide);
+    auto *finishButton = buttons->addButton(tr("Use new geometry"), QDialogButtonBox::AcceptRole);
+    layout->addWidget(buttons);
+
+    connect(buttons, &QDialogButtonBox::rejected, guide, &QDialog::reject);
+    connect(finishButton, &QPushButton::clicked, guide,
+            [guide, status, existingObjects, pieceId, nodeId, pathId]()
+    {
+        PatternPieceTool *pieceTool = nullptr;
+        try
+        {
+            pieceTool = qobject_cast<PatternPieceTool *>(VAbstractPattern::getTool(pieceId));
+        }
+        catch (const VExceptionBadId &)
+        {
+            status->setText(PatternPieceTool::tr("The pattern piece is no longer available."));
+            return;
+        }
+
+        QVector<quint32> createdGeometry;
+        const auto currentObjects = pieceTool->getData()->DataGObjects();
+        for (auto iterator = currentObjects->constBegin(); iterator != currentObjects->constEnd(); ++iterator)
+        {
+            const QSharedPointer<VGObject> object = iterator.value();
+            const GOType type = object->getType();
+            const bool usableType = type == GOType::Point || type == GOType::Arc || type == GOType::EllipticalArc ||
+                                    type == GOType::Spline || type == GOType::CubicBezier ||
+                                    type == GOType::SplinePath || type == GOType::CubicBezierPath;
+            if (!existingObjects.contains(iterator.key()) && usableType && object->getMode() == Draw::Calculation &&
+                object->getIdObject() == NULL_ID)
+            {
+                createdGeometry.append(iterator.key());
+            }
+        }
+        if (createdGeometry.isEmpty())
+        {
+            status->setText(PatternPieceTool::tr(
+                "No new point or curve was found. Finish the active drawing tool first, then try again."));
+            return;
+        }
+
+        guide->setProperty("replacementHandled", true);
+        guide->accept();
+        pieceTool->replacePieceNode(nodeId, pathId, false, createdGeometry);
+        emit pieceTool->replacementGeometrySessionClosed();
+    });
+    connect(guide, &QDialog::finished, this, [this, initialUndoIndex](int)
+    {
+        if (!sender()->property("replacementHandled").toBool())
+        {
+            while (qApp->getUndoStack()->index() > initialUndoIndex)
+            {
+                qApp->getUndoStack()->undo();
+            }
+            emit replacementGeometrySessionClosed();
+        }
+    });
+    guide->show();
 }
 
 //---------------------------------------------------------------------------------------------------------------------

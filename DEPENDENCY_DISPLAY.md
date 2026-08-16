@@ -22,8 +22,9 @@
    Recursive lookup also follows chains through custom variables.
 2. A dependency dialog shows name, type, the specific reference role, draft block, and a suggested next action.
    Selecting a row highlights the tool through the existing `VAbstractPattern::ShowTool` signal. The available action
-   is chosen after selection: open Properties, edit the piece, remove a piece section, or replace it. After a guided
-   piece action closes, the dependency dialog opens again with the updated result.
+   is chosen after selection: open Properties, edit the piece, detach a piece section, select existing replacement
+   geometry, or draw new replacement geometry. After a guided piece action closes, the dependency dialog opens again
+   with the updated result. A blocked delete goes directly to this dialog instead of showing a warning first.
 3. **Delete** remains reachable for used draw tools and pattern pieces so `deleteTool()` can explain why it is blocked.
    The existing `isUsed()` guard remains authoritative. The base point remains a special case because deleting it
    deletes the complete draft block, including its contents.
@@ -33,7 +34,10 @@
 5. Piece contours and internal paths use a separate guided replacement. One or more adjacent entries can be replaced
    by a different number of points, lines, curves, or splines, including removal without replacement. The old path is
    retained until the candidate passes continuity, direction, and point checks, then one undoable command swaps it.
-   This staging provides the safe part of a freeze workflow without storing a permanently detached piece state.
+   New geometry can be drawn with the standard point, line, curve, spline, and arc tools while a small guide remains
+   open. The new objects are preselected for review; cancelling the guide rolls its drawing steps back through Undo.
+   Detaching removes only the piece reference, so the underlying construction remains visible on the draft. This
+   staging provides the safe part of a freeze workflow without storing a permanently detached piece state.
 6. History marks independent roots, unused geometry, and dependent objects. Clicking a row keeps using the existing
    scene highlight, so independent construction geometry is visible both as a list and in the draft.
 7. Reference lengths are non-printing drafting aids. Their length uses the standard formula variables, and their
@@ -46,6 +50,7 @@
 - structured references from pieces, internal paths, and operations
 - recursive formula dependencies through a custom variable
 - dependency dialog population, recursive toggle, and highlight signal
+- replacement, create, and detach actions for piece nodes
 - full-parse requests when an edited tool replaces a referenced object in an attribute or child element
 - lite-parse preservation for changes that do not affect references
 - flexible piece-path section replacement, collapse, and removal

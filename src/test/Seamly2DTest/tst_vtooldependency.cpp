@@ -471,6 +471,49 @@ void TST_VToolDependency::dependencyDialog()
     QCOMPARE(highlightSpy.at(0).at(1).toBool(), true);
 }
 
+void TST_VToolDependency::nodeDependencyActions()
+{
+    const QString xml = QStringLiteral(
+        "<pattern><draftBlock name=\"Block\"><calculation>"
+        "<point id=\"1\" name=\"A18\" type=\"single\"/>"
+        "</calculation><modeling>"
+        "<point id=\"136\" idObject=\"1\" type=\"modeling\"/>"
+        "</modeling></draftBlock></pattern>");
+    DependencyPattern pattern;
+    pattern.load(xml, {VToolRecord(1, Tool::BasePoint, QStringLiteral("Block")),
+                       VToolRecord(136, Tool::NodePoint, QStringLiteral("Block"))});
+    const Unit unit = Unit::Cm;
+    VContainer data(nullptr, &unit);
+    data.UpdateGObject(1, new VPointF(0, 0, QStringLiteral("A18"), 0, 0));
+    DependencyTool tool(&pattern, &data, 1);
+
+    bool replaceShown = false;
+    bool createShown = false;
+    bool detachShown = false;
+    QTimer::singleShot(0, qApp, [&]()
+    {
+        auto *dialog = qobject_cast<QDialog *>(QApplication::activeModalWidget());
+        QVERIFY(dialog != nullptr);
+        auto *tree = dialog->findChild<QTreeWidget *>();
+        QVERIFY(tree != nullptr);
+        QCOMPARE(tree->topLevelItemCount(), 1);
+        tree->itemClicked(tree->topLevelItem(0), 0);
+        auto *replaceButton = dialog->findChild<QPushButton *>(QStringLiteral("dependencyReplaceNodeButton"));
+        auto *createButton = dialog->findChild<QPushButton *>(QStringLiteral("dependencyCreateReplacementButton"));
+        auto *detachButton = dialog->findChild<QPushButton *>(QStringLiteral("dependencyRemoveNodeButton"));
+        replaceShown = replaceButton != nullptr && !replaceButton->isHidden();
+        createShown = createButton != nullptr && !createButton->isHidden();
+        detachShown = detachButton != nullptr && !detachButton->isHidden();
+        dialog->reject();
+    });
+
+    tool.showDependencies();
+
+    QVERIFY(replaceShown);
+    QVERIFY(createShown);
+    QVERIFY(detachShown);
+}
+
 void TST_VToolDependency::referenceChangeRequestsFullParse()
 {
     DependencyPattern pattern;
