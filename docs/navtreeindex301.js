@@ -1,5 +1,8 @@
 var NAVTREEINDEX301 =
 {
+"de/dca/classTimeDatatypeValidator.html#af50733e870e1320c410a87072eda663c":[3,0,506,35],
+"de/dca/mingw_2include_2xercesc_2dom_2DOMRange_8hpp.html":[4,0,0,1,15,1,0,0,0,41],
+"de/dca/mingw_2include_2xercesc_2dom_2DOMRange_8hpp_source.html":[4,0,0,1,15,1,0,0,0,41],
 "de/dca/variables_8h.html":[4,0,0,1,10,10],
 "de/dca/variables_8h_source.html":[4,0,0,1,10,10],
 "de/dcd/classXPathScanner.html":[3,0,893],
@@ -246,8 +249,5 @@ var NAVTREEINDEX301 =
 "de/dcf/classXSValue.html#a51d52439745495eca3b06dc46c355791a8b97540dbc4e427cbc5a0794b8c3cfff":[3,0,926,14,19],
 "de/dcf/classXSValue.html#a51d52439745495eca3b06dc46c355791a8b97540dbc4e427cbc5a0794b8c3cfff":[3,0,926,16,8],
 "de/dcf/classXSValue.html#a51d52439745495eca3b06dc46c355791ac842993a6dc1698cf5646441686cf117":[3,0,926,14,40],
-"de/dcf/classXSValue.html#a51d52439745495eca3b06dc46c355791ac842993a6dc1698cf5646441686cf117":[3,0,926,17,40],
-"de/dcf/classXSValue.html#a51d52439745495eca3b06dc46c355791ac842993a6dc1698cf5646441686cf117":[3,0,926,15,7],
-"de/dcf/classXSValue.html#a51d52439745495eca3b06dc46c355791ac842993a6dc1698cf5646441686cf117":[3,0,926,14,29],
-"de/dcf/classXSValue.html#a51d52439745495eca3b06dc46c355791ac842993a6dc1698cf5646441686cf117":[3,0,926,14,7]
+"de/dcf/classXSValue.html#a51d52439745495eca3b06dc46c355791ac842993a6dc1698cf5646441686cf117":[3,0,926,17,40]
 };

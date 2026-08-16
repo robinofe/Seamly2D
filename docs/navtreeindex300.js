@@ -1,5 +1,8 @@
 var NAVTREEINDEX300 =
 {
+"de/dbf/classSchemaElementDecl.html#ac6e2bdfded9344ff1a5a30fc48fe5b8e":[3,0,473,87],
+"de/dbf/classSchemaElementDecl.html#acbc0ca6b8704023682a65b0de8ed314b":[3,0,473,101],
+"de/dbf/classSchemaElementDecl.html#acbc0ca6b8704023682a65b0de8ed314b":[3,0,473,102],
 "de/dbf/classSchemaElementDecl.html#acbc0ca6b8704023682a65b0de8ed314b":[3,0,473,103],
 "de/dbf/classSchemaElementDecl.html#acbc0ca6b8704023682a65b0de8ed314b":[3,0,473,100],
 "de/dbf/classSchemaElementDecl.html#ad1cf6b5388bb295f4824a26b45512b96":[3,0,473,188],
@@ -246,8 +249,5 @@ var NAVTREEINDEX300 =
 "de/dca/classTimeDatatypeValidator.html#ab0a438769a0c98bb3a6f0b79ca136f9f":[3,0,506,30],
 "de/dca/classTimeDatatypeValidator.html#af50733e870e1320c410a87072eda663c":[3,0,506,32],
 "de/dca/classTimeDatatypeValidator.html#af50733e870e1320c410a87072eda663c":[3,0,506,33],
-"de/dca/classTimeDatatypeValidator.html#af50733e870e1320c410a87072eda663c":[3,0,506,34],
-"de/dca/classTimeDatatypeValidator.html#af50733e870e1320c410a87072eda663c":[3,0,506,35],
-"de/dca/mingw_2include_2xercesc_2dom_2DOMRange_8hpp.html":[4,0,0,1,15,1,0,0,0,41],
-"de/dca/mingw_2include_2xercesc_2dom_2DOMRange_8hpp_source.html":[4,0,0,1,15,1,0,0,0,41]
+"de/dca/classTimeDatatypeValidator.html#af50733e870e1320c410a87072eda663c":[3,0,506,34]
 };

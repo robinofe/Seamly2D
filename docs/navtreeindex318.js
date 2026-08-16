@@ -1,5 +1,8 @@
 var NAVTREEINDEX318 =
 {
+"df/dcb/mingw_2include_2xercesc_2util_2XercesDefs_8hpp.html":[4,0,0,1,15,1,0,0,6,83],
+"df/dcb/mingw_2include_2xercesc_2util_2XercesDefs_8hpp.html#a0d6a565822d793e51c090177bbae675d":[4,0,0,1,15,1,0,0,6,83,11],
+"df/dcb/mingw_2include_2xercesc_2util_2XercesDefs_8hpp.html#a12b3de3d73b0c001f05eacd202c9f2f9":[4,0,0,1,15,1,0,0,6,83,2],
 "df/dcb/mingw_2include_2xercesc_2util_2XercesDefs_8hpp.html#a13df5a01e63e51f62a1467b588b59054":[4,0,0,1,15,1,0,0,6,83,13],
 "df/dcb/mingw_2include_2xercesc_2util_2XercesDefs_8hpp.html#a33ae6aeb420a5fc867079688f5cdc617":[4,0,0,1,15,1,0,0,6,83,3],
 "df/dcb/mingw_2include_2xercesc_2util_2XercesDefs_8hpp.html#a40e97a4d60600cb8128a2eb5d6504e26":[4,0,0,1,15,1,0,0,6,83,0],
@@ -246,8 +249,5 @@ var NAVTREEINDEX318 =
 "df/de1/classVPiecePath.html#aa11dc7d39175e8911befd9df89d84288":[3,0,717,28],
 "df/de1/classVPiecePath.html#aa3901156fb77696214cf12af07ecbc6d":[3,0,717,17],
 "df/de1/classVPiecePath.html#aa3fd6256f610dcfd2f4e61ce990c3770":[3,0,717,0],
-"df/de1/classVPiecePath.html#aa81c05b55ae1a156395b5c6830473407":[3,0,717,34],
-"df/de1/classVPiecePath.html#aad3c7fa1feebff33eab4c07a271d92ed":[3,0,717,19],
-"df/de1/classVPiecePath.html#abd0995a22aa10c9e26423b36ef151518":[3,0,717,5],
-"df/de1/classVPiecePath.html#ac15092cd74e77bdf9d488f9baa253ba3":[3,0,717,37]
+"df/de1/classVPiecePath.html#aa81c05b55ae1a156395b5c6830473407":[3,0,717,34]
 };

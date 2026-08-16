@@ -1,5 +1,8 @@
 var NAVTREEINDEX316 =
 {
+"df/d96/msvc_2include_2xercesc_2dom_2DOMProcessingInstruction_8hpp_source.html":[4,0,0,1,15,2,0,0,0,39],
+"df/d98/vnodearc_8h.html":[4,0,0,1,13,1,1,8],
+"df/d98/vnodearc_8h_source.html":[4,0,0,1,13,1,1,8],
 "df/d9a/classDialogBisector.html":[3,0,103],
 "df/d9a/classDialogBisector.html#a0c364082aa61fe5db0eee2b4f84202d2":[3,0,103,19],
 "df/d9a/classDialogBisector.html#a156a4965cade4260ed6fe67ddb1986bd":[3,0,103,2],
@@ -246,8 +249,5 @@ var NAVTREEINDEX316 =
 "df/db4/classXTemplateSerializer.html#a51d94b7459579fc4fbde367830c5cdc6":[3,0,928,20],
 "df/db4/classXTemplateSerializer.html#a51d94b7459579fc4fbde367830c5cdc6":[3,0,928,21],
 "df/db4/classXTemplateSerializer.html#a51d94b7459579fc4fbde367830c5cdc6":[3,0,928,22],
-"df/db4/classXTemplateSerializer.html#a51d94b7459579fc4fbde367830c5cdc6":[3,0,928,23],
-"df/db4/classXTemplateSerializer.html#a52ef83ecaf264f8293b0efd110120fe1":[3,0,928,236],
-"df/db4/classXTemplateSerializer.html#a52ef83ecaf264f8293b0efd110120fe1":[3,0,928,239],
-"df/db4/classXTemplateSerializer.html#a52ef83ecaf264f8293b0efd110120fe1":[3,0,928,237]
+"df/db4/classXTemplateSerializer.html#a51d94b7459579fc4fbde367830c5cdc6":[3,0,928,23]
 };

@@ -1,5 +1,8 @@
 var NAVTREEINDEX312 =
 {
+"df/d53/classVFormulaProperty.html#a65d67edb2fc788e70a938786dc86a1df":[3,0,630,1],
+"df/d53/classVFormulaProperty.html#a936cd51e49c85dfb6c47c78c5a654494":[3,0,630,5],
+"df/d53/classVFormulaProperty.html#ac020eb3391b1096e92a35537dd09285a":[3,0,630,9],
 "df/d53/classVFormulaProperty.html#ad1b18a836d20b7da8aa6be16a478bb4b":[3,0,630,8],
 "df/d55/classXMLRecognizer.html":[3,0,868],
 "df/d55/classXMLRecognizer.html#a23b33c240f64a0de73411962a87d9f09":[3,0,868,31],
@@ -246,8 +249,5 @@ var NAVTREEINDEX312 =
 "df/d59/msvc-arm64_2include_2xercesc_2dom_2DOMRange_8hpp.html":[4,0,0,1,15,3,0,0,0,41],
 "df/d59/msvc-arm64_2include_2xercesc_2dom_2DOMRange_8hpp_source.html":[4,0,0,1,15,3,0,0,0,41],
 "df/d5b/classImageTool.html":[3,0,311],
-"df/d5b/classImageTool.html#a015f5304d70cf8c196882cd62c7eaa20":[3,0,311,14],
-"df/d5b/classImageTool.html#a1057012750692b81e8ae7766693094a6":[3,0,311,10],
-"df/d5b/classImageTool.html#a1d31f8a87fd7b143a8e93f2f26d9c5f7":[3,0,311,12],
-"df/d5b/classImageTool.html#a2e6e20a50bdf98741c14face1f06f97f":[3,0,311,4]
+"df/d5b/classImageTool.html#a015f5304d70cf8c196882cd62c7eaa20":[3,0,311,14]
 };

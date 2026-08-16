@@ -1,5 +1,8 @@
 var NAVTREEINDEX306 =
 {
+"de/dd1/classDOMXPathNSResolver.html#a3c6557bf3e191de76173ef090f8be78b":[3,0,237,9],
+"de/dd1/classDOMXPathNSResolver.html#a3c6557bf3e191de76173ef090f8be78b":[3,0,237,3],
+"de/dd1/classDOMXPathNSResolver.html#a3c6557bf3e191de76173ef090f8be78b":[3,0,237,6],
 "de/dd1/classDOMXPathNSResolver.html#a3c6557bf3e191de76173ef090f8be78b":[3,0,237,0],
 "de/dd1/classDOMXPathNSResolver.html#a74cf8b941548eb8362b8915056337a01":[3,0,237,13],
 "de/dd1/classDOMXPathNSResolver.html#a74cf8b941548eb8362b8915056337a01":[3,0,237,12],
@@ -246,8 +249,5 @@ var NAVTREEINDEX306 =
 "de/df3/classXMLGrammarDescription.html#aa672fb21c32db48ae05aa8b66e362a7c":[3,0,846,10],
 "de/df3/classXMLGrammarDescription.html#aa6f5a6b3b2ddcd6a37d73652a27e4d95":[3,0,846,2],
 "de/df3/classXMLGrammarDescription.html#aa6f5a6b3b2ddcd6a37d73652a27e4d95":[3,0,846,5],
-"de/df3/classXMLGrammarDescription.html#aa6f5a6b3b2ddcd6a37d73652a27e4d95":[3,0,846,8],
-"de/df3/classXMLGrammarDescription.html#aa6f5a6b3b2ddcd6a37d73652a27e4d95":[3,0,846,11],
-"de/df3/classXMLGrammarDescription.html#abc5e50962e0e06c1dc5a5fe1890259c1":[3,0,846,24],
-"de/df3/classXMLGrammarDescription.html#abc5e50962e0e06c1dc5a5fe1890259c1":[3,0,846,25]
+"de/df3/classXMLGrammarDescription.html#aa6f5a6b3b2ddcd6a37d73652a27e4d95":[3,0,846,8]
 };

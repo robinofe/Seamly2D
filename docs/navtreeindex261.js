@@ -1,5 +1,8 @@
 var NAVTREEINDEX261 =
 {
+"dc/dd0/msvc_2include_2xercesc_2util_2regx_2RegxDefs_8hpp.html#abdcffbb4591de2bc0396b8756c61ec24":[4,0,0,1,15,2,0,0,6,3,15,33],
+"dc/dd0/msvc_2include_2xercesc_2util_2regx_2RegxDefs_8hpp.html#abe46ef317e543fc24e81159b3dc4500a":[4,0,0,1,15,2,0,0,6,3,15,5],
+"dc/dd0/msvc_2include_2xercesc_2util_2regx_2RegxDefs_8hpp.html#ac886982c485fffe92ee4ec5956bc4f71":[4,0,0,1,15,2,0,0,6,3,15,24],
 "dc/dd0/msvc_2include_2xercesc_2util_2regx_2RegxDefs_8hpp.html#ac904cee753dd1a54f1149a7825b25af1":[4,0,0,1,15,2,0,0,6,3,15,8],
 "dc/dd0/msvc_2include_2xercesc_2util_2regx_2RegxDefs_8hpp.html#ad5a25f2179d2124aa216506576afbf5c":[4,0,0,1,15,2,0,0,6,3,15,7],
 "dc/dd0/msvc_2include_2xercesc_2util_2regx_2RegxDefs_8hpp.html#ae49e65fbc7e722783e6b1ac3f77fd96e":[4,0,0,1,15,2,0,0,6,3,15,22],
@@ -246,8 +249,5 @@ var NAVTREEINDEX261 =
 "dc/dee/classInternalPathVisual.html#a242ce92119f91af67c4f1e4117d176f0":[3,0,318,1],
 "dc/dee/classInternalPathVisual.html#a28f3ed67263e932a5beab15d0636fd1b":[3,0,318,7],
 "dc/dee/classInternalPathVisual.html#a2ec13e2aa65886d48e5c8a15aaef9127":[3,0,318,6],
-"dc/dee/classInternalPathVisual.html#a384f0358fc4c853ffba48b6eb5c8a0dc":[3,0,318,10],
-"dc/dee/classInternalPathVisual.html#a59f108cec6216a0a2263f197c0f4b6fb":[3,0,318,9],
-"dc/dee/classInternalPathVisual.html#a681e0fdd9434aab535343e89dea81963":[3,0,318,12],
-"dc/dee/classInternalPathVisual.html#a7be775b4f16a760dff1f1dab2db82692":[3,0,318,0]
+"dc/dee/classInternalPathVisual.html#a384f0358fc4c853ffba48b6eb5c8a0dc":[3,0,318,10]
 };

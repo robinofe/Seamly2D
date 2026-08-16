@@ -4,6 +4,7 @@ var classTST__VToolDependency =
     [ "dependencyDialog", "da/d12/classTST__VToolDependency.html#aa8dd64e342830a42e6fd1cfe6dbb2da7", null ],
     [ "directDependencies", "da/d12/classTST__VToolDependency.html#a899365af3cb17cc06c0e8167a0ef99ba", null ],
     [ "internalPathReferenceCounts", "da/d12/classTST__VToolDependency.html#a9915001475265f5ecba9529a8d1715b3", null ],
+    [ "nodeDependencyActions", "da/d12/classTST__VToolDependency.html#ab5ec0d221eed06a1858bd911fec0d61b", null ],
     [ "recursiveDependencies", "da/d12/classTST__VToolDependency.html#a4d9a41b0d2a69842e12deea1f81a06f1", null ],
     [ "recursiveFormulaDependencies", "da/d12/classTST__VToolDependency.html#a40bf32279c25beced1e07a2e72813a80", null ],
     [ "referenceAttributes", "da/d12/classTST__VToolDependency.html#a6b056dc87625fdfa62cbd5e3eaadbe8b", null ],

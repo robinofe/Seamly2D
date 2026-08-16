@@ -1,5 +1,8 @@
 var NAVTREEINDEX307 =
 {
+"de/df3/classXMLGrammarDescription.html#aa6f5a6b3b2ddcd6a37d73652a27e4d95":[3,0,846,11],
+"de/df3/classXMLGrammarDescription.html#abc5e50962e0e06c1dc5a5fe1890259c1":[3,0,846,24],
+"de/df3/classXMLGrammarDescription.html#abc5e50962e0e06c1dc5a5fe1890259c1":[3,0,846,25],
 "de/df3/classXMLGrammarDescription.html#abc5e50962e0e06c1dc5a5fe1890259c1":[3,0,846,26],
 "de/df3/classXMLGrammarDescription.html#abc5e50962e0e06c1dc5a5fe1890259c1":[3,0,846,27],
 "de/df3/msvc-arm64_2include_2xercesc_2util_2PlatformUtils_8hpp.html":[4,0,0,1,15,3,0,0,6,45],
@@ -246,8 +249,5 @@ var NAVTREEINDEX307 =
 "df/d1f/classXMLAttDef.html#a13d104f78fc326bee61279efe8523d8a":[3,0,811,52],
 "df/d1f/classXMLAttDef.html#a19c85db7ef4b0f4069a8d8349c6d393d":[3,0,811,51],
 "df/d1f/classXMLAttDef.html#a19c85db7ef4b0f4069a8d8349c6d393d":[3,0,811,50],
-"df/d1f/classXMLAttDef.html#a19c85db7ef4b0f4069a8d8349c6d393d":[3,0,811,49],
-"df/d1f/classXMLAttDef.html#a19c85db7ef4b0f4069a8d8349c6d393d":[3,0,811,48],
-"df/d1f/classXMLAttDef.html#a2404353a1b2104640ded9273edf8a7f5":[3,0,811,120],
-"df/d1f/classXMLAttDef.html#a244028a04f84de0b9b43d89b317f2d7e":[3,0,811,107]
+"df/d1f/classXMLAttDef.html#a19c85db7ef4b0f4069a8d8349c6d393d":[3,0,811,49]
 };

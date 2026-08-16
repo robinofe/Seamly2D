@@ -1,5 +1,8 @@
 var NAVTREEINDEX272 =
 {
+"dd/dc6/classDOMLocatorImpl.html#a65617201816f5c0720b9280960fdb287":[3,0,187,7],
+"dd/dc6/classDOMLocatorImpl.html#a65617201816f5c0720b9280960fdb287":[3,0,187,15],
+"dd/dc6/classDOMLocatorImpl.html#a65617201816f5c0720b9280960fdb287":[3,0,187,11],
 "dd/dc6/classDOMLocatorImpl.html#a6e486d67a05a16de39704ea0e15faeed":[3,0,187,23],
 "dd/dc6/classDOMLocatorImpl.html#a6e486d67a05a16de39704ea0e15faeed":[3,0,187,22],
 "dd/dc6/classDOMLocatorImpl.html#a6e486d67a05a16de39704ea0e15faeed":[3,0,187,21],
@@ -246,8 +249,5 @@ var NAVTREEINDEX272 =
 "dd/dd4/macx_2include_2xercesc_2util_2TransENameMap_8hpp.html":[4,0,0,1,15,0,0,0,6,69],
 "dd/dd4/macx_2include_2xercesc_2util_2TransENameMap_8hpp_source.html":[4,0,0,1,15,0,0,0,6,69],
 "dd/dd5/vgraphicssimpletextitem_8h.html":[4,0,0,1,14,46],
-"dd/dd5/vgraphicssimpletextitem_8h_source.html":[4,0,0,1,14,46],
-"dd/dd7/tst__vmeasurements_8h.html":[4,0,0,2,2,32],
-"dd/dd7/tst__vmeasurements_8h_source.html":[4,0,0,2,2,32],
-"dd/dd8/macx_2include_2xercesc_2util_2NameIdPool_8c.html":[4,0,0,1,15,0,0,0,6,37]
+"dd/dd5/vgraphicssimpletextitem_8h_source.html":[4,0,0,1,14,46]
 };
