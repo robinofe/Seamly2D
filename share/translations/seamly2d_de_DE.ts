@@ -12468,6 +12468,47 @@ wie gewohnt in SeamlyME laden können.
         <source>The pattern piece is in another draft block. Open that draft block and try again.</source>
         <translation>Das Schnittteil befindet sich in einem anderen Entwurfsblock. Öffnen Sie diesen Entwurfsblock und versuchen Sie es erneut.</translation>
     </message>
+    <message><source>Replace %1 everywhere...</source><translation>%1 überall ersetzen...</translation></message>
+    <message><source>Create replacement for %1...</source><translation>Ersatz für %1 erstellen...</translation></message>
+    <message><source>Replace %1 everywhere</source><translation>%1 überall ersetzen</translation></message>
+    <message>
+        <source>Choose one compatible object. Every direct object reference listed below will be changed together. The old object remains on the draft and becomes independent when no references remain.</source>
+        <translation>Wählen Sie ein passendes Objekt. Alle unten angeführten direkten Objektreferenzen werden gemeinsam geändert. Das alte Objekt bleibt im Entwurf und wird unabhängig, sobald keine Referenzen mehr vorhanden sind.</translation>
+    </message>
+    <message><source>Replacement object</source><translation>Ersatzobjekt</translation></message>
+    <message><source>References that will be updated</source><translation>Zu aktualisierende Referenzen</translation></message>
+    <message>
+        <source>Formula references are shown for review but cannot be renamed safely. They will continue to refer to the old object's variables.</source>
+        <translation>Formelreferenzen werden zur Kontrolle angezeigt, können aber nicht sicher umbenannt werden. Sie verweisen weiterhin auf die Variablen des alten Objekts.</translation>
+    </message>
+    <message>
+        <source>No compatible existing object was found. Close this window and choose 'Create replacement'.</source>
+        <translation>Es wurde kein passendes vorhandenes Objekt gefunden. Schließen Sie dieses Fenster und wählen Sie „Ersatz erstellen“.</translation>
+    </message>
+    <message><source>Replace everywhere</source><translation>Überall ersetzen</translation></message>
+    <message><source>Replace object everywhere</source><translation>Objekt überall ersetzen</translation></message>
+    <message><source>No compatible direct object reference was found.</source><translation>Es wurde keine passende direkte Objektreferenz gefunden.</translation></message>
+    <message><source>Create replacement for %1</source><translation>Ersatz für %1 erstellen</translation></message>
+    <message>
+        <source>Create a compatible replacement with the normal drawing tools. Finish the active tool, then choose 'Select new object'. The affected references are shown once more before anything changes.</source>
+        <translation>Erstellen Sie mit den normalen Zeichenwerkzeugen einen passenden Ersatz. Beenden Sie das aktive Werkzeug und wählen Sie anschließend „Neues Objekt auswählen“. Vor der Änderung werden die betroffenen Referenzen nochmals angezeigt.</translation>
+    </message>
+    <message><source>New point</source><translation>Neuer Punkt</translation></message>
+    <message><source>Curve</source><translation>Kurve</translation></message>
+    <message><source>Spline</source><translation>Spline</translation></message>
+    <message><source>Fixed curve</source><translation>Kurve mit festen Kontrollpunkten</translation></message>
+    <message><source>Fixed spline</source><translation>Spline mit festen Kontrollpunkten</translation></message>
+    <message><source>Arc</source><translation>Kreisbogen</translation></message>
+    <message><source>Elliptical arc</source><translation>Elliptischer Bogen</translation></message>
+    <message>
+        <source>Only newly created geometry of the same type as the old object can be selected.</source>
+        <translation>Es kann nur neu erstellte Geometrie desselben Typs wie das alte Objekt ausgewählt werden.</translation>
+    </message>
+    <message><source>Select new object</source><translation>Neues Objekt auswählen</translation></message>
+    <message>
+        <source>No independent compatible object was found. Finish the active drawing tool and make sure the replacement does not depend on the old object.</source>
+        <translation>Es wurde kein passendes unabhängiges Objekt gefunden. Beenden Sie das aktive Zeichenwerkzeug und stellen Sie sicher, dass der Ersatz nicht vom alten Objekt abhängt.</translation>
+    </message>
 </context>
 <context>
     <name>VCommandLine</name>

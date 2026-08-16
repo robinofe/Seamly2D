@@ -64,6 +64,7 @@
 #include <QLineF>
 #include <QMessageBox>
 #include <QLabel>
+#include <QListWidget>
 #include <QTreeWidget>
 #include <QVBoxLayout>
 #include <QPainter>
@@ -77,6 +78,7 @@
 #include <QString>
 #include <QStyle>
 #include <QTimer>
+#include <QToolButton>
 #include <QUndoStack>
 #include <QVector>
 #include <new>
@@ -90,6 +92,7 @@
 #include "../ifc/exception/vexceptionundo.h"
 #include "../ifc/xml/vtoolrecord.h"
 #include "../undocommands/deltool.h"
+#include "../undocommands/replaceobjectreferences.h"
 #include "pattern_piece_tool.h"
 #include "../vgeometry/../ifc/ifcdef.h"
 #include "../vgeometry/vgeometrydef.h"
@@ -310,7 +313,9 @@ void VAbstractTool::showDependencies()
         EditPiece,
         ReplaceNode,
         CreateReplacement,
-        RemoveNode
+        RemoveNode,
+        ReplaceEverywhere,
+        CreateEverywhere
     };
 
     QDialog dialog(qApp->getMainWindow());
@@ -358,12 +363,22 @@ void VAbstractTool::showDependencies()
     actionLabel->setWordWrap(true);
     layout->addWidget(actionLabel);
 
+    auto *globalActionLayout = new QHBoxLayout;
+    auto *replaceEverywhereButton = new QPushButton(tr("Replace %1 everywhere...").arg(objectName), &dialog);
+    auto *createEverywhereButton = new QPushButton(tr("Create replacement for %1...").arg(objectName), &dialog);
+    globalActionLayout->addWidget(replaceEverywhereButton);
+    globalActionLayout->addWidget(createEverywhereButton);
+    globalActionLayout->addStretch();
+    layout->addLayout(globalActionLayout);
+
     auto *actionLayout = new QHBoxLayout;
     auto *selectButton = new QPushButton(tr("Open properties"), &dialog);
     auto *replaceButton = new QPushButton(tr("Select replacement..."), &dialog);
     auto *createButton = new QPushButton(tr("Create replacement geometry..."), &dialog);
     auto *removeButton = new QPushButton(tr("Detach from pattern piece..."), &dialog);
     auto *editPieceButton = new QPushButton(tr("Edit pattern piece"), &dialog);
+    replaceEverywhereButton->setObjectName(QStringLiteral("dependencyReplaceEverywhereButton"));
+    createEverywhereButton->setObjectName(QStringLiteral("dependencyCreateEverywhereButton"));
     selectButton->setObjectName(QStringLiteral("dependencyOpenPropertiesButton"));
     replaceButton->setObjectName(QStringLiteral("dependencyReplaceNodeButton"));
     createButton->setObjectName(QStringLiteral("dependencyCreateReplacementButton"));
@@ -382,6 +397,33 @@ void VAbstractTool::showDependencies()
     createButton->hide();
     removeButton->hide();
     editPieceButton->hide();
+
+    bool canReplaceEverywhere = false;
+    bool canCreateEverywhere = false;
+    try
+    {
+        const QSharedPointer<VGObject> source = getData()->GetGObject(m_id);
+        canReplaceEverywhere = source->getMode() == Draw::Calculation;
+        switch (source->getType())
+        {
+            case GOType::Point:
+            case GOType::Spline:
+            case GOType::SplinePath:
+            case GOType::CubicBezier:
+            case GOType::CubicBezierPath:
+            case GOType::Arc:
+            case GOType::EllipticalArc:
+                canCreateEverywhere = canReplaceEverywhere;
+                break;
+            default:
+                break;
+        }
+    }
+    catch (const VExceptionBadId &)
+    {
+    }
+    replaceEverywhereButton->setVisible(canReplaceEverywhere);
+    createEverywhereButton->setVisible(canCreateEverywhere);
 
     auto *buttons = new QDialogButtonBox(QDialogButtonBox::Close, &dialog);
 
@@ -494,6 +536,16 @@ void VAbstractTool::showDependencies()
         selectedAction = DependencyAction::Select;
         dialog.accept();
     });
+    connect(replaceEverywhereButton, &QPushButton::clicked, &dialog, [&dialog, &selectedAction]()
+    {
+        selectedAction = DependencyAction::ReplaceEverywhere;
+        dialog.accept();
+    });
+    connect(createEverywhereButton, &QPushButton::clicked, &dialog, [&dialog, &selectedAction]()
+    {
+        selectedAction = DependencyAction::CreateEverywhere;
+        dialog.accept();
+    });
     connect(replaceButton, &QPushButton::clicked, &dialog, [&dialog, &selectedAction]()
     {
         selectedAction = DependencyAction::ReplaceNode;
@@ -526,6 +578,18 @@ void VAbstractTool::showDependencies()
         {
             emit doc->ShowTool(dependency.id, false);
         }
+    }
+
+    if (selectedAction == DependencyAction::ReplaceEverywhere)
+    {
+        replaceObjectEverywhere();
+        QTimer::singleShot(0, this, [this]() { showDependencies(); });
+        return;
+    }
+    if (selectedAction == DependencyAction::CreateEverywhere)
+    {
+        createReplacementObject();
+        return;
     }
 
     quint32 selectedPathId = NULL_ID;
@@ -622,6 +686,273 @@ void VAbstractTool::showDependencies()
             // A dependency from another draft block may not be loaded in the current scene.
         }
     }
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+bool VAbstractTool::replaceObjectEverywhere(const QVector<quint32> &suggestedObjects)
+{
+    QSharedPointer<VGObject> source;
+    try
+    {
+        source = getData()->GetGObject(m_id);
+    }
+    catch (const VExceptionBadId &)
+    {
+        return false;
+    }
+
+    QDialog dialog(qApp->getMainWindow());
+    dialog.setWindowTitle(tr("Replace %1 everywhere").arg(source->name()));
+    dialog.resize(720, 500);
+    auto *layout = new QVBoxLayout(&dialog);
+    auto *description = new QLabel(
+        tr("Choose one compatible object. Every direct object reference listed below will be changed together. "
+           "The old object remains on the draft and becomes independent when no references remain."), &dialog);
+    description->setWordWrap(true);
+    layout->addWidget(description);
+
+    layout->addWidget(new QLabel(tr("Replacement object"), &dialog));
+    auto *objects = new QListWidget(&dialog);
+    objects->setObjectName(QStringLiteral("dependencyGlobalReplacementList"));
+    QSet<quint32> descendantTools;
+    const QVector<VToolDependency> descendants = doc->getDependentObjectsRecursive(source->getIdTool(), getData());
+    for (const VToolDependency &dependency : descendants)
+    {
+        if (dependency.id != NULL_ID)
+        {
+            descendantTools.insert(dependency.id);
+        }
+    }
+    const auto geometry = getData()->DataGObjects();
+    for (auto object = geometry->constBegin(); object != geometry->constEnd(); ++object)
+    {
+        const QSharedPointer<VGObject> candidate = object.value();
+        if (candidate->getMode() != Draw::Calculation || candidate->getIdObject() != NULL_ID ||
+            candidate->getIdTool() == source->getIdTool() || candidate->getType() != source->getType() ||
+            descendantTools.contains(candidate->getIdTool()))
+        {
+            continue;
+        }
+        auto *item = new QListWidgetItem(candidate->name(), objects);
+        item->setData(Qt::UserRole, object.key());
+        if (suggestedObjects.contains(object.key()))
+        {
+            objects->setCurrentItem(item);
+        }
+    }
+    objects->sortItems();
+    layout->addWidget(objects);
+
+    layout->addWidget(new QLabel(tr("References that will be updated"), &dialog));
+    auto *affectedTree = new QTreeWidget(&dialog);
+    affectedTree->setColumnCount(3);
+    affectedTree->setHeaderLabels(QStringList() << tr("Object") << tr("Type") << tr("Dependency"));
+    affectedTree->setRootIsDecorated(false);
+    bool hasFormulaReference = false;
+    const QVector<VToolDependency> dependencies = doc->getDirectDependencies(source->getIdTool(), getData());
+    for (const VToolDependency &dependency : dependencies)
+    {
+        new QTreeWidgetItem(affectedTree, QStringList() << dependency.name << dependency.typeName
+                                                        << dependency.reference);
+        hasFormulaReference = hasFormulaReference ||
+                              dependency.reference.contains(tr("formula"), Qt::CaseInsensitive);
+    }
+    affectedTree->resizeColumnToContents(0);
+    affectedTree->resizeColumnToContents(1);
+    layout->addWidget(affectedTree);
+
+    auto *status = new QLabel(&dialog);
+    status->setWordWrap(true);
+    if (hasFormulaReference)
+    {
+        status->setText(tr("Formula references are shown for review but cannot be renamed safely. They will continue "
+                           "to refer to the old object's variables."));
+    }
+    else if (objects->count() == 0)
+    {
+        status->setText(tr("No compatible existing object was found. Close this window and choose 'Create replacement'."));
+    }
+    layout->addWidget(status);
+
+    auto *buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, &dialog);
+    QPushButton *okButton = buttons->button(QDialogButtonBox::Ok);
+    okButton->setText(tr("Replace everywhere"));
+    okButton->setEnabled(objects->currentItem() != nullptr);
+    layout->addWidget(buttons);
+    connect(objects, &QListWidget::currentItemChanged, &dialog,
+            [this, okButton](QListWidgetItem *current, QListWidgetItem *previous)
+    {
+        if (previous != nullptr)
+        {
+            emit doc->ShowTool(previous->data(Qt::UserRole).toUInt(), false);
+        }
+        okButton->setEnabled(current != nullptr);
+        if (current != nullptr)
+        {
+            emit doc->ShowTool(current->data(Qt::UserRole).toUInt(), true);
+        }
+    });
+    connect(buttons, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
+    connect(buttons, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
+
+    const int dialogResult = dialog.exec();
+    const quint32 highlightedId = objects->currentItem() == nullptr
+                                      ? NULL_ID
+                                      : objects->currentItem()->data(Qt::UserRole).toUInt();
+    if (highlightedId != NULL_ID)
+    {
+        emit doc->ShowTool(highlightedId, false);
+    }
+    if (dialogResult != QDialog::Accepted || objects->currentItem() == nullptr)
+    {
+        return false;
+    }
+    const quint32 replacementId = objects->currentItem()->data(Qt::UserRole).toUInt();
+
+    auto *command = new ReplaceObjectReferences(source->getIdTool(), replacementId, doc, getData());
+    if (command->changedToolCount() == 0)
+    {
+        delete command;
+        QMessageBox::information(qApp->getMainWindow(), tr("Replace object everywhere"),
+                                 tr("No compatible direct object reference was found."));
+        return false;
+    }
+    connect(command, &ReplaceObjectReferences::NeedFullParsing, doc, &VAbstractPattern::NeedFullParsing);
+    qApp->getUndoStack()->push(command);
+    return true;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+void VAbstractTool::createReplacementObject()
+{
+    QSharedPointer<VGObject> source;
+    try
+    {
+        source = getData()->GetGObject(m_id);
+    }
+    catch (const VExceptionBadId &)
+    {
+        return;
+    }
+
+    const int initialUndoIndex = qApp->getUndoStack()->index();
+    QSet<quint32> existingObjects;
+    const auto objects = getData()->DataGObjects();
+    for (auto object = objects->constBegin(); object != objects->constEnd(); ++object)
+    {
+        existingObjects.insert(object.key());
+    }
+
+    auto *guide = new QDialog(qApp->getMainWindow(), Qt::Tool);
+    guide->setAttribute(Qt::WA_DeleteOnClose);
+    guide->setWindowTitle(tr("Create replacement for %1").arg(source->name()));
+    guide->resize(540, 230);
+    auto *layout = new QVBoxLayout(guide);
+    auto *description = new QLabel(
+        tr("Create a compatible replacement with the normal drawing tools. Finish the active tool, then choose "
+           "'Select new object'. The affected references are shown once more before anything changes."), guide);
+    description->setWordWrap(true);
+    layout->addWidget(description);
+
+    auto *toolLayout = new QHBoxLayout;
+    QList<QPair<QString, QString>> tools;
+    switch (source->getType())
+    {
+        case GOType::Point:
+            tools.append(qMakePair(tr("New point"), QStringLiteral("pointAtDistanceAngle_ToolButton")));
+            break;
+        case GOType::Spline:
+            tools.append(qMakePair(tr("Curve"), QStringLiteral("curve_ToolButton")));
+            break;
+        case GOType::SplinePath:
+            tools.append(qMakePair(tr("Spline"), QStringLiteral("spline_ToolButton")));
+            break;
+        case GOType::CubicBezier:
+            tools.append(qMakePair(tr("Fixed curve"), QStringLiteral("curveWithCPs_ToolButton")));
+            break;
+        case GOType::CubicBezierPath:
+            tools.append(qMakePair(tr("Fixed spline"), QStringLiteral("splineWithCPs_ToolButton")));
+            break;
+        case GOType::Arc:
+            tools.append(qMakePair(tr("Arc"), QStringLiteral("arc_ToolButton")));
+            break;
+        case GOType::EllipticalArc:
+            tools.append(qMakePair(tr("Elliptical arc"), QStringLiteral("ellipticalArc_ToolButton")));
+            break;
+        default:
+            break;
+    }
+    for (const auto &tool : tools)
+    {
+        auto *button = new QPushButton(tool.first, guide);
+        toolLayout->addWidget(button);
+        connect(button, &QPushButton::clicked, guide, [guide, tool]()
+        {
+            if (auto *toolButton = qApp->getMainWindow()->findChild<QToolButton *>(tool.second))
+            {
+                toolButton->click();
+                guide->raise();
+            }
+        });
+    }
+    layout->addLayout(toolLayout);
+
+    auto *status = new QLabel(tr("Only newly created geometry of the same type as the old object can be selected."),
+                              guide);
+    status->setWordWrap(true);
+    layout->addWidget(status);
+    auto *buttons = new QDialogButtonBox(QDialogButtonBox::Cancel, guide);
+    auto *finishButton = buttons->addButton(tr("Select new object"), QDialogButtonBox::AcceptRole);
+    layout->addWidget(buttons);
+    connect(buttons, &QDialogButtonBox::rejected, guide, &QDialog::reject);
+    connect(finishButton, &QPushButton::clicked, guide,
+            [this, guide, status, existingObjects, source]()
+    {
+        QVector<quint32> createdObjects;
+        QSet<quint32> descendantTools;
+        const QVector<VToolDependency> descendants =
+            doc->getDependentObjectsRecursive(source->getIdTool(), getData());
+        for (const VToolDependency &dependency : descendants)
+        {
+            if (dependency.id != NULL_ID)
+            {
+                descendantTools.insert(dependency.id);
+            }
+        }
+        const auto currentObjects = getData()->DataGObjects();
+        for (auto object = currentObjects->constBegin(); object != currentObjects->constEnd(); ++object)
+        {
+            const QSharedPointer<VGObject> candidate = object.value();
+            if (!existingObjects.contains(object.key()) && candidate->getMode() == Draw::Calculation &&
+                candidate->getIdObject() == NULL_ID && candidate->getType() == source->getType() &&
+                !descendantTools.contains(candidate->getIdTool()))
+            {
+                createdObjects.append(object.key());
+            }
+        }
+        if (createdObjects.isEmpty())
+        {
+            status->setText(tr("No independent compatible object was found. Finish the active drawing tool and make "
+                               "sure the replacement does not depend on the old object."));
+            return;
+        }
+
+        guide->setProperty("replacementHandled", true);
+        guide->accept();
+        replaceObjectEverywhere(createdObjects);
+        QTimer::singleShot(0, this, [this]() { showDependencies(); });
+    });
+    connect(guide, &QDialog::finished, this, [this, initialUndoIndex](int)
+    {
+        if (!sender()->property("replacementHandled").toBool())
+        {
+            while (qApp->getUndoStack()->index() > initialUndoIndex)
+            {
+                qApp->getUndoStack()->undo();
+            }
+        }
+    });
+    guide->show();
 }
 
 //---------------------------------------------------------------------------------------------------------------------

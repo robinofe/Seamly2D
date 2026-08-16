@@ -163,6 +163,8 @@ protected:
     virtual void                 RemoveReferens() {}
     virtual void                 deleteTool(bool ask = true);
     void                         showDependencies();
+    bool                         replaceObjectEverywhere(const QVector<quint32> &suggestedObjects = {});
+    void                         createReplacementObject();
     static int                   ConfirmDeletion();
 
     template <typename T>

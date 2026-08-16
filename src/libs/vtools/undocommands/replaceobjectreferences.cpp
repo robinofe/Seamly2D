@@ -11,6 +11,7 @@
 
 #include "replaceobjectreferences.h"
 
+#include "../ifc/exception/vexceptionbadid.h"
 #include "../ifc/xml/vabstractpattern.h"
 #include "../vpatterndb/vcontainer.h"
 #include "../vgeometry/vgobject.h"
@@ -81,10 +82,20 @@ ReplaceObjectReferences::ReplaceObjectReferences(quint32 oldToolId, quint32 newO
     }
 
     QSet<quint32> ownerIds;
+    quint32 replacementToolId = NULL_ID;
+    try
+    {
+        replacementToolId = data->GetGObject(newObjectId)->getIdTool();
+    }
+    catch (const VExceptionBadId &)
+    {
+    }
     const QVector<VToolDependency> dependencies = doc->getDirectDependencies(oldToolId, data);
     for (const VToolDependency &dependency : dependencies)
     {
-        if (dependency.id == NULL_ID || ownerIds.contains(dependency.id))
+        // Rewriting the replacement's own construction would create a self-reference when it was built from the old
+        // object. The chooser normally excludes such descendants; keep this guard in the command as well.
+        if (dependency.id == NULL_ID || dependency.id == replacementToolId || ownerIds.contains(dependency.id))
         {
             continue;
         }

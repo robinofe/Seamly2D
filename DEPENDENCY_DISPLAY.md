@@ -40,10 +40,13 @@
    staging provides the safe part of a freeze workflow without storing a permanently detached piece state.
 6. A compatible one-to-one replacement can update every direct object reference in one undoable command. The command
    rewrites construction-tool attributes, piece-node source objects, and piece anchors, then requests a full parse so
-   the existing reference counters are rebuilt. The confirmation lists all affected owners. Formula expressions are
-   reported but are not rewritten by name because a replacement object does not necessarily export equivalent
-   variables. One-to-many geometry remains in the guided piece-section workflow where continuity and piece settings
-   can be reviewed.
+   the existing reference counters are rebuilt. The dependency dialog offers this action for ordinary construction
+   geometry as well as piece nodes. The user can choose an existing object of the same type or create one with the
+   normal drafting tools; the confirmation lists all affected owners. Formula expressions are reported but are not
+   rewritten by name because a replacement object does not necessarily export equivalent variables. One-to-many
+   geometry remains in the guided piece-section workflow where continuity and piece settings can be reviewed.
+   Objects that already depend on the old geometry are excluded as replacements, preventing a self-reference or
+   dependency cycle.
 7. The dependency list supports multiple node selection. Adjacent selected entries from the same piece path are
    handed to the existing section replacement, allowing them to be detached or replaced together.
 8. History marks independent roots, unused geometry, and dependent objects. Clicking a row keeps using the existing

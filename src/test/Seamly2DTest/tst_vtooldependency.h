@@ -32,6 +32,7 @@ private slots:
     void replaceObjectReferences();
     void dependencyDialog();
     void nodeDependencyActions();
+    void globalReplacementDialog();
     void referenceChangeRequestsFullParse();
     void childReferenceChangeRequestsFullParse();
     void visualChangeRequestsLiteParse();

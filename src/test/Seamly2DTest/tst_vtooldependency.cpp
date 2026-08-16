@@ -26,6 +26,7 @@
 
 #include <QCheckBox>
 #include <QDialog>
+#include <QListWidget>
 #include <QPushButton>
 #include <QTemporaryFile>
 #include <QTextStream>
@@ -93,6 +94,7 @@ public:
     }
 
     using VAbstractTool::showDependencies;
+    using VAbstractTool::replaceObjectEverywhere;
 
     QString getTagName() const override { return QStringLiteral("point"); }
     void ShowVisualization(bool) override {}
@@ -528,6 +530,8 @@ void TST_VToolDependency::nodeDependencyActions()
     bool replaceShown = false;
     bool createShown = false;
     bool detachShown = false;
+    bool replaceEverywhereShown = false;
+    bool createEverywhereShown = false;
     QTimer::singleShot(0, qApp, [&]()
     {
         auto *dialog = qobject_cast<QDialog *>(QApplication::activeModalWidget());
@@ -539,9 +543,15 @@ void TST_VToolDependency::nodeDependencyActions()
         auto *replaceButton = dialog->findChild<QPushButton *>(QStringLiteral("dependencyReplaceNodeButton"));
         auto *createButton = dialog->findChild<QPushButton *>(QStringLiteral("dependencyCreateReplacementButton"));
         auto *detachButton = dialog->findChild<QPushButton *>(QStringLiteral("dependencyRemoveNodeButton"));
+        auto *replaceEverywhereButton =
+            dialog->findChild<QPushButton *>(QStringLiteral("dependencyReplaceEverywhereButton"));
+        auto *createEverywhereButton =
+            dialog->findChild<QPushButton *>(QStringLiteral("dependencyCreateEverywhereButton"));
         replaceShown = replaceButton != nullptr && !replaceButton->isHidden();
         createShown = createButton != nullptr && !createButton->isHidden();
         detachShown = detachButton != nullptr && !detachButton->isHidden();
+        replaceEverywhereShown = replaceEverywhereButton != nullptr && !replaceEverywhereButton->isHidden();
+        createEverywhereShown = createEverywhereButton != nullptr && !createEverywhereButton->isHidden();
         dialog->reject();
     });
 
@@ -550,6 +560,53 @@ void TST_VToolDependency::nodeDependencyActions()
     QVERIFY(replaceShown);
     QVERIFY(createShown);
     QVERIFY(detachShown);
+    QVERIFY(replaceEverywhereShown);
+    QVERIFY(createEverywhereShown);
+}
+
+void TST_VToolDependency::globalReplacementDialog()
+{
+    DependencyPattern pattern;
+    pattern.load(QStringLiteral(
+        "<pattern><draftBlock name=\"Block\"><calculation>"
+        "<point id=\"1\" name=\"Old\" type=\"single\"/>"
+        "<point id=\"4\" name=\"New\" type=\"single\"/>"
+        "<point id=\"2\" name=\"Child\" type=\"endLine\" basePoint=\"1\"/>"
+        "<point id=\"5\" name=\"Dependent candidate\" type=\"endLine\" basePoint=\"1\"/>"
+        "</calculation></draftBlock></pattern>"),
+        {VToolRecord(1, Tool::BasePoint, QStringLiteral("Block")),
+         VToolRecord(4, Tool::BasePoint, QStringLiteral("Block")),
+         VToolRecord(2, Tool::EndLine, QStringLiteral("Block")),
+         VToolRecord(5, Tool::EndLine, QStringLiteral("Block"))});
+    const Unit unit = Unit::Cm;
+    VContainer data(nullptr, &unit);
+    data.UpdateGObject(1, new VPointF(0, 0, QStringLiteral("Old"), 0, 0));
+    data.UpdateGObject(4, new VPointF(10, 0, QStringLiteral("New"), 0, 0));
+    data.UpdateGObject(5, new VPointF(20, 0, QStringLiteral("Dependent candidate"), 0, 0));
+    DependencyTool tool(&pattern, &data, 1);
+
+    bool dialogFound = false;
+    int replacementCount = -1;
+    int affectedCount = -1;
+    QTimer::singleShot(0, qApp, [&]()
+    {
+        auto *dialog = qobject_cast<QDialog *>(QApplication::activeModalWidget());
+        dialogFound = dialog != nullptr;
+        if (dialog == nullptr)
+        {
+            return;
+        }
+        auto *objects = dialog->findChild<QListWidget *>(QStringLiteral("dependencyGlobalReplacementList"));
+        const QList<QTreeWidget *> trees = dialog->findChildren<QTreeWidget *>();
+        replacementCount = objects == nullptr ? -1 : objects->count();
+        affectedCount = trees.isEmpty() ? -1 : trees.constFirst()->topLevelItemCount();
+        dialog->reject();
+    });
+
+    QVERIFY(!tool.replaceObjectEverywhere());
+    QVERIFY(dialogFound);
+    QCOMPARE(replacementCount, 1);
+    QCOMPARE(affectedCount, 2);
 }
 
 void TST_VToolDependency::referenceChangeRequestsFullParse()
