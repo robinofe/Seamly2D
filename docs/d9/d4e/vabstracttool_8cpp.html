@@ -106,8 +106,12 @@ $(document).ready(function(){initNavTree('d9/d4e/vabstracttool_8cpp.html','../..
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="../../d1/de6/vabstracttool_8h_source.html">vabstracttool.h</a>&quot;</code><br />
 <code>#include &lt;QBrush&gt;</code><br />
+<code>#include &lt;QApplication&gt;</code><br />
+<code>#include &lt;QClipboard&gt;</code><br />
+<code>#include &lt;QCoreApplication&gt;</code><br />
 <code>#include &lt;QDialog&gt;</code><br />
 <code>#include &lt;QDialogButtonBox&gt;</code><br />
+<code>#include &lt;QDomDocument&gt;</code><br />
 <code>#include &lt;QCheckBox&gt;</code><br />
 <code>#include &lt;QComboBox&gt;</code><br />
 <code>#include &lt;QFlags&gt;</code><br />
@@ -125,6 +129,7 @@ $(document).ready(function(){initNavTree('d9/d4e/vabstracttool_8cpp.html','../..
 <code>#include &lt;QPainter&gt;</code><br />
 <code>#include &lt;QPen&gt;</code><br />
 <code>#include &lt;QPixmap&gt;</code><br />
+<code>#include &lt;QPlainTextEdit&gt;</code><br />
 <code>#include &lt;QPoint&gt;</code><br />
 <code>#include &lt;QPointF&gt;</code><br />
 <code>#include &lt;QPushButton&gt;</code><br />
@@ -132,6 +137,7 @@ $(document).ready(function(){initNavTree('d9/d4e/vabstracttool_8cpp.html','../..
 <code>#include &lt;QSharedPointer&gt;</code><br />
 <code>#include &lt;QString&gt;</code><br />
 <code>#include &lt;QStyle&gt;</code><br />
+<code>#include &lt;QTextStream&gt;</code><br />
 <code>#include &lt;QTimer&gt;</code><br />
 <code>#include &lt;QToolButton&gt;</code><br />
 <code>#include &lt;QUndoStack&gt;</code><br />
@@ -175,6 +181,12 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:ad34b036fcf942ccbd1b02ede3c56689b"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d94/namespaceanonymous__namespace_02vabstracttool_8cpp_03.html#ad34b036fcf942ccbd1b02ede3c56689b">anonymous_namespace{vabstracttool.cpp}::GeometryTypeName</a> (<a class="el" href="../../d5/d9d/vgeometrydef_8h.html#a6bf870a878c696639c3936fa7e9729b9">GOType</a> type)</td></tr>
+<tr class="separator:ad34b036fcf942ccbd1b02ede3c56689b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19b0f983be201a542e7dc8cc3645bd53"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d94/namespaceanonymous__namespace_02vabstracttool_8cpp_03.html#a19b0f983be201a542e7dc8cc3645bd53">anonymous_namespace{vabstracttool.cpp}::DrawModeName</a> (<a class="el" href="../../d5/d9d/vgeometrydef_8h.html#a85a66cf8eff1eceb62457cf1931ddf1a">Draw</a> mode)</td></tr>
+<tr class="separator:a19b0f983be201a542e7dc8cc3645bd53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5651737a1cd1c3c2d0feacd66410b05"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d94/namespaceanonymous__namespace_02vabstracttool_8cpp_03.html#ad5651737a1cd1c3c2d0feacd66410b05">anonymous_namespace{vabstracttool.cpp}::ReplacementDiagnostics</a> (<a class="el" href="../../d8/dba/classVAbstractPattern.html">VAbstractPattern</a> *doc, const <a class="el" href="../../d2/d83/classVContainer.html">VContainer</a> *data, const <a class="el" href="../../dd/daa/classQSharedPointer.html">QSharedPointer</a>&lt; <a class="el" href="../../d1/de7/classVGObject.html">VGObject</a> &gt; &amp;source, quint32 sourceObjectId, const QSet&lt; quint32 &gt; &amp;trackedObjects, bool allowTrackedPointDetachment, bool requireTrackedObject)</td></tr>
+<tr class="separator:ad5651737a1cd1c3c2d0feacd66410b05"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7236e797575617f3512429acf2adee0d"><td class="memItemLeft" align="right" valign="top">quint32&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d94/namespaceanonymous__namespace_02vabstracttool_8cpp_03.html#a7236e797575617f3512429acf2adee0d">anonymous_namespace{vabstracttool.cpp}::CreateNodeSpline</a> (<a class="el" href="../../d2/d83/classVContainer.html">VContainer</a> *data, quint32 id)</td></tr>
 <tr class="separator:a7236e797575617f3512429acf2adee0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe8ee413200e830c15092676c305cf93"><td class="memItemLeft" align="right" valign="top">quint32&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d94/namespaceanonymous__namespace_02vabstracttool_8cpp_03.html#afe8ee413200e830c15092676c305cf93">anonymous_namespace{vabstracttool.cpp}::CreateNodeSplinePath</a> (<a class="el" href="../../d2/d83/classVContainer.html">VContainer</a> *data, quint32 id)</td></tr>

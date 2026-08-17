@@ -39,7 +39,10 @@ var namespaces_dup =
     ] ],
     [ "anonymous_namespace{vabstracttool.cpp}", "dc/d94/namespaceanonymous__namespace_02vabstracttool_8cpp_03.html", [
       [ "CreateNodeSpline", "dc/d94/namespaceanonymous__namespace_02vabstracttool_8cpp_03.html#a7236e797575617f3512429acf2adee0d", null ],
-      [ "CreateNodeSplinePath", "dc/d94/namespaceanonymous__namespace_02vabstracttool_8cpp_03.html#afe8ee413200e830c15092676c305cf93", null ]
+      [ "CreateNodeSplinePath", "dc/d94/namespaceanonymous__namespace_02vabstracttool_8cpp_03.html#afe8ee413200e830c15092676c305cf93", null ],
+      [ "DrawModeName", "dc/d94/namespaceanonymous__namespace_02vabstracttool_8cpp_03.html#a19b0f983be201a542e7dc8cc3645bd53", null ],
+      [ "GeometryTypeName", "dc/d94/namespaceanonymous__namespace_02vabstracttool_8cpp_03.html#ad34b036fcf942ccbd1b02ede3c56689b", null ],
+      [ "ReplacementDiagnostics", "dc/d94/namespaceanonymous__namespace_02vabstracttool_8cpp_03.html#ad5651737a1cd1c3c2d0feacd66410b05", null ]
     ] ],
     [ "anonymous_namespace{vcommonsettings.cpp}", "d5/dc3/namespaceanonymous__namespace_02vcommonsettings_8cpp_03.html", [
       [ "ClearFormats", "d5/dc3/namespaceanonymous__namespace_02vcommonsettings_8cpp_03.html#ad33f2f0b5106c172dee047d0af12ebc6", null ],
