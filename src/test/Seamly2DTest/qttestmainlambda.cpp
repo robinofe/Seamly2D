@@ -80,6 +80,8 @@
 #include "../vmisc/vabstractapplication.h"
 #include "../vmisc/projectversion.h"
 
+#include <QUndoStack>
+
 class TestApplication2D : public VAbstractApplication
 {
 public:
@@ -99,6 +101,7 @@ TestApplication2D::TestApplication2D(int &argc, char **argv)
 {
     setApplicationName(VER_INTERNALNAME_2D_STR);
     setOrganizationName(VER_COMPANYNAME_STR);
+    undoStack = new QUndoStack(this);
     openSettings();
 }
 

@@ -49,7 +49,9 @@
    dependency cycle. The creation guide names rejected objects and explains this relationship. Closing the guide keeps
    newly drawn construction and returns to the refreshed recursive dependency list. This also reveals new geometry
    attached indirectly through a curve or spline. Point replacement offers the common point construction tools instead
-   of assuming one point method; rollback is available only through the explicit discard action.
+   of assuming one point method. A newly created point that depends on the old construction can be detached at its
+   current position and used as the replacement in the same undoable command; rollback is available only through the
+   explicit discard action.
 7. The dependency list supports multiple node selection. Adjacent selected entries from the same piece path are
    handed to the existing section replacement, allowing them to be detached or replaced together.
 8. History marks independent roots, unused geometry, and dependent objects. Clicking a row keeps using the existing

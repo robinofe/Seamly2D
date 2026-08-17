@@ -164,7 +164,8 @@ protected:
     virtual void                 deleteTool(bool ask = true);
     void                         showDependencies();
     void                         showDependencies(bool showAllDescendants);
-    bool                         replaceObjectEverywhere(const QVector<quint32> &suggestedObjects = {});
+    bool                         replaceObjectEverywhere(const QVector<quint32> &suggestedObjects = {},
+                                                         bool detachSuggestedObjects = false);
     void                         createReplacementObject();
     static int                   ConfirmDeletion();
 

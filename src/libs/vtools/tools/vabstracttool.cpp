@@ -697,7 +697,7 @@ void VAbstractTool::showDependencies(bool showAllDescendants)
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-bool VAbstractTool::replaceObjectEverywhere(const QVector<quint32> &suggestedObjects)
+bool VAbstractTool::replaceObjectEverywhere(const QVector<quint32> &suggestedObjects, bool detachSuggestedObjects)
 {
     QSharedPointer<VGObject> source;
     try
@@ -714,8 +714,11 @@ bool VAbstractTool::replaceObjectEverywhere(const QVector<quint32> &suggestedObj
     dialog.resize(720, 500);
     auto *layout = new QVBoxLayout(&dialog);
     auto *description = new QLabel(
-        tr("Choose one compatible object. Every direct object reference listed below will be changed together. "
-           "The old object remains on the draft and becomes independent when no references remain."), &dialog);
+        detachSuggestedObjects
+            ? tr("Choose the newly created point. If it depends on the old construction, it will first be detached "
+                 "at its current position. Every direct object reference listed below will then be changed together.")
+            : tr("Choose one compatible object. Every direct object reference listed below will be changed together. "
+                 "The old object remains on the draft and becomes independent when no references remain."), &dialog);
     description->setWordWrap(true);
     layout->addWidget(description);
 
@@ -735,14 +738,20 @@ bool VAbstractTool::replaceObjectEverywhere(const QVector<quint32> &suggestedObj
     for (auto object = geometry->constBegin(); object != geometry->constEnd(); ++object)
     {
         const QSharedPointer<VGObject> candidate = object.value();
+        const bool descendant = descendantTools.contains(candidate->getIdTool());
+        const bool canDetach = detachSuggestedObjects && suggestedObjects.contains(object.key()) &&
+                               source->getType() == GOType::Point;
         if (candidate->getMode() != Draw::Calculation || candidate->getIdObject() != NULL_ID ||
             candidate->getIdTool() == source->getIdTool() || candidate->getType() != source->getType() ||
-            descendantTools.contains(candidate->getIdTool()))
+            (descendant && !canDetach))
         {
             continue;
         }
-        auto *item = new QListWidgetItem(candidate->name(), objects);
+        auto *item = new QListWidgetItem(canDetach
+                                             ? tr("%1 (detach at current position)").arg(candidate->name())
+                                             : candidate->name(), objects);
         item->setData(Qt::UserRole, object.key());
+        item->setData(Qt::UserRole + 1, canDetach);
         if (suggestedObjects.contains(object.key()))
         {
             objects->setCurrentItem(item);
@@ -784,7 +793,10 @@ bool VAbstractTool::replaceObjectEverywhere(const QVector<quint32> &suggestedObj
 
     auto *buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, &dialog);
     QPushButton *okButton = buttons->button(QDialogButtonBox::Ok);
-    okButton->setText(tr("Replace everywhere"));
+    okButton->setText(objects->currentItem() != nullptr &&
+                              objects->currentItem()->data(Qt::UserRole + 1).toBool()
+                          ? tr("Detach and replace everywhere")
+                          : tr("Replace everywhere"));
     okButton->setEnabled(objects->currentItem() != nullptr);
     layout->addWidget(buttons);
     connect(objects, &QListWidget::currentItemChanged, &dialog,
@@ -795,6 +807,9 @@ bool VAbstractTool::replaceObjectEverywhere(const QVector<quint32> &suggestedObj
             emit doc->ShowTool(previous->data(Qt::UserRole).toUInt(), false);
         }
         okButton->setEnabled(current != nullptr);
+        okButton->setText(current != nullptr && current->data(Qt::UserRole + 1).toBool()
+                              ? tr("Detach and replace everywhere")
+                              : tr("Replace everywhere"));
         if (current != nullptr)
         {
             emit doc->ShowTool(current->data(Qt::UserRole).toUInt(), true);
@@ -816,8 +831,66 @@ bool VAbstractTool::replaceObjectEverywhere(const QVector<quint32> &suggestedObj
         return false;
     }
     const quint32 replacementId = objects->currentItem()->data(Qt::UserRole).toUInt();
+    QDomElement detachedReplacement;
+    if (objects->currentItem()->data(Qt::UserRole + 1).toBool())
+    {
+        const QSharedPointer<VPointF> point =
+            qSharedPointerDynamicCast<VPointF>(getData()->GetGObject(replacementId));
+        if (point.isNull())
+        {
+            QMessageBox::information(qApp->getMainWindow(), tr("Replace object everywhere"),
+                                     tr("This point cannot be detached safely because no independent draft base "
+                                        "point is available."));
+            return false;
+        }
+        const QDomElement oldXml = doc->elementById(point->getIdTool());
+        const QDomElement calculation = oldXml.parentNode().toElement();
+        QDomElement basePointXml = calculation.firstChildElement(VAbstractPattern::TagPoint);
+        while (!basePointXml.isNull() && basePointXml.attribute(AttrType) != QStringLiteral("single"))
+        {
+            basePointXml = basePointXml.nextSiblingElement(VAbstractPattern::TagPoint);
+        }
+        const quint32 basePointId = basePointXml.attribute(QStringLiteral("id")).toUInt();
+        if (oldXml.isNull() || basePointId == NULL_ID || basePointId == source->getIdTool())
+        {
+            QMessageBox::information(qApp->getMainWindow(), tr("Replace object everywhere"),
+                                     tr("This point cannot be detached safely because no independent draft base "
+                                        "point is available."));
+            return false;
+        }
 
-    auto *command = new ReplaceObjectReferences(source->getIdTool(), replacementId, doc, getData());
+        try
+        {
+            const QSharedPointer<VPointF> basePoint = getData()->GeometricObject<VPointF>(basePointId);
+            const QLineF offset(static_cast<QPointF>(*basePoint), static_cast<QPointF>(*point));
+            // An end-line point preserves the position while depending only on the draft block's root point.
+            detachedReplacement = doc->createElement(VAbstractPattern::TagPoint);
+            doc->SetAttribute(detachedReplacement, QStringLiteral("id"), point->getIdTool());
+            doc->SetAttribute(detachedReplacement, AttrType, QStringLiteral("endLine"));
+            doc->SetAttribute(detachedReplacement, AttrName, point->name());
+            doc->SetAttribute(detachedReplacement, AttrMx, qApp->fromPixel(point->mx()));
+            doc->SetAttribute(detachedReplacement, AttrMy, qApp->fromPixel(point->my()));
+            doc->SetAttribute<bool>(detachedReplacement, AttrShowPointName, point->isShowPointName());
+            doc->SetAttribute(detachedReplacement, AttrLineType, LineTypeNone);
+            doc->SetAttribute(detachedReplacement, AttrLineWeight, DefaultLineWeight);
+            doc->SetAttribute(detachedReplacement, AttrLineColor, ColorBlack);
+            doc->SetAttribute(detachedReplacement, AttrLength,
+                              QString::number(qApp->fromPixel(offset.length()), 'g', 15));
+            doc->SetAttribute(detachedReplacement, AttrAngle,
+                              QString::number(offset.length() > 0 ? offset.angle() : 0.0, 'g', 15));
+            doc->SetAttribute(detachedReplacement, AttrBasePoint, basePointId);
+        }
+        catch (const VExceptionBadId &)
+        {
+            QMessageBox::information(qApp->getMainWindow(), tr("Replace object everywhere"),
+                                     tr("This point cannot be detached safely because no independent draft base "
+                                        "point is available."));
+            return false;
+        }
+    }
+
+    auto *command = new ReplaceObjectReferences(source->getIdTool(), replacementId, doc, getData(),
+                                                detachedReplacement);
     if (command->changedToolCount() == 0)
     {
         delete command;
@@ -960,7 +1033,8 @@ void VAbstractTool::createReplacementObject()
             [this, guide, status, existingObjects, source]()
     {
         QVector<quint32> createdObjects;
-        QStringList dependentCreatedObjects;
+        QVector<quint32> dependentCreatedObjects;
+        QStringList dependentCreatedObjectNames;
         QSet<quint32> descendantTools;
         const QVector<VToolDependency> descendants =
             doc->getDependentObjectsRecursive(source->getIdTool(), getData());
@@ -981,7 +1055,8 @@ void VAbstractTool::createReplacementObject()
                                            candidate->getType() == source->getType();
             if (newCompatibleType && descendantTools.contains(candidate->getIdTool()))
             {
-                dependentCreatedObjects.append(candidate->name());
+                dependentCreatedObjects.append(object.key());
+                dependentCreatedObjectNames.append(candidate->name());
             }
             else if (newCompatibleType)
             {
@@ -990,13 +1065,21 @@ void VAbstractTool::createReplacementObject()
         }
         if (createdObjects.isEmpty())
         {
+            if (!dependentCreatedObjects.isEmpty() && source->getType() == GOType::Point)
+            {
+                guide->setProperty("replacementSelectionStarted", true);
+                guide->accept();
+                replaceObjectEverywhere(dependentCreatedObjects, true);
+                QTimer::singleShot(0, this, [this]() { showDependencies(true); });
+                return;
+            }
             status->setText(dependentCreatedObjects.isEmpty()
                                 ? tr("No new object of the required type was found. Finish the active drawing tool "
                                      "and try again.")
                                 : tr("%1 cannot replace %2 because it depends on %2. It will be shown under 'Show "
                                      "all descendants'. Create the replacement from a different point or "
                                      "construction chain.")
-                                      .arg(dependentCreatedObjects.join(QStringLiteral(", ")), source->name()));
+                                      .arg(dependentCreatedObjectNames.join(QStringLiteral(", ")), source->name()));
             return;
         }
 

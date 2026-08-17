@@ -67,6 +67,13 @@ bool replaceReferences(QDomElement root, const QSet<quint32> &oldIds, quint32 ne
 
 ReplaceObjectReferences::ReplaceObjectReferences(quint32 oldToolId, quint32 newObjectId, VAbstractPattern *doc,
                                                  const VContainer *data, QUndoCommand *parent)
+    : ReplaceObjectReferences(oldToolId, newObjectId, doc, data, QDomElement(), parent)
+{
+}
+
+ReplaceObjectReferences::ReplaceObjectReferences(quint32 oldToolId, quint32 newObjectId, VAbstractPattern *doc,
+                                                 const VContainer *data, const QDomElement &detachedReplacement,
+                                                 QUndoCommand *parent)
     : VUndoCommand(QDomElement(), doc, parent)
 {
     setText(tr("Replace object in all direct uses"));
@@ -89,6 +96,16 @@ ReplaceObjectReferences::ReplaceObjectReferences(quint32 oldToolId, quint32 newO
     }
     catch (const VExceptionBadId &)
     {
+    }
+    if (!detachedReplacement.isNull() && replacementToolId != NULL_ID)
+    {
+        // Store detaching and reference replacement in one command so undo cannot leave a half-repaired pattern.
+        const QDomElement replacementXml = doc->elementById(replacementToolId);
+        if (!replacementXml.isNull())
+        {
+            m_tools.append({replacementToolId, replacementXml.cloneNode(true).toElement(),
+                            detachedReplacement.cloneNode(true).toElement()});
+        }
     }
     const QVector<VToolDependency> dependencies = doc->getDirectDependencies(oldToolId, data);
     for (const VToolDependency &dependency : dependencies)

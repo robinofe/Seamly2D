@@ -34,6 +34,7 @@ private slots:
     void dependencyDialog();
     void nodeDependencyActions();
     void globalReplacementDialog();
+    void detachedPointReplacement();
     void referenceChangeRequestsFullParse();
     void childReferenceChangeRequestsFullParse();
     void visualChangeRequestsLiteParse();

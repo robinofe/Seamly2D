@@ -12475,6 +12475,11 @@ wie gewohnt in SeamlyME laden können.
         <source>Choose one compatible object. Every direct object reference listed below will be changed together. The old object remains on the draft and becomes independent when no references remain.</source>
         <translation>Wählen Sie ein passendes Objekt. Alle unten angeführten direkten Objektreferenzen werden gemeinsam geändert. Das alte Objekt bleibt im Entwurf und wird unabhängig, sobald keine Referenzen mehr vorhanden sind.</translation>
     </message>
+    <message>
+        <source>Choose the newly created point. If it depends on the old construction, it will first be detached at its current position. Every direct object reference listed below will then be changed together.</source>
+        <translation>Wählen Sie den neu erstellten Punkt. Wenn er von der alten Konstruktion abhängt, wird er zuerst an seiner aktuellen Position gelöst. Danach werden alle unten angeführten direkten Objektreferenzen gemeinsam geändert.</translation>
+    </message>
+    <message><source>%1 (detach at current position)</source><translation>%1 (an aktueller Position lösen)</translation></message>
     <message><source>Replacement object</source><translation>Ersatzobjekt</translation></message>
     <message><source>References that will be updated</source><translation>Zu aktualisierende Referenzen</translation></message>
     <message>
@@ -12486,8 +12491,13 @@ wie gewohnt in SeamlyME laden können.
         <translation>Es wurde kein passendes vorhandenes Objekt gefunden. Schließen Sie dieses Fenster und wählen Sie „Ersatz erstellen“.</translation>
     </message>
     <message><source>Replace everywhere</source><translation>Überall ersetzen</translation></message>
+    <message><source>Detach and replace everywhere</source><translation>Lösen und überall ersetzen</translation></message>
     <message><source>Replace object everywhere</source><translation>Objekt überall ersetzen</translation></message>
     <message><source>No compatible direct object reference was found.</source><translation>Es wurde keine passende direkte Objektreferenz gefunden.</translation></message>
+    <message>
+        <source>This point cannot be detached safely because no independent draft base point is available.</source>
+        <translation>Dieser Punkt kann nicht sicher gelöst werden, weil kein unabhängiger Basis-Punkt des Entwurfs verfügbar ist.</translation>
+    </message>
     <message><source>Create replacement for %1</source><translation>Ersatz für %1 erstellen</translation></message>
     <message>
         <source>Create a compatible replacement with the normal drawing tools. Finish the active tool, then choose 'Select new object'. The replacement must not use %1 itself, directly or indirectly. The affected references are shown once more before anything changes.</source>

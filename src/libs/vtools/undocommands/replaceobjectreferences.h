@@ -25,6 +25,8 @@ class ReplaceObjectReferences : public VUndoCommand
 public:
     ReplaceObjectReferences(quint32 oldToolId, quint32 newObjectId, VAbstractPattern *doc, const VContainer *data,
                             QUndoCommand *parent = nullptr);
+    ReplaceObjectReferences(quint32 oldToolId, quint32 newObjectId, VAbstractPattern *doc, const VContainer *data,
+                            const QDomElement &detachedReplacement, QUndoCommand *parent = nullptr);
 
     void undo() override;
     void redo() override;

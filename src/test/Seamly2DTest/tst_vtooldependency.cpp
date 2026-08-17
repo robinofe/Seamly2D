@@ -27,6 +27,7 @@
 #include <QCheckBox>
 #include <QDialog>
 #include <QListWidget>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QTemporaryFile>
 #include <QTextStream>
@@ -653,6 +654,79 @@ void TST_VToolDependency::globalReplacementDialog()
     QVERIFY(dialogFound);
     QCOMPARE(replacementCount, 1);
     QCOMPARE(affectedCount, 2);
+}
+
+void TST_VToolDependency::detachedPointReplacement()
+{
+    DependencyPattern pattern;
+    pattern.load(QStringLiteral(
+        "<pattern><draftBlock name=\"Block\"><calculation>"
+        "<point id=\"10\" name=\"Base\" type=\"single\"/>"
+        "<point id=\"1\" name=\"Old\" type=\"endLine\" basePoint=\"10\"/>"
+        "<point id=\"2\" name=\"Child\" type=\"endLine\" basePoint=\"1\"/>"
+        "<spline id=\"3\" type=\"simple\" point1=\"1\" point4=\"1\"/>"
+        "<point id=\"5\" name=\"PointOnSpline\" type=\"cutSpline\" spline=\"3\"/>"
+        "</calculation></draftBlock></pattern>"),
+        {VToolRecord(10, Tool::BasePoint, QStringLiteral("Block")),
+         VToolRecord(1, Tool::EndLine, QStringLiteral("Block")),
+         VToolRecord(2, Tool::EndLine, QStringLiteral("Block")),
+         VToolRecord(3, Tool::Spline, QStringLiteral("Block")),
+         VToolRecord(5, Tool::CutSpline, QStringLiteral("Block"))});
+    const Unit unit = Unit::Cm;
+    VContainer data(nullptr, &unit);
+    data.UpdateGObject(10, new VPointF(0, 0, QStringLiteral("Base"), 0, 0));
+    data.UpdateGObject(1, new VPointF(10, 0, QStringLiteral("Old"), 0, 0));
+    data.UpdateGObject(5, new VPointF(30, 40, QStringLiteral("PointOnSpline"), 0, 0));
+    DependencyTool tool(&pattern, &data, 1);
+    const int undoIndex = qApp->getUndoStack()->index();
+
+    bool candidateCanBeDetached = false;
+    QString safetyMessage;
+    QTimer::singleShot(0, qApp, [&]()
+    {
+        auto *dialog = qobject_cast<QDialog *>(QApplication::activeModalWidget());
+        if (dialog == nullptr)
+        {
+            return;
+        }
+        auto *objects = dialog->findChild<QListWidget *>(QStringLiteral("dependencyGlobalReplacementList"));
+        for (int i = 0; objects != nullptr && i < objects->count(); ++i)
+        {
+            if (objects->item(i)->data(Qt::UserRole).toUInt() == 5)
+            {
+                candidateCanBeDetached = objects->item(i)->data(Qt::UserRole + 1).toBool();
+                objects->setCurrentRow(i);
+                break;
+            }
+        }
+        dialog->accept();
+        QTimer::singleShot(0, qApp, [&]()
+        {
+            auto *message = qobject_cast<QMessageBox *>(QApplication::activeModalWidget());
+            if (message != nullptr)
+            {
+                safetyMessage = message->text();
+                message->accept();
+            }
+        });
+    });
+
+    const bool replaced = tool.replaceObjectEverywhere({5}, true);
+    QVERIFY2(safetyMessage.isEmpty(), qPrintable(safetyMessage));
+    QVERIFY(replaced);
+    QVERIFY(candidateCanBeDetached);
+    QCOMPARE(pattern.elementById(5).attribute(QStringLiteral("type")), QStringLiteral("endLine"));
+    QCOMPARE(pattern.elementById(5).attribute(QStringLiteral("basePoint")), QStringLiteral("10"));
+    QCOMPARE(pattern.elementById(2).attribute(QStringLiteral("basePoint")), QStringLiteral("5"));
+    QCOMPARE(pattern.elementById(3).attribute(QStringLiteral("point1")), QStringLiteral("5"));
+
+    while (qApp->getUndoStack()->index() > undoIndex)
+    {
+        qApp->getUndoStack()->undo();
+    }
+    QCOMPARE(pattern.elementById(5).attribute(QStringLiteral("type")), QStringLiteral("cutSpline"));
+    QCOMPARE(pattern.elementById(2).attribute(QStringLiteral("basePoint")), QStringLiteral("1"));
+    QCOMPARE(pattern.elementById(3).attribute(QStringLiteral("point1")), QStringLiteral("1"));
 }
 
 void TST_VToolDependency::referenceChangeRequestsFullParse()
