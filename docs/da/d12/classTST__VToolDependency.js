@@ -2,6 +2,7 @@ var classTST__VToolDependency =
 [
     [ "childReferenceChangeRequestsFullParse", "da/d12/classTST__VToolDependency.html#ab35ebf8d7f801f8b7bc8a87167667505", null ],
     [ "dependencyDialog", "da/d12/classTST__VToolDependency.html#aa8dd64e342830a42e6fd1cfe6dbb2da7", null ],
+    [ "detachedPointReplacement", "da/d12/classTST__VToolDependency.html#a741e8b16ec23024f0447ed87df9d3aff", null ],
     [ "directDependencies", "da/d12/classTST__VToolDependency.html#a899365af3cb17cc06c0e8167a0ef99ba", null ],
     [ "globalReplacementDialog", "da/d12/classTST__VToolDependency.html#ac9076c7ee5275cc8f19d28f1fbc88894", null ],
     [ "internalPathReferenceCounts", "da/d12/classTST__VToolDependency.html#a9915001475265f5ecba9529a8d1715b3", null ],

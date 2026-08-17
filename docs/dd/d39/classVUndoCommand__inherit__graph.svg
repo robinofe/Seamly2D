@@ -583,23 +583,24 @@ var sectionId = 'dynsection-0';
 <g id="node27" class="node">
 <title>Node27</title>
 <g id="a_node27"><a xlink:href="../../de/d22/classReplaceObjectReferences.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="2791,-232 2791,-333 2952,-333 2952,-232 2791,-232"/>
-<text text-anchor="middle" x="2871.5" y="-321" font-family="Helvetica,sans-Serif" font-size="10.00">ReplaceObjectReferences</text>
-<polyline fill="none" stroke="#666666" points="2791,-314 2952,-314 "/>
-<text text-anchor="start" x="2799" y="-302" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; m_tools</text>
-<polyline fill="none" stroke="#666666" points="2791,-295 2952,-295 "/>
-<text text-anchor="start" x="2799" y="-283" font-family="Helvetica,sans-Serif" font-size="10.00">+ ReplaceObjectReferences()</text>
-<text text-anchor="start" x="2799" y="-272" font-family="Helvetica,sans-Serif" font-size="10.00">+ undo()</text>
-<text text-anchor="start" x="2799" y="-261" font-family="Helvetica,sans-Serif" font-size="10.00">+ redo()</text>
-<text text-anchor="start" x="2799" y="-250" font-family="Helvetica,sans-Serif" font-size="10.00">+ changedToolCount()</text>
-<text text-anchor="start" x="2799" y="-239" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; apply()</text>
+<polygon fill="white" stroke="#666666" points="2791,-226.5 2791,-338.5 2952,-338.5 2952,-226.5 2791,-226.5"/>
+<text text-anchor="middle" x="2871.5" y="-326.5" font-family="Helvetica,sans-Serif" font-size="10.00">ReplaceObjectReferences</text>
+<polyline fill="none" stroke="#666666" points="2791,-319.5 2952,-319.5 "/>
+<text text-anchor="start" x="2799" y="-307.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; m_tools</text>
+<polyline fill="none" stroke="#666666" points="2791,-300.5 2952,-300.5 "/>
+<text text-anchor="start" x="2799" y="-288.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ ReplaceObjectReferences()</text>
+<text text-anchor="start" x="2799" y="-277.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ ReplaceObjectReferences()</text>
+<text text-anchor="start" x="2799" y="-266.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ undo()</text>
+<text text-anchor="start" x="2799" y="-255.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ redo()</text>
+<text text-anchor="start" x="2799" y="-244.5" font-family="Helvetica,sans-Serif" font-size="10.00">+ changedToolCount()</text>
+<text text-anchor="start" x="2799" y="-233.5" font-family="Helvetica,sans-Serif" font-size="10.00">&#45; apply()</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node27 -->
 <g id="edge26" class="edge">
 <title>Node1&#45;&gt;Node27</title>
-<path fill="none" stroke="#63b8ff" d="M2173.02,-518.76C2309.72,-515.67 2583.92,-494.63 2781.5,-383 2803.1,-370.8 2822.3,-351.53 2837.37,-333.18"/>
+<path fill="none" stroke="#63b8ff" d="M2173.02,-518.76C2309.72,-515.67 2583.92,-494.63 2781.5,-383 2800.97,-372 2818.49,-355.26 2832.79,-338.63"/>
 <polygon fill="none" stroke="#63b8ff" points="2172.95,-515.26 2163.02,-518.96 2173.09,-522.26 2172.95,-515.26"/>
 </g>
 <!-- Node28 -->
