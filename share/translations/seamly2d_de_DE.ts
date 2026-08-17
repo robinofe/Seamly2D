@@ -12524,6 +12524,8 @@ wie gewohnt in SeamlyME laden können.
         <translation>Es kann nur neu erstellte Geometrie desselben Typs wie das alte Objekt ausgewählt werden.</translation>
     </message>
     <message><source>Select new object</source><translation>Neues Objekt auswählen</translation></message>
+    <message><source>Refresh diagnostics</source><translation>Diagnose aktualisieren</translation></message>
+    <message><source>Copy diagnostics</source><translation>Diagnose kopieren</translation></message>
     <message><source>Keep geometry and close</source><translation>Geometrie behalten und schließen</translation></message>
     <message><source>Discard new geometry</source><translation>Neue Geometrie verwerfen</translation></message>
     <message>

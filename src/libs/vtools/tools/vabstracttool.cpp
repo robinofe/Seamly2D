@@ -52,8 +52,12 @@
 #include "vabstracttool.h"
 
 #include <QBrush>
+#include <QApplication>
+#include <QClipboard>
+#include <QCoreApplication>
 #include <QDialog>
 #include <QDialogButtonBox>
+#include <QDomDocument>
 #include <QCheckBox>
 #include <QComboBox>
 #include <QFlags>
@@ -71,6 +75,7 @@
 #include <QPainter>
 #include <QPen>
 #include <QPixmap>
+#include <QPlainTextEdit>
 #include <QPoint>
 #include <QPointF>
 #include <QPushButton>
@@ -78,6 +83,7 @@
 #include <QSharedPointer>
 #include <QString>
 #include <QStyle>
+#include <QTextStream>
 #include <QTimer>
 #include <QToolButton>
 #include <QUndoStack>
@@ -120,6 +126,157 @@ const QString VAbstractTool::AttrInUse = QStringLiteral("inUse");
 
 namespace
 {
+//---------------------------------------------------------------------------------------------------------------------
+QString GeometryTypeName(GOType type)
+{
+    switch (type)
+    {
+        case GOType::Point: return QStringLiteral("Point");
+        case GOType::Arc: return QStringLiteral("Arc");
+        case GOType::EllipticalArc: return QStringLiteral("EllipticalArc");
+        case GOType::Spline: return QStringLiteral("Spline");
+        case GOType::SplinePath: return QStringLiteral("SplinePath");
+        case GOType::CubicBezier: return QStringLiteral("CubicBezier");
+        case GOType::CubicBezierPath: return QStringLiteral("CubicBezierPath");
+        case GOType::Unknown: return QStringLiteral("Unknown");
+        case GOType::Curve: return QStringLiteral("Curve");
+        case GOType::Path: return QStringLiteral("Path");
+        case GOType::AllCurves: return QStringLiteral("AllCurves");
+    }
+    return QStringLiteral("Invalid(%1)").arg(static_cast<int>(type));
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+QString DrawModeName(Draw mode)
+{
+    switch (mode)
+    {
+        case Draw::Calculation: return QStringLiteral("Calculation");
+        case Draw::Modeling: return QStringLiteral("Modeling");
+        case Draw::Layout: return QStringLiteral("Layout");
+    }
+    return QStringLiteral("Invalid(%1)").arg(static_cast<int>(mode));
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+QString ReplacementDiagnostics(VAbstractPattern *doc, const VContainer *data,
+                               const QSharedPointer<VGObject> &source, quint32 sourceObjectId,
+                               const QSet<quint32> &trackedObjects, bool allowTrackedPointDetachment,
+                               bool requireTrackedObject)
+{
+    QString report;
+    QTextStream out(&report);
+    out << "Seamly2D replacement diagnostics v1\n";
+    out << "Diagnostic build marker: replacement-diagnostics-2026-08-17\n";
+    out << "Executable: " << QCoreApplication::applicationFilePath() << '\n';
+    out << "Application version: " << QCoreApplication::applicationVersion() << '\n';
+    out << "Qt version: " << qVersion() << "\n\n";
+    out << "Source object ID: " << sourceObjectId << '\n';
+    out << "Source name: " << source->name() << '\n';
+    out << "Source geometry type: " << GeometryTypeName(source->getType()) << " ("
+        << static_cast<int>(source->getType()) << ")\n";
+    out << "Source tool ID: " << source->getIdTool() << "\n\n";
+
+    QSet<quint32> descendantTools;
+    const QVector<VToolDependency> descendants =
+        doc->getDependentObjectsRecursive(source->getIdTool(), data);
+    out << "Dependency descendants: " << descendants.size() << '\n';
+    for (const VToolDependency &dependency : descendants)
+    {
+        if (dependency.id != NULL_ID)
+        {
+            descendantTools.insert(dependency.id);
+        }
+        out << "  tool=" << dependency.id << ", depth=" << dependency.depth
+            << ", name=" << dependency.name << ", type=" << dependency.typeName
+            << ", reference=" << dependency.reference << '\n';
+    }
+
+    const auto geometry = data->DataGObjects();
+    out << "\nGeometry object count: " << geometry->size() << '\n';
+    out << "Tracked/new object IDs:";
+    for (quint32 id : trackedObjects)
+    {
+        out << ' ' << id;
+    }
+    out << "\n\nCandidate evaluation:\n";
+
+    bool foundRelevantObject = false;
+    for (auto object = geometry->constBegin(); object != geometry->constEnd(); ++object)
+    {
+        const QSharedPointer<VGObject> candidate = object.value();
+        const bool tracked = trackedObjects.contains(object.key());
+        const bool sameType = candidate->getType() == source->getType();
+        if (!tracked && !sameType)
+        {
+            continue;
+        }
+        foundRelevantObject = true;
+        const bool descendant = descendantTools.contains(candidate->getIdTool());
+        const bool canDetach = allowTrackedPointDetachment && tracked && source->getType() == GOType::Point;
+        QString result = QStringLiteral("eligible");
+        if (candidate->getMode() != Draw::Calculation)
+        {
+            result = QStringLiteral("excluded: mode is not Calculation");
+        }
+        else if (candidate->getIdObject() != NULL_ID)
+        {
+            result = QStringLiteral("excluded: idObject is not 0");
+        }
+        else if (candidate->getIdTool() == source->getIdTool())
+        {
+            result = QStringLiteral("excluded: same tool as source");
+        }
+        else if (requireTrackedObject && !tracked)
+        {
+            result = QStringLiteral("excluded: object existed before replacement session");
+        }
+        else if (!sameType)
+        {
+            result = QStringLiteral("excluded: geometry type differs from source");
+        }
+        else if (descendant && !canDetach)
+        {
+            result = QStringLiteral("excluded: descendant of source");
+        }
+        else if (descendant)
+        {
+            result = QStringLiteral("eligible: tracked point will be detached");
+        }
+
+        out << "- object ID: " << object.key() << '\n';
+        out << "  name: " << candidate->name() << '\n';
+        out << "  geometry type: " << GeometryTypeName(candidate->getType()) << " ("
+            << static_cast<int>(candidate->getType()) << ")\n";
+        out << "  tool ID: " << candidate->getIdTool() << '\n';
+        out << "  mode: " << DrawModeName(candidate->getMode()) << " ("
+            << static_cast<int>(candidate->getMode()) << ")\n";
+        out << "  idObject: " << candidate->getIdObject() << '\n';
+        out << "  tracked/new: " << (tracked ? "yes" : "no") << '\n';
+        out << "  descendant: " << (descendant ? "yes" : "no") << '\n';
+        out << "  result: " << result << '\n';
+
+        const QDomElement element = doc->elementById(candidate->getIdTool());
+        if (element.isNull())
+        {
+            out << "  XML: <not found>\n";
+        }
+        else
+        {
+            QDomDocument snippet;
+            snippet.appendChild(snippet.importNode(element, true));
+            QString xml = snippet.toString(-1).trimmed();
+            xml.replace('\n', ' ');
+            out << "  XML: " << xml << '\n';
+        }
+    }
+    if (!foundRelevantObject)
+    {
+        out << "  <no tracked or type-compatible geometry objects found>\n";
+    }
+    return report;
+}
+
 //---------------------------------------------------------------------------------------------------------------------
 quint32 CreateNodeSpline(VContainer *data, quint32 id)
 {
@@ -791,6 +948,48 @@ bool VAbstractTool::replaceObjectEverywhere(const QVector<quint32> &suggestedObj
     }
     layout->addWidget(status);
 
+    QSet<quint32> diagnosticObjects;
+    for (quint32 id : suggestedObjects)
+    {
+        diagnosticObjects.insert(id);
+    }
+    auto *diagnosticButtons = new QHBoxLayout;
+    auto *showDiagnosticsButton = new QPushButton(tr("Refresh diagnostics"), &dialog);
+    auto *copyDiagnosticsButton = new QPushButton(tr("Copy diagnostics"), &dialog);
+    diagnosticButtons->addWidget(showDiagnosticsButton);
+    diagnosticButtons->addWidget(copyDiagnosticsButton);
+    diagnosticButtons->addStretch();
+    layout->addLayout(diagnosticButtons);
+    auto *diagnostics = new QPlainTextEdit(&dialog);
+    diagnostics->setObjectName(QStringLiteral("replacementDiagnosticsText"));
+    diagnostics->setReadOnly(true);
+    diagnostics->setLineWrapMode(QPlainTextEdit::NoWrap);
+    diagnostics->setMinimumHeight(180);
+    diagnostics->setVisible(objects->count() == 0);
+    layout->addWidget(diagnostics);
+    const auto refreshDiagnostics = [this, diagnostics, source, diagnosticObjects, detachSuggestedObjects]()
+    {
+        diagnostics->setPlainText(ReplacementDiagnostics(doc, getData(), source, m_id, diagnosticObjects,
+                                                         detachSuggestedObjects, false));
+    };
+    if (diagnostics->isVisible())
+    {
+        refreshDiagnostics();
+    }
+    connect(showDiagnosticsButton, &QPushButton::clicked, &dialog,
+            [diagnostics, refreshDiagnostics]()
+    {
+        refreshDiagnostics();
+        diagnostics->show();
+    });
+    connect(copyDiagnosticsButton, &QPushButton::clicked, &dialog,
+            [diagnostics, refreshDiagnostics]()
+    {
+        refreshDiagnostics();
+        QApplication::clipboard()->setText(diagnostics->toPlainText());
+        diagnostics->setVisible(true);
+    });
+
     auto *buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, &dialog);
     QPushButton *okButton = buttons->button(QDialogButtonBox::Ok);
     okButton->setText(objects->currentItem() != nullptr &&
@@ -1018,6 +1217,48 @@ void VAbstractTool::createReplacementObject()
                               guide);
     status->setWordWrap(true);
     layout->addWidget(status);
+
+    auto *diagnosticButtons = new QHBoxLayout;
+    auto *showDiagnosticsButton = new QPushButton(tr("Refresh diagnostics"), guide);
+    auto *copyDiagnosticsButton = new QPushButton(tr("Copy diagnostics"), guide);
+    diagnosticButtons->addWidget(showDiagnosticsButton);
+    diagnosticButtons->addWidget(copyDiagnosticsButton);
+    diagnosticButtons->addStretch();
+    layout->addLayout(diagnosticButtons);
+    auto *diagnostics = new QPlainTextEdit(guide);
+    diagnostics->setObjectName(QStringLiteral("replacementDiagnosticsText"));
+    diagnostics->setReadOnly(true);
+    diagnostics->setLineWrapMode(QPlainTextEdit::NoWrap);
+    diagnostics->setMinimumHeight(180);
+    diagnostics->hide();
+    layout->addWidget(diagnostics);
+    const auto refreshDiagnostics = [this, diagnostics, existingObjects, source]()
+    {
+        QSet<quint32> newObjects;
+        const auto currentObjects = getData()->DataGObjects();
+        for (auto object = currentObjects->constBegin(); object != currentObjects->constEnd(); ++object)
+        {
+            if (!existingObjects.contains(object.key()))
+            {
+                newObjects.insert(object.key());
+            }
+        }
+        diagnostics->setPlainText(ReplacementDiagnostics(doc, getData(), source, m_id, newObjects, true, true));
+    };
+    connect(showDiagnosticsButton, &QPushButton::clicked, guide,
+            [diagnostics, refreshDiagnostics]()
+    {
+        refreshDiagnostics();
+        diagnostics->show();
+    });
+    connect(copyDiagnosticsButton, &QPushButton::clicked, guide,
+            [diagnostics, refreshDiagnostics]()
+    {
+        refreshDiagnostics();
+        QApplication::clipboard()->setText(diagnostics->toPlainText());
+        diagnostics->show();
+    });
+
     auto *buttons = new QDialogButtonBox(guide);
     auto *finishButton = buttons->addButton(tr("Select new object"), QDialogButtonBox::AcceptRole);
     auto *keepButton = buttons->addButton(tr("Keep geometry and close"), QDialogButtonBox::RejectRole);
@@ -1030,7 +1271,7 @@ void VAbstractTool::createReplacementObject()
         guide->reject();
     });
     connect(finishButton, &QPushButton::clicked, guide,
-            [this, guide, status, existingObjects, source]()
+            [this, guide, status, diagnostics, refreshDiagnostics, existingObjects, source]()
     {
         QVector<quint32> createdObjects;
         QVector<quint32> dependentCreatedObjects;
@@ -1080,6 +1321,8 @@ void VAbstractTool::createReplacementObject()
                                      "all descendants'. Create the replacement from a different point or "
                                      "construction chain.")
                                       .arg(dependentCreatedObjectNames.join(QStringLiteral(", ")), source->name()));
+            refreshDiagnostics();
+            diagnostics->show();
             return;
         }
 
