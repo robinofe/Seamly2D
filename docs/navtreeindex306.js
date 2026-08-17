@@ -1,5 +1,9 @@
 var NAVTREEINDEX306 =
 {
+"de/dcf/classXSValue.html#ad1788e787526663aeb4b99ff52567141afe38f82d56531285478e3cd39161e700":[3,0,927,7,97],
+"de/dcf/classXSValue.html#ad1788e787526663aeb4b99ff52567141afe38f82d56531285478e3cd39161e700":[3,0,927,7,52],
+"de/dcf/classXSValue.html#ad1788e787526663aeb4b99ff52567141afe38f82d56531285478e3cd39161e700":[3,0,927,9,97],
+"de/dcf/classXSValue.html#ad1788e787526663aeb4b99ff52567141afe38f82d56531285478e3cd39161e700":[3,0,927,7,7],
 "de/dcf/classXSValue.html#ad1788e787526663aeb4b99ff52567141afe38f82d56531285478e3cd39161e700":[3,0,927,8,142],
 "de/dcf/classXSValue.html#ad1788e787526663aeb4b99ff52567141afe38f82d56531285478e3cd39161e700":[3,0,927,6,97],
 "de/dcf/classXSValue.html#ad1788e787526663aeb4b99ff52567141afe38f82d56531285478e3cd39161e700":[3,0,927,6,142],
@@ -245,9 +249,5 @@ var NAVTREEINDEX306 =
 "de/df0/vcubicbezierpath_8cpp_source.html":[4,0,0,1,6,20],
 "de/df1/msvc_2include_2xercesc_2dom_2impl_2DOMLSOutputImpl_8hpp.html":[4,0,0,1,15,2,0,0,0,0,24],
 "de/df1/msvc_2include_2xercesc_2dom_2impl_2DOMLSOutputImpl_8hpp_source.html":[4,0,0,1,15,2,0,0,0,0,24],
-"de/df2/macx_2include_2xercesc_2sax2_2Attributes_8hpp.html":[4,0,0,1,15,0,0,0,5,0],
-"de/df2/macx_2include_2xercesc_2sax2_2Attributes_8hpp_source.html":[4,0,0,1,15,0,0,0,5,0],
-"de/df2/mingw_2include_2xercesc_2util_2RefHash2KeysTableOf_8c.html":[4,0,0,1,15,1,0,0,6,52],
-"de/df2/mingw_2include_2xercesc_2util_2RefHash2KeysTableOf_8c_source.html":[4,0,0,1,15,1,0,0,6,52],
-"de/df3/classXMLGrammarDescription.html":[3,0,847]
+"de/df2/macx_2include_2xercesc_2sax2_2Attributes_8hpp.html":[4,0,0,1,15,0,0,0,5,0]
 };

@@ -37,6 +37,7 @@ var classVAbstractTool =
     [ "setPointNameVisiblity", "d4/d36/classVAbstractTool.html#af5b3153cb7a4e3023328961be332bcca", null ],
     [ "SetVisualization", "d4/d36/classVAbstractTool.html#ae0f2dd6754377053294a98097b3c89ba", null ],
     [ "showDependencies", "d4/d36/classVAbstractTool.html#aece32984447a7572ce808682181970af", null ],
+    [ "showDependencies", "d4/d36/classVAbstractTool.html#ab26377c0dbbc0cedb58c8f67a4628574", null ],
     [ "ShowVisualization", "d4/d36/classVAbstractTool.html#a962d59cd7f28b2b5bd74631ba4deea95", null ],
     [ "supportColorsList", "d4/d36/classVAbstractTool.html#aa881e27f598b21107b5a0e476d98b0a6", null ],
     [ "ToolCreation", "d4/d36/classVAbstractTool.html#a981e6bae05ffb564bfac034ccff918da", null ],

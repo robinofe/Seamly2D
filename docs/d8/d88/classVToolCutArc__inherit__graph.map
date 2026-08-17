@@ -1,13 +1,13 @@
 <map id="VToolCutArc" name="VToolCutArc">
-<area shape="rect" id="node1" title="The VToolCutArc class tool for cutting arc." alt="" coords="144,3281,315,3520"/>
-<area shape="rect" id="node2" href="$d0/d8a/classVToolCut.html" title=" " alt="" coords="133,2863,325,3233"/>
-<area shape="rect" id="node3" href="$da/dbc/classVToolSinglePoint.html" title="The VToolSinglePoint class parent for all tools what create points." alt="" coords="116,2312,343,2815"/>
-<area shape="rect" id="node4" href="$da/da4/classVAbstractPoint.html" title=" " alt="" coords="8,2011,224,2205"/>
-<area shape="rect" id="node5" href="$d2/df2/classVDrawTool.html" title="The VDrawTool abstract class for all draw tool." alt="" coords="5,1357,227,1904"/>
-<area shape="rect" id="node6" href="$d4/d36/classVInteractiveTool.html" title=" " alt="" coords="11,1144,221,1309"/>
-<area shape="rect" id="node7" href="$d4/d36/classVAbstractTool.html" title="The VAbstractTool abstract class for all tools." alt="" coords="8,388,224,1096"/>
+<area shape="rect" id="node1" title="The VToolCutArc class tool for cutting arc." alt="" coords="144,3296,315,3535"/>
+<area shape="rect" id="node2" href="$d0/d8a/classVToolCut.html" title=" " alt="" coords="133,2877,325,3248"/>
+<area shape="rect" id="node3" href="$da/dbc/classVToolSinglePoint.html" title="The VToolSinglePoint class parent for all tools what create points." alt="" coords="116,2327,343,2829"/>
+<area shape="rect" id="node4" href="$da/da4/classVAbstractPoint.html" title=" " alt="" coords="8,2025,224,2220"/>
+<area shape="rect" id="node5" href="$d2/df2/classVDrawTool.html" title="The VDrawTool abstract class for all draw tool." alt="" coords="5,1372,227,1919"/>
+<area shape="rect" id="node6" href="$d4/d36/classVInteractiveTool.html" title=" " alt="" coords="11,1159,221,1324"/>
+<area shape="rect" id="node7" href="$d4/d36/classVAbstractTool.html" title="The VAbstractTool abstract class for all tools." alt="" coords="8,388,224,1111"/>
 <area shape="rect" id="node8" href="$d5/d68/classVDataTool.html" title="The VDataTool class need for getting access to data container of tool." alt="" coords="29,131,203,340"/>
 <area shape="rect" id="node9" title=" " alt="" coords="79,5,153,83"/>
-<area shape="rect" id="node10" href="$dc/d3b/classVScenePoint.html" title=" " alt="" coords="249,1952,439,2264"/>
-<area shape="rect" id="node11" title=" " alt="" coords="263,1592,425,1669"/>
+<area shape="rect" id="node10" href="$dc/d3b/classVScenePoint.html" title=" " alt="" coords="249,1967,439,2279"/>
+<area shape="rect" id="node11" title=" " alt="" coords="263,1607,425,1684"/>
 </map>

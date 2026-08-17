@@ -6,6 +6,7 @@ var classTST__VToolDependency =
     [ "globalReplacementDialog", "da/d12/classTST__VToolDependency.html#ac9076c7ee5275cc8f19d28f1fbc88894", null ],
     [ "internalPathReferenceCounts", "da/d12/classTST__VToolDependency.html#a9915001475265f5ecba9529a8d1715b3", null ],
     [ "nodeDependencyActions", "da/d12/classTST__VToolDependency.html#ab5ec0d221eed06a1858bd911fec0d61b", null ],
+    [ "pointOnSplineDependency", "da/d12/classTST__VToolDependency.html#ae60e55822ef71cf38c703261c143d8c7", null ],
     [ "recursiveDependencies", "da/d12/classTST__VToolDependency.html#a4d9a41b0d2a69842e12deea1f81a06f1", null ],
     [ "recursiveFormulaDependencies", "da/d12/classTST__VToolDependency.html#a40bf32279c25beced1e07a2e72813a80", null ],
     [ "referenceAttributes", "da/d12/classTST__VToolDependency.html#a6b056dc87625fdfa62cbd5e3eaadbe8b", null ],
