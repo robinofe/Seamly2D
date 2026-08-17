@@ -22,6 +22,7 @@ private slots:
     void referenceAttributes();
     void directDependencies();
     void recursiveDependencies();
+    void pointOnSplineDependency();
     void structuredDependencies();
     void unusedNodeDependencies();
     void recursiveFormulaDependencies();

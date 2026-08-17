@@ -55,6 +55,7 @@
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QCheckBox>
+#include <QComboBox>
 #include <QFlags>
 #include <QGraphicsEllipseItem>
 #include <QGraphicsLineItem>
@@ -306,6 +307,12 @@ void VAbstractTool::deleteTool(bool ask)
 //---------------------------------------------------------------------------------------------------------------------
 void VAbstractTool::showDependencies()
 {
+    showDependencies(false);
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+void VAbstractTool::showDependencies(bool showAllDescendants)
+{
     enum class DependencyAction
     {
         None,
@@ -344,6 +351,7 @@ void VAbstractTool::showDependencies()
     layout->addWidget(label);
 
     auto *recursive = new QCheckBox(tr("Show all descendants"), &dialog);
+    recursive->setChecked(showAllDescendants);
     layout->addWidget(recursive);
 
     auto *tree = new QTreeWidget(&dialog);
@@ -860,7 +868,17 @@ void VAbstractTool::createReplacementObject()
     switch (source->getType())
     {
         case GOType::Point:
-            tools.append(qMakePair(tr("New point"), QStringLiteral("pointAtDistanceAngle_ToolButton")));
+            tools.append(qMakePair(tr("Point by length and angle"),
+                                   QStringLiteral("pointAtDistanceAngle_ToolButton")));
+            tools.append(qMakePair(tr("Point on line"), QStringLiteral("alongLine_ToolButton")));
+            tools.append(qMakePair(tr("Midpoint on line"), QStringLiteral("midpoint_ToolButton")));
+            tools.append(qMakePair(tr("Perpendicular point"), QStringLiteral("normal_ToolButton")));
+            tools.append(qMakePair(tr("Point on curve"), QStringLiteral("pointAlongCurve_ToolButton")));
+            tools.append(qMakePair(tr("Point on spline"), QStringLiteral("pointAlongSpline_ToolButton")));
+            tools.append(qMakePair(tr("Point on arc"), QStringLiteral("pointAlongArc_ToolButton")));
+            tools.append(qMakePair(tr("Line intersection"), QStringLiteral("lineIntersect_ToolButton")));
+            tools.append(qMakePair(tr("Curve intersection"),
+                                   QStringLiteral("pointOfIntersectionCurves_ToolButton")));
             break;
         case GOType::Spline:
             tools.append(qMakePair(tr("Curve"), QStringLiteral("curve_ToolButton")));
@@ -883,18 +901,43 @@ void VAbstractTool::createReplacementObject()
         default:
             break;
     }
-    for (const auto &tool : tools)
+    if (source->getType() == GOType::Point)
     {
-        auto *button = new QPushButton(tool.first, guide);
-        toolLayout->addWidget(button);
-        connect(button, &QPushButton::clicked, guide, [guide, tool]()
+        auto *pointTypes = new QComboBox(guide);
+        pointTypes->setObjectName(QStringLiteral("replacementPointTypeCombo"));
+        for (const auto &tool : tools)
         {
-            if (auto *toolButton = qApp->getMainWindow()->findChild<QToolButton *>(tool.second))
+            pointTypes->addItem(tool.first, tool.second);
+        }
+        auto *button = new QPushButton(tr("Start point tool"), guide);
+        button->setObjectName(QStringLiteral("replacementStartPointToolButton"));
+        toolLayout->addWidget(pointTypes);
+        toolLayout->addWidget(button);
+        connect(button, &QPushButton::clicked, guide, [guide, pointTypes]()
+        {
+            const QString objectName = pointTypes->currentData().toString();
+            if (auto *toolButton = qApp->getMainWindow()->findChild<QToolButton *>(objectName))
             {
                 toolButton->click();
                 guide->raise();
             }
         });
+    }
+    else
+    {
+        for (const auto &tool : tools)
+        {
+            auto *button = new QPushButton(tool.first, guide);
+            toolLayout->addWidget(button);
+            connect(button, &QPushButton::clicked, guide, [guide, tool]()
+            {
+                if (auto *toolButton = qApp->getMainWindow()->findChild<QToolButton *>(tool.second))
+                {
+                    toolButton->click();
+                    guide->raise();
+                }
+            });
+        }
     }
     layout->addLayout(toolLayout);
 
@@ -950,8 +993,9 @@ void VAbstractTool::createReplacementObject()
             status->setText(dependentCreatedObjects.isEmpty()
                                 ? tr("No new object of the required type was found. Finish the active drawing tool "
                                      "and try again.")
-                                : tr("%1 cannot replace %2 because it depends on %2. Create the replacement from a "
-                                     "different point or construction chain.")
+                                : tr("%1 cannot replace %2 because it depends on %2. It will be shown under 'Show "
+                                     "all descendants'. Create the replacement from a different point or "
+                                     "construction chain.")
                                       .arg(dependentCreatedObjects.join(QStringLiteral(", ")), source->name()));
             return;
         }
@@ -963,7 +1007,8 @@ void VAbstractTool::createReplacementObject()
     });
     connect(guide, &QDialog::finished, this, [this, guide, initialUndoIndex](int)
     {
-        if (guide->property("discardCreatedGeometry").toBool())
+        const bool discardCreatedGeometry = guide->property("discardCreatedGeometry").toBool();
+        if (discardCreatedGeometry)
         {
             while (qApp->getUndoStack()->index() > initialUndoIndex)
             {
@@ -972,7 +1017,10 @@ void VAbstractTool::createReplacementObject()
         }
         if (!guide->property("replacementSelectionStarted").toBool())
         {
-            QTimer::singleShot(0, this, [this]() { showDependencies(); });
+            QTimer::singleShot(0, this, [this, discardCreatedGeometry]()
+            {
+                showDependencies(!discardCreatedGeometry);
+            });
         }
     });
     guide->show();

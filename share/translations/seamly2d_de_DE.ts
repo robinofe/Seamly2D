@@ -12493,7 +12493,16 @@ wie gewohnt in SeamlyME laden können.
         <source>Create a compatible replacement with the normal drawing tools. Finish the active tool, then choose 'Select new object'. The replacement must not use %1 itself, directly or indirectly. The affected references are shown once more before anything changes.</source>
         <translation>Erstellen Sie mit den normalen Zeichenwerkzeugen einen passenden Ersatz. Beenden Sie das aktive Werkzeug und wählen Sie anschließend „Neues Objekt auswählen“. Der Ersatz darf %1 weder direkt noch indirekt verwenden. Vor der Änderung werden die betroffenen Referenzen nochmals angezeigt.</translation>
     </message>
-    <message><source>New point</source><translation>Neuer Punkt</translation></message>
+    <message><source>Point by length and angle</source><translation>Punkt über Länge und Winkel</translation></message>
+    <message><source>Point on line</source><translation>Punkt auf Linie</translation></message>
+    <message><source>Midpoint on line</source><translation>Mittelpunkt auf Linie</translation></message>
+    <message><source>Perpendicular point</source><translation>Lotpunkt</translation></message>
+    <message><source>Point on curve</source><translation>Punkt auf Kurve</translation></message>
+    <message><source>Point on spline</source><translation>Punkt auf Spline</translation></message>
+    <message><source>Point on arc</source><translation>Punkt auf Kreisbogen</translation></message>
+    <message><source>Line intersection</source><translation>Schnittpunkt von Linien</translation></message>
+    <message><source>Curve intersection</source><translation>Schnittpunkt von Kurven</translation></message>
+    <message><source>Start point tool</source><translation>Punktwerkzeug starten</translation></message>
     <message><source>Curve</source><translation>Kurve</translation></message>
     <message><source>Spline</source><translation>Spline</translation></message>
     <message><source>Fixed curve</source><translation>Kurve mit festen Kontrollpunkten</translation></message>
@@ -12512,8 +12521,8 @@ wie gewohnt in SeamlyME laden können.
         <translation>Es wurde kein neues Objekt des erforderlichen Typs gefunden. Beenden Sie das aktive Zeichenwerkzeug und versuchen Sie es erneut.</translation>
     </message>
     <message>
-        <source>%1 cannot replace %2 because it depends on %2. Create the replacement from a different point or construction chain.</source>
-        <translation>%1 kann %2 nicht ersetzen, weil es von %2 abhängt. Erstellen Sie den Ersatz von einem anderen Punkt oder einer anderen Konstruktionskette aus.</translation>
+        <source>%1 cannot replace %2 because it depends on %2. It will be shown under 'Show all descendants'. Create the replacement from a different point or construction chain.</source>
+        <translation>%1 kann %2 nicht ersetzen, weil es von %2 abhängt. Es wird unter „Alle Nachfolger anzeigen“ aufgeführt. Erstellen Sie den Ersatz von einem anderen Punkt oder einer anderen Konstruktionskette aus.</translation>
     </message>
 </context>
 <context>

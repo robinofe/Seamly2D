@@ -163,6 +163,31 @@ void TST_VToolDependency::recursiveDependencies()
     QCOMPARE(descendants.at(0).depth, 1);
 }
 
+void TST_VToolDependency::pointOnSplineDependency()
+{
+    const QString xml = QStringLiteral(
+        "<pattern><draftBlock name=\"Block\"><calculation>"
+        "<point id=\"1\" name=\"Z1\" type=\"single\"/>"
+        "<spline id=\"2\" type=\"simple\" point1=\"1\" point4=\"1\"/>"
+        "<point id=\"3\" name=\"PointOnSpline\" type=\"cutSpline\" spline=\"2\"/>"
+        "</calculation></draftBlock></pattern>");
+    DependencyPattern pattern;
+    pattern.load(xml);
+    const Unit unit = Unit::Cm;
+    VContainer data(nullptr, &unit);
+
+    const QVector<VToolDependency> splineChildren = pattern.getDirectDependencies(2, &data);
+    QCOMPARE(splineChildren.size(), 1);
+    QCOMPARE(splineChildren.at(0).id, quint32(3));
+    QCOMPARE(splineChildren.at(0).reference, QStringLiteral("spline"));
+
+    const QVector<VToolDependency> descendants = pattern.getDependentObjectsRecursive(1, &data);
+    QCOMPARE(descendants.size(), 2);
+    QCOMPARE(descendants.at(0).id, quint32(2));
+    QCOMPARE(descendants.at(1).id, quint32(3));
+    QCOMPARE(descendants.at(1).depth, 2);
+}
+
 void TST_VToolDependency::structuredDependencies()
 {
     const QString xml = QStringLiteral(
@@ -509,6 +534,27 @@ void TST_VToolDependency::dependencyDialog()
     QVERIFY(!highlightSpy.isEmpty());
     QCOMPARE(highlightSpy.at(0).at(0).toUInt(), quint32(2));
     QCOMPARE(highlightSpy.at(0).at(1).toBool(), true);
+
+    bool startsWithDescendants = false;
+    int initiallyVisibleRows = -1;
+    QTimer::singleShot(0, qApp, [&]()
+    {
+        auto *dialog = qobject_cast<QDialog *>(QApplication::activeModalWidget());
+        if (dialog == nullptr)
+        {
+            return;
+        }
+        auto *recursive = dialog->findChild<QCheckBox *>();
+        auto *tree = dialog->findChild<QTreeWidget *>();
+        startsWithDescendants = recursive != nullptr && recursive->isChecked();
+        initiallyVisibleRows = tree == nullptr ? -1 : tree->topLevelItemCount();
+        dialog->accept();
+    });
+
+    tool.showDependencies(true);
+
+    QVERIFY(startsWithDescendants);
+    QCOMPARE(initiallyVisibleRows, 2);
 }
 
 void TST_VToolDependency::nodeDependencyActions()
