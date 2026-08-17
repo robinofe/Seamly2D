@@ -1,13 +1,5 @@
 var annotated_dup =
 [
-    [ "anonymous_namespace{reference_line_tool.cpp}", "d6/dd0/namespaceanonymous__namespace_02reference__line__tool_8cpp_03.html", [
-      [ "ReferenceLineDialog", "de/d53/classanonymous__namespace_02reference__line__tool_8cpp_03_1_1ReferenceLineDialog.html", "de/d53/classanonymous__namespace_02reference__line__tool_8cpp_03_1_1ReferenceLineDialog" ]
-    ] ],
-    [ "anonymous_namespace{tst_vtooldependency.cpp}", "d5/da0/namespaceanonymous__namespace_02tst__vtooldependency_8cpp_03.html", [
-      [ "DependencyPattern", "d2/d03/classanonymous__namespace_02tst__vtooldependency_8cpp_03_1_1DependencyPattern.html", "d2/d03/classanonymous__namespace_02tst__vtooldependency_8cpp_03_1_1DependencyPattern" ],
-      [ "DependencyTool", "dc/d47/classanonymous__namespace_02tst__vtooldependency_8cpp_03_1_1DependencyTool.html", "dc/d47/classanonymous__namespace_02tst__vtooldependency_8cpp_03_1_1DependencyTool" ],
-      [ "ToolVariable", "d2/d65/classanonymous__namespace_02tst__vtooldependency_8cpp_03_1_1ToolVariable.html", "d2/d65/classanonymous__namespace_02tst__vtooldependency_8cpp_03_1_1ToolVariable" ]
-    ] ],
     [ "qmu", "da/d92/namespaceqmu.html", [
       [ "Test", "d8/d1e/namespaceqmu_1_1Test.html", [
         [ "QmuParserTester", "da/d59/classqmu_1_1Test_1_1QmuParserTester.html", "da/d59/classqmu_1_1Test_1_1QmuParserTester" ]
@@ -89,7 +81,6 @@ var annotated_dup =
     [ "AddGroupItem", "da/d3a/classAddGroupItem.html", "da/d3a/classAddGroupItem" ],
     [ "AddImage", "df/d11/classAddImage.html", "df/d11/classAddImage" ],
     [ "AddPiece", "dc/d9d/classAddPiece.html", "dc/d9d/classAddPiece" ],
-    [ "AddReferenceLine", "d8/dba/classAddReferenceLine.html", "d8/dba/classAddReferenceLine" ],
     [ "AddToCalc", "d6/db3/classAddToCalc.html", "d6/db3/classAddToCalc" ],
     [ "AddToGroupDialog", "d1/dde/classAddToGroupDialog.html", "d1/dde/classAddToGroupDialog" ],
     [ "AllContentModel", "d1/d0a/classAllContentModel.html", "d1/d0a/classAllContentModel" ],
@@ -507,8 +498,6 @@ var annotated_dup =
     [ "RefArrayEnumerator", "da/db4/classRefArrayEnumerator.html", "da/db4/classRefArrayEnumerator" ],
     [ "RefArrayOf", "d4/d21/classRefArrayOf.html", "d4/d21/classRefArrayOf" ],
     [ "RefArrayVectorOf", "dd/d24/classRefArrayVectorOf.html", "dd/d24/classRefArrayVectorOf" ],
-    [ "ReferenceLineData", "d4/de0/structReferenceLineData.html", "d4/de0/structReferenceLineData" ],
-    [ "ReferenceLineTool", "d0/d2a/classReferenceLineTool.html", "d0/d2a/classReferenceLineTool" ],
     [ "RefHash2KeysTableBucketElem", "db/dad/structRefHash2KeysTableBucketElem.html", "db/dad/structRefHash2KeysTableBucketElem" ],
     [ "RefHash2KeysTableOf", "df/dfa/classRefHash2KeysTableOf.html", "df/dfa/classRefHash2KeysTableOf" ],
     [ "RefHash2KeysTableOfEnumerator", "de/d54/classRefHash2KeysTableOfEnumerator.html", "de/d54/classRefHash2KeysTableOfEnumerator" ],
@@ -526,7 +515,6 @@ var annotated_dup =
     [ "RegxUtil", "d1/d3a/classRegxUtil.html", "d1/d3a/classRegxUtil" ],
     [ "RemoveGroupItem", "d7/d18/classRemoveGroupItem.html", "d7/d18/classRemoveGroupItem" ],
     [ "RenameDraftBlock", "dd/d20/classRenameDraftBlock.html", "dd/d20/classRenameDraftBlock" ],
-    [ "ReplaceObjectReferences", "de/d22/classReplaceObjectReferences.html", "de/d22/classReplaceObjectReferences" ],
     [ "ResizeHandlesItem", "d0/de9/classResizeHandlesItem.html", "d0/de9/classResizeHandlesItem" ],
     [ "RowData", "da/d35/structRowData.html", "da/d35/structRowData" ],
     [ "SavePieceOptions", "d9/d20/classSavePieceOptions.html", "d9/d20/classSavePieceOptions" ],
@@ -613,7 +601,6 @@ var annotated_dup =
     [ "TST_VPoster", "db/d56/classTST__VPoster.html", "db/d56/classTST__VPoster" ],
     [ "TST_VSpline", "d7/d3f/classTST__VSpline.html", "d7/d3f/classTST__VSpline" ],
     [ "TST_VSplinePath", "d8/d25/classTST__VSplinePath.html", "d8/d25/classTST__VSplinePath" ],
-    [ "TST_VToolDependency", "da/d12/classTST__VToolDependency.html", "da/d12/classTST__VToolDependency" ],
     [ "TST_VTranslateVars", "da/d3d/classTST__VTranslateVars.html", "da/d3d/classTST__VTranslateVars" ],
     [ "UndoEvent", "d0/d5b/classUndoEvent.html", "d0/d5b/classUndoEvent" ],
     [ "UnicodeRangeFactory", "df/deb/classUnicodeRangeFactory.html", "df/deb/classUnicodeRangeFactory" ],
@@ -824,7 +811,6 @@ var annotated_dup =
     [ "VToolCutArc", "d1/d98/classVToolCutArc.html", "d1/d98/classVToolCutArc" ],
     [ "VToolCutSpline", "d9/d86/classVToolCutSpline.html", "d9/d86/classVToolCutSpline" ],
     [ "VToolCutSplinePath", "d8/d67/classVToolCutSplinePath.html", "d8/d67/classVToolCutSplinePath" ],
-    [ "VToolDependency", "d0/db1/structVToolDependency.html", "d0/db1/structVToolDependency" ],
     [ "VToolDoublePoint", "d0/dcf/classVToolDoublePoint.html", "d0/dcf/classVToolDoublePoint" ],
     [ "VToolEllipticalArc", "d4/daa/classVToolEllipticalArc.html", "d4/daa/classVToolEllipticalArc" ],
     [ "VToolEndLine", "dc/d21/classVToolEndLine.html", "dc/d21/classVToolEndLine" ],

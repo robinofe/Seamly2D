@@ -94,7 +94,6 @@ var classPatternPieceDialog =
     [ "resizeEvent", "d5/d41/classPatternPieceDialog.html#aed3c2490f3c225cfa6f672ceb3e255e6", null ],
     [ "reverseNode", "d5/d41/classPatternPieceDialog.html#adc96b42cc461ec9f4d860afc7e571f78", null ],
     [ "SaveData", "d5/d41/classPatternPieceDialog.html#a90e5cd11356707a352cfe930d349fa98", null ],
-    [ "selectMainPathNode", "d5/d41/classPatternPieceDialog.html#a05cad33fc1960cca9941d139a1f1ca4c", null ],
     [ "setCurrentAfterSeamAllowance", "d5/d41/classPatternPieceDialog.html#a5146f108601f07e38933f397bd6cd901", null ],
     [ "setCurrentBeforeSeamAllowance", "d5/d41/classPatternPieceDialog.html#a55e07278654a5ab77efe18ab718997e5", null ],
     [ "setCurrentText", "d5/d41/classPatternPieceDialog.html#a706e514243b99402b4ecafec7e24e87d", null ],
