@@ -385,7 +385,8 @@ var hierarchy =
       [ "SeamlyWelcomeDialog", "d4/d8f/classSeamlyWelcomeDialog.html", null ],
       [ "ShortcutsDialog", "de/d8e/classShortcutsDialog.html", null ],
       [ "ShowInfoDialog", "da/d5b/classShowInfoDialog.html", null ],
-      [ "Utils::CheckableMessageBox", "dd/dc4/classUtils_1_1CheckableMessageBox.html", null ]
+      [ "Utils::CheckableMessageBox", "dd/dc4/classUtils_1_1CheckableMessageBox.html", null ],
+      [ "anonymous_namespace{reference_line_tool.cpp}::ReferenceLineDialog", "de/d53/classanonymous__namespace_02reference__line__tool_8cpp_03_1_1ReferenceLineDialog.html", null ]
     ] ],
     [ "QDomDocument", null, [
       [ "VDomDocument", "d6/deb/classVDomDocument.html", [
@@ -400,7 +401,8 @@ var hierarchy =
         ] ],
         [ "VAbstractPattern", "d8/dba/classVAbstractPattern.html", [
           [ "VLitePattern", "da/d79/classVLitePattern.html", null ],
-          [ "VPattern", "d4/d43/classVPattern.html", null ]
+          [ "VPattern", "d4/d43/classVPattern.html", null ],
+          [ "anonymous_namespace{tst_vtooldependency.cpp}::DependencyPattern", "d2/d03/classanonymous__namespace_02tst__vtooldependency_8cpp_03_1_1DependencyPattern.html", null ]
         ] ],
         [ "VLabelTemplate", "d0/df9/classVLabelTemplate.html", null ]
       ] ]
@@ -507,6 +509,7 @@ var hierarchy =
       [ "VToolLine", "dc/d2b/classVToolLine.html", null ]
     ] ],
     [ "QGraphicsObject", null, [
+      [ "ReferenceLineTool", "d0/d2a/classReferenceLineTool.html", null ],
       [ "VPieceItem", "da/d7d/classVPieceItem.html", [
         [ "VGrainlineItem", "da/d4e/classVGrainlineItem.html", null ],
         [ "VTextGraphicsItem", "d2/d41/classVTextGraphicsItem.html", null ]
@@ -609,6 +612,7 @@ var hierarchy =
     [ "QMap< int, QString >", "d0/d4c/classQMap.html", null ],
     [ "QMap< QCheckBox *, int >", "d0/d4c/classQMap.html", null ],
     [ "QMap< qint32, ImageItem * >", "d0/d4c/classQMap.html", null ],
+    [ "QMap< qint32, ReferenceLineTool * >", "d0/d4c/classQMap.html", null ],
     [ "QMap< QString, int >", "d0/d4c/classQMap.html", null ],
     [ "QMap< QString, qmu::QmuTranslation >", "d0/d4c/classQMap.html", null ],
     [ "QMap< QString, QPair< QString, QString > >", "d0/d4c/classQMap.html", null ],
@@ -670,6 +674,7 @@ var hierarchy =
       [ "TST_VPointF", "d5/d29/classTST__VPointF.html", null ],
       [ "TST_VPoster", "db/d56/classTST__VPoster.html", null ],
       [ "TST_VSplinePath", "d8/d25/classTST__VSplinePath.html", null ],
+      [ "TST_VToolDependency", "da/d12/classTST__VToolDependency.html", null ],
       [ "TST_VTranslateVars", "da/d3d/classTST__VTranslateVars.html", null ],
       [ "VAbstractPattern", "d8/dba/classVAbstractPattern.html", null ],
       [ "VAbstractSimple", "dc/de5/classVAbstractSimple.html", [
@@ -700,7 +705,8 @@ var hierarchy =
               [ "VAbstractSpline", "d3/d64/classVAbstractSpline.html", null ],
               [ "VToolLine", "dc/d2b/classVToolLine.html", null ]
             ] ]
-          ] ]
+          ] ],
+          [ "anonymous_namespace{tst_vtooldependency.cpp}::DependencyTool", "dc/d47/classanonymous__namespace_02tst__vtooldependency_8cpp_03_1_1DependencyTool.html", null ]
         ] ]
       ] ],
       [ "VGraphicsSimpleTextItem", "de/dbc/classVGraphicsSimpleTextItem.html", null ],
@@ -739,6 +745,7 @@ var hierarchy =
         [ "AddGroupItem", "da/d3a/classAddGroupItem.html", null ],
         [ "AddImage", "df/d11/classAddImage.html", null ],
         [ "AddPiece", "dc/d9d/classAddPiece.html", null ],
+        [ "AddReferenceLine", "d8/dba/classAddReferenceLine.html", null ],
         [ "AddToCalc", "d6/db3/classAddToCalc.html", null ],
         [ "DelGroup", "d5/dbd/classDelGroup.html", null ],
         [ "DelTool", "d9/d22/classDelTool.html", null ],
@@ -756,6 +763,7 @@ var hierarchy =
         [ "MoveSplinePath", "d9/de8/classMoveSplinePath.html", null ],
         [ "RemoveGroupItem", "d7/d18/classRemoveGroupItem.html", null ],
         [ "RenameDraftBlock", "dd/d20/classRenameDraftBlock.html", null ],
+        [ "ReplaceObjectReferences", "de/d22/classReplaceObjectReferences.html", null ],
         [ "SavePieceOptions", "d9/d20/classSavePieceOptions.html", null ],
         [ "SavePiecePathOptions", "df/d94/classSavePiecePathOptions.html", null ],
         [ "SaveToolOptions", "d6/d4d/classSaveToolOptions.html", null ],
@@ -887,6 +895,7 @@ var hierarchy =
     ] ],
     [ "QxtPrivateInterface< PUB, PVT >", "de/ddc/classQxtPrivateInterface.html", null ],
     [ "QxtPrivateInterface< QxtCsvModel, QxtCsvModelPrivate >", "de/ddc/classQxtPrivateInterface.html", null ],
+    [ "ReferenceLineData", "d4/de0/structReferenceLineData.html", null ],
     [ "RefHash2KeysTableBucketElem< TVal >", "db/dad/structRefHash2KeysTableBucketElem.html", null ],
     [ "RefHash2KeysTableBucketElem< IdentityConstraint >", "db/dad/structRefHash2KeysTableBucketElem.html", null ],
     [ "RefHash2KeysTableBucketElem< KeyRefPair >", "db/dad/structRefHash2KeysTableBucketElem.html", null ],
@@ -953,6 +962,7 @@ var hierarchy =
     [ "XSValue::t_value", "d4/dee/unionXSValue_1_1t__value.html", null ],
     [ "TextLine", "d8/de6/structTextLine.html", null ],
     [ "ThrowEOEJanitor", "d6/d5d/classThrowEOEJanitor.html", null ],
+    [ "ReplaceObjectReferences::ToolXml", "d3/d6d/structReplaceObjectReferences_1_1ToolXml.html", null ],
     [ "TranscodeFromStr", "d3/d55/classTranscodeFromStr.html", null ],
     [ "TranscodeToStr", "d8/dad/classTranscodeToStr.html", null ],
     [ "XMLTransService::TransRec", "de/d76/structXMLTransService_1_1TransRec.html", null ],
@@ -1016,7 +1026,8 @@ var hierarchy =
       [ "VVariable", "da/d49/classVVariable.html", [
         [ "CustomVariable", "d2/d16/classCustomVariable.html", null ],
         [ "MeasurementVariable", "d5/d38/classMeasurementVariable.html", null ]
-      ] ]
+      ] ],
+      [ "anonymous_namespace{tst_vtooldependency.cpp}::ToolVariable", "d2/d65/classanonymous__namespace_02tst__vtooldependency_8cpp_03_1_1ToolVariable.html", null ]
     ] ],
     [ "VLabelTemplateLine", "dc/daa/structVLabelTemplateLine.html", null ],
     [ "VLayoutPaper", "d4/d25/classVLayoutPaper.html", null ],
@@ -1044,6 +1055,7 @@ var hierarchy =
     [ "VSplinePoint", "df/d03/classVSplinePoint.html", null ],
     [ "VTest", "d1/d20/classVTest.html", null ],
     [ "VTextManager", "d7/db1/classVTextManager.html", null ],
+    [ "VToolDependency", "d0/db1/structVToolDependency.html", null ],
     [ "VToolRecord", "de/da8/classVToolRecord.html", null ],
     [ "VTranslateMeasurements", "d3/d44/classVTranslateMeasurements.html", [
       [ "VTranslateVars", "dc/dbc/classVTranslateVars.html", null ]

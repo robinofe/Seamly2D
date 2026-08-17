@@ -1,6 +1,7 @@
 var def_8h =
 [
     [ "DraftImage", "d3/df8/structDraftImage.html", "d3/df8/structDraftImage" ],
+    [ "ReferenceLineData", "d4/de0/structReferenceLineData.html", "d4/de0/structReferenceLineData" ],
     [ "CustomSARecord", "dc/d74/structCustomSARecord.html", "dc/d74/structCustomSARecord" ],
     [ "QxtPrivate< PUB >", "db/d14/classQxtPrivate.html", "db/d14/classQxtPrivate" ],
     [ "QxtPrivateInterface< PUB, PVT >", "de/ddc/classQxtPrivateInterface.html", "de/ddc/classQxtPrivateInterface" ],
@@ -389,6 +390,7 @@ var def_8h =
     [ "PreparePrinter", "d4/da4/def_8h.html#a4d48e08b62697a4d46199919f131efb2", null ],
     [ "Q_DECLARE_TYPEINFO", "d4/da4/def_8h.html#ac2a684cd90d4072b96ca1cf87d980dbf", null ],
     [ "Q_DECLARE_TYPEINFO", "d4/da4/def_8h.html#ae47b6bd4531cf8d8c6666e9b9d455792", null ],
+    [ "Q_DECLARE_TYPEINFO", "d4/da4/def_8h.html#aec50068d4d47f50a4fbafe072634c1a6", null ],
     [ "RelativeMPath", "d4/da4/def_8h.html#a70500634183359838388ccd270379787", null ],
     [ "SetItemOverrideCursor", "d4/da4/def_8h.html#ac50ba30a64d21ea38312134c435a5a34", null ],
     [ "ShowInGraphicalShell", "d4/da4/def_8h.html#a7b1907f9df8d8f726641e41137e42fe9", null ],

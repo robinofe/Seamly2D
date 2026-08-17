@@ -1,9 +1,10 @@
 <map id="VInternalVariable" name="VInternalVariable">
-<area shape="rect" id="node1" title=" " alt="" coords="539,5,709,273"/>
+<area shape="rect" id="node1" title=" " alt="" coords="619,5,789,273"/>
 <area shape="rect" id="node2" href="$d3/d5a/classVCurveVariable.html" title=" " alt="" coords="293,321,451,545"/>
 <area shape="rect" id="node7" href="$d6/d57/classVLengthLine.html" title=" " alt="" coords="476,329,615,538"/>
 <area shape="rect" id="node8" href="$d1/d88/classVLineAngle.html" title=" " alt="" coords="639,329,769,538"/>
 <area shape="rect" id="node9" href="$da/d49/classVVariable.html" title=" " alt="" coords="793,343,937,523"/>
+<area shape="rect" id="node12" href="$d2/d65/classanonymous__namespace_02tst__vtooldependency_8cpp_03_1_1ToolVariable.html" title=" " alt="" coords="962,373,1161,494"/>
 <area shape="rect" id="node3" href="$d1/dd4/classVArcRadius.html" title=" " alt="" coords="5,689,136,839"/>
 <area shape="rect" id="node4" href="$d1/ddd/classVCurveAngle.html" title=" " alt="" coords="161,689,303,839"/>
 <area shape="rect" id="node5" href="$de/d77/classVCurveCLength.html" title=" " alt="" coords="327,689,486,839"/>

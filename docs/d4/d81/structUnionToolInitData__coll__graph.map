@@ -1,13 +1,14 @@
 <map id="UnionToolInitData" name="UnionToolInitData">
-<area shape="rect" id="node1" title=" " alt="" coords="299,2009,462,2175"/>
-<area shape="rect" id="node2" href="$d7/df5/classVMainGraphicsScene.html" title="The VMainGraphicsScene class main scene." alt="" coords="5,1114,223,1661"/>
-<area shape="rect" id="node3" title=" " alt="" coords="25,417,153,494"/>
-<area shape="rect" id="node4" href="$d8/dba/classVAbstractPattern.html" title=" " alt="" coords="273,828,489,1947"/>
-<area shape="rect" id="node5" title=" " alt="" coords="177,417,251,494"/>
-<area shape="rect" id="node6" href="$d6/deb/classVDomDocument.html" title="The VDomDocument class represents a Seamly2D document (.val file)." alt="" coords="276,145,485,765"/>
-<area shape="rect" id="node7" title=" " alt="" coords="209,5,339,83"/>
-<area shape="rect" id="node8" href="$da/da1/classQHash.html" title=" " alt="" coords="364,5,611,83"/>
-<area shape="rect" id="node9" href="$d0/d4c/classQMap.html" title=" " alt="" coords="510,417,731,494"/>
-<area shape="rect" id="node10" href="$da/da1/classQHash.html" title=" " alt="" coords="755,417,985,494"/>
-<area shape="rect" id="node11" href="$d2/d83/classVContainer.html" title="Manages a collection of geometric objects, pieces, paths, and variables." alt="" coords="513,1099,737,1675"/>
+<area shape="rect" id="node1" title=" " alt="" coords="452,1965,615,2131"/>
+<area shape="rect" id="node2" href="$d7/df5/classVMainGraphicsScene.html" title="The VMainGraphicsScene class main scene." alt="" coords="30,1092,247,1639"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,417,133,494"/>
+<area shape="rect" id="node4" href="$d8/dba/classVAbstractPattern.html" title=" " alt="" coords="407,828,659,1903"/>
+<area shape="rect" id="node5" title=" " alt="" coords="157,417,232,494"/>
+<area shape="rect" id="node6" href="$d6/deb/classVDomDocument.html" title="The VDomDocument class represents a Seamly2D document (.val file)." alt="" coords="257,145,466,765"/>
+<area shape="rect" id="node7" title=" " alt="" coords="189,5,320,83"/>
+<area shape="rect" id="node8" href="$da/da1/classQHash.html" title=" " alt="" coords="345,5,591,83"/>
+<area shape="rect" id="node9" href="$d0/d4c/classQMap.html" title=" " alt="" coords="491,417,712,494"/>
+<area shape="rect" id="node10" href="$d0/d4c/classQMap.html" title=" " alt="" coords="737,409,954,501"/>
+<area shape="rect" id="node11" href="$da/da1/classQHash.html" title=" " alt="" coords="979,417,1208,494"/>
+<area shape="rect" id="node12" href="$d2/d83/classVContainer.html" title="Manages a collection of geometric objects, pieces, paths, and variables." alt="" coords="684,1077,908,1653"/>
 </map>
