@@ -12490,8 +12490,8 @@ wie gewohnt in SeamlyME laden können.
     <message><source>No compatible direct object reference was found.</source><translation>Es wurde keine passende direkte Objektreferenz gefunden.</translation></message>
     <message><source>Create replacement for %1</source><translation>Ersatz für %1 erstellen</translation></message>
     <message>
-        <source>Create a compatible replacement with the normal drawing tools. Finish the active tool, then choose 'Select new object'. The affected references are shown once more before anything changes.</source>
-        <translation>Erstellen Sie mit den normalen Zeichenwerkzeugen einen passenden Ersatz. Beenden Sie das aktive Werkzeug und wählen Sie anschließend „Neues Objekt auswählen“. Vor der Änderung werden die betroffenen Referenzen nochmals angezeigt.</translation>
+        <source>Create a compatible replacement with the normal drawing tools. Finish the active tool, then choose 'Select new object'. The replacement must not use %1 itself, directly or indirectly. The affected references are shown once more before anything changes.</source>
+        <translation>Erstellen Sie mit den normalen Zeichenwerkzeugen einen passenden Ersatz. Beenden Sie das aktive Werkzeug und wählen Sie anschließend „Neues Objekt auswählen“. Der Ersatz darf %1 weder direkt noch indirekt verwenden. Vor der Änderung werden die betroffenen Referenzen nochmals angezeigt.</translation>
     </message>
     <message><source>New point</source><translation>Neuer Punkt</translation></message>
     <message><source>Curve</source><translation>Kurve</translation></message>
@@ -12505,9 +12505,15 @@ wie gewohnt in SeamlyME laden können.
         <translation>Es kann nur neu erstellte Geometrie desselben Typs wie das alte Objekt ausgewählt werden.</translation>
     </message>
     <message><source>Select new object</source><translation>Neues Objekt auswählen</translation></message>
+    <message><source>Keep geometry and close</source><translation>Geometrie behalten und schließen</translation></message>
+    <message><source>Discard new geometry</source><translation>Neue Geometrie verwerfen</translation></message>
     <message>
-        <source>No independent compatible object was found. Finish the active drawing tool and make sure the replacement does not depend on the old object.</source>
-        <translation>Es wurde kein passendes unabhängiges Objekt gefunden. Beenden Sie das aktive Zeichenwerkzeug und stellen Sie sicher, dass der Ersatz nicht vom alten Objekt abhängt.</translation>
+        <source>No new object of the required type was found. Finish the active drawing tool and try again.</source>
+        <translation>Es wurde kein neues Objekt des erforderlichen Typs gefunden. Beenden Sie das aktive Zeichenwerkzeug und versuchen Sie es erneut.</translation>
+    </message>
+    <message>
+        <source>%1 cannot replace %2 because it depends on %2. Create the replacement from a different point or construction chain.</source>
+        <translation>%1 kann %2 nicht ersetzen, weil es von %2 abhängt. Erstellen Sie den Ersatz von einem anderen Punkt oder einer anderen Konstruktionskette aus.</translation>
     </message>
 </context>
 <context>

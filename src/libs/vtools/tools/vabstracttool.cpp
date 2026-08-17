@@ -850,7 +850,8 @@ void VAbstractTool::createReplacementObject()
     auto *layout = new QVBoxLayout(guide);
     auto *description = new QLabel(
         tr("Create a compatible replacement with the normal drawing tools. Finish the active tool, then choose "
-           "'Select new object'. The affected references are shown once more before anything changes."), guide);
+           "'Select new object'. The replacement must not use %1 itself, directly or indirectly. The affected "
+           "references are shown once more before anything changes.").arg(source->name()), guide);
     description->setWordWrap(true);
     layout->addWidget(description);
 
@@ -901,14 +902,22 @@ void VAbstractTool::createReplacementObject()
                               guide);
     status->setWordWrap(true);
     layout->addWidget(status);
-    auto *buttons = new QDialogButtonBox(QDialogButtonBox::Cancel, guide);
+    auto *buttons = new QDialogButtonBox(guide);
     auto *finishButton = buttons->addButton(tr("Select new object"), QDialogButtonBox::AcceptRole);
+    auto *keepButton = buttons->addButton(tr("Keep geometry and close"), QDialogButtonBox::RejectRole);
+    auto *discardButton = buttons->addButton(tr("Discard new geometry"), QDialogButtonBox::DestructiveRole);
     layout->addWidget(buttons);
-    connect(buttons, &QDialogButtonBox::rejected, guide, &QDialog::reject);
+    connect(keepButton, &QPushButton::clicked, guide, &QDialog::reject);
+    connect(discardButton, &QPushButton::clicked, guide, [guide]()
+    {
+        guide->setProperty("discardCreatedGeometry", true);
+        guide->reject();
+    });
     connect(finishButton, &QPushButton::clicked, guide,
             [this, guide, status, existingObjects, source]()
     {
         QVector<quint32> createdObjects;
+        QStringList dependentCreatedObjects;
         QSet<quint32> descendantTools;
         const QVector<VToolDependency> descendants =
             doc->getDependentObjectsRecursive(source->getIdTool(), getData());
@@ -923,28 +932,37 @@ void VAbstractTool::createReplacementObject()
         for (auto object = currentObjects->constBegin(); object != currentObjects->constEnd(); ++object)
         {
             const QSharedPointer<VGObject> candidate = object.value();
-            if (!existingObjects.contains(object.key()) && candidate->getMode() == Draw::Calculation &&
-                candidate->getIdObject() == NULL_ID && candidate->getType() == source->getType() &&
-                !descendantTools.contains(candidate->getIdTool()))
+            const bool newCompatibleType = !existingObjects.contains(object.key()) &&
+                                           candidate->getMode() == Draw::Calculation &&
+                                           candidate->getIdObject() == NULL_ID &&
+                                           candidate->getType() == source->getType();
+            if (newCompatibleType && descendantTools.contains(candidate->getIdTool()))
+            {
+                dependentCreatedObjects.append(candidate->name());
+            }
+            else if (newCompatibleType)
             {
                 createdObjects.append(object.key());
             }
         }
         if (createdObjects.isEmpty())
         {
-            status->setText(tr("No independent compatible object was found. Finish the active drawing tool and make "
-                               "sure the replacement does not depend on the old object."));
+            status->setText(dependentCreatedObjects.isEmpty()
+                                ? tr("No new object of the required type was found. Finish the active drawing tool "
+                                     "and try again.")
+                                : tr("%1 cannot replace %2 because it depends on %2. Create the replacement from a "
+                                     "different point or construction chain.")
+                                      .arg(dependentCreatedObjects.join(QStringLiteral(", ")), source->name()));
             return;
         }
 
-        guide->setProperty("replacementHandled", true);
         guide->accept();
         replaceObjectEverywhere(createdObjects);
         QTimer::singleShot(0, this, [this]() { showDependencies(); });
     });
     connect(guide, &QDialog::finished, this, [this, initialUndoIndex](int)
     {
-        if (!sender()->property("replacementHandled").toBool())
+        if (sender()->property("discardCreatedGeometry").toBool())
         {
             while (qApp->getUndoStack()->index() > initialUndoIndex)
             {
