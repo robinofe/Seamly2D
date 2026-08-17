@@ -47,7 +47,8 @@
    geometry remains in the guided piece-section workflow where continuity and piece settings can be reviewed.
    Objects that already depend on the old geometry are excluded as replacements, preventing a self-reference or
    dependency cycle. The creation guide names rejected objects and explains this relationship. Closing the guide keeps
-   newly drawn construction; rollback is available only through the explicit discard action.
+   newly drawn construction and returns to the refreshed dependency list; rollback is available only through the
+   explicit discard action.
 7. The dependency list supports multiple node selection. Adjacent selected entries from the same piece path are
    handed to the existing section replacement, allowing them to be detached or replaced together.
 8. History marks independent roots, unused geometry, and dependent objects. Clicking a row keeps using the existing

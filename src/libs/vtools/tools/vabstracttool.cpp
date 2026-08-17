@@ -956,18 +956,23 @@ void VAbstractTool::createReplacementObject()
             return;
         }
 
+        guide->setProperty("replacementSelectionStarted", true);
         guide->accept();
         replaceObjectEverywhere(createdObjects);
         QTimer::singleShot(0, this, [this]() { showDependencies(); });
     });
-    connect(guide, &QDialog::finished, this, [this, initialUndoIndex](int)
+    connect(guide, &QDialog::finished, this, [this, guide, initialUndoIndex](int)
     {
-        if (sender()->property("discardCreatedGeometry").toBool())
+        if (guide->property("discardCreatedGeometry").toBool())
         {
             while (qApp->getUndoStack()->index() > initialUndoIndex)
             {
                 qApp->getUndoStack()->undo();
             }
+        }
+        if (!guide->property("replacementSelectionStarted").toBool())
+        {
+            QTimer::singleShot(0, this, [this]() { showDependencies(); });
         }
     });
     guide->show();
