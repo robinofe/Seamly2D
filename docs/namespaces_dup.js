@@ -23,26 +23,16 @@ var namespaces_dup =
     [ "anonymous_namespace{preferencespatternpage.cpp}", "d1/dbe/namespaceanonymous__namespace_02preferencespatternpage_8cpp_03.html", [
       [ "initAllStringsComboBox", "d1/dbe/namespaceanonymous__namespace_02preferencespatternpage_8cpp_03.html#a97383a8b46e2afedbc957a5c56b7522f", null ]
     ] ],
-    [ "anonymous_namespace{reference_line_tool.cpp}", "d6/dd0/namespaceanonymous__namespace_02reference__line__tool_8cpp_03.html", "d6/dd0/namespaceanonymous__namespace_02reference__line__tool_8cpp_03" ],
-    [ "anonymous_namespace{replaceobjectreferences.cpp}", "d3/d51/namespaceanonymous__namespace_02replaceobjectreferences_8cpp_03.html", [
-      [ "replaceReferences", "d3/d51/namespaceanonymous__namespace_02replaceobjectreferences_8cpp_03.html#a46ffe8c67719b13724533df73d0c8979", null ]
-    ] ],
     [ "anonymous_namespace{savetooloptions.cpp}", "dd/da8/namespaceanonymous__namespace_02savetooloptions_8cpp_03.html", [
       [ "childElements", "dd/da8/namespaceanonymous__namespace_02savetooloptions_8cpp_03.html#a90bc00f8429f2767711cee83fd7c5b09", null ],
       [ "referencesChanged", "dd/da8/namespaceanonymous__namespace_02savetooloptions_8cpp_03.html#a37fef8eec386cdf9b1548406ee1b6175", null ]
     ] ],
-    [ "anonymous_namespace{tst_vtooldependency.cpp}", "d5/da0/namespaceanonymous__namespace_02tst__vtooldependency_8cpp_03.html", "d5/da0/namespaceanonymous__namespace_02tst__vtooldependency_8cpp_03" ],
     [ "anonymous_namespace{vabstractpattern.cpp}", "d0/d42/namespaceanonymous__namespace_02vabstractpattern_8cpp_03.html", [
-      [ "dependencyTypeName", "d0/d42/namespaceanonymous__namespace_02vabstractpattern_8cpp_03.html#acc4b6e2fad44e3310b577afd29ee373c", null ],
-      [ "ReadExpressionAttribute", "d0/d42/namespaceanonymous__namespace_02vabstractpattern_8cpp_03.html#a03b1fb578fba1ecb51300ab233820199", null ],
-      [ "referenceLabel", "d0/d42/namespaceanonymous__namespace_02vabstractpattern_8cpp_03.html#a20ec90f85dbdaed4bf064381240e6b08", null ]
+      [ "ReadExpressionAttribute", "d0/d42/namespaceanonymous__namespace_02vabstractpattern_8cpp_03.html#a03b1fb578fba1ecb51300ab233820199", null ]
     ] ],
     [ "anonymous_namespace{vabstracttool.cpp}", "dc/d94/namespaceanonymous__namespace_02vabstracttool_8cpp_03.html", [
       [ "CreateNodeSpline", "dc/d94/namespaceanonymous__namespace_02vabstracttool_8cpp_03.html#a7236e797575617f3512429acf2adee0d", null ],
-      [ "CreateNodeSplinePath", "dc/d94/namespaceanonymous__namespace_02vabstracttool_8cpp_03.html#afe8ee413200e830c15092676c305cf93", null ],
-      [ "DrawModeName", "dc/d94/namespaceanonymous__namespace_02vabstracttool_8cpp_03.html#a19b0f983be201a542e7dc8cc3645bd53", null ],
-      [ "GeometryTypeName", "dc/d94/namespaceanonymous__namespace_02vabstracttool_8cpp_03.html#ad34b036fcf942ccbd1b02ede3c56689b", null ],
-      [ "ReplacementDiagnostics", "dc/d94/namespaceanonymous__namespace_02vabstracttool_8cpp_03.html#ad5651737a1cd1c3c2d0feacd66410b05", null ]
+      [ "CreateNodeSplinePath", "dc/d94/namespaceanonymous__namespace_02vabstracttool_8cpp_03.html#afe8ee413200e830c15092676c305cf93", null ]
     ] ],
     [ "anonymous_namespace{vcommonsettings.cpp}", "d5/dc3/namespaceanonymous__namespace_02vcommonsettings_8cpp_03.html", [
       [ "ClearFormats", "d5/dc3/namespaceanonymous__namespace_02vcommonsettings_8cpp_03.html#ad33f2f0b5106c172dee047d0af12ebc6", null ],
@@ -284,9 +274,6 @@ var namespaces_dup =
     ] ],
     [ "anonymous_namespace{vtoolmove.cpp}", "dd/dbe/namespaceanonymous__namespace_02vtoolmove_8cpp_03.html", [
       [ "findRotationOrigin", "dd/dbe/namespaceanonymous__namespace_02vtoolmove_8cpp_03.html#a2f7cb2fa85efab3c7cc6db3569f5bd15", null ]
-    ] ],
-    [ "anonymous_namespace{vtooloptionspropertybrowser.cpp}", "d7/df8/namespaceanonymous__namespace_02vtooloptionspropertybrowser_8cpp_03.html", [
-      [ "calculatedLengthId", "d7/df8/namespaceanonymous__namespace_02vtooloptionspropertybrowser_8cpp_03.html#ad55867092955e5862782f3e69526a334", null ]
     ] ],
     [ "qmu", "da/d92/namespaceqmu.html", "da/d92/namespaceqmu" ],
     [ "QT_WARNING_POP", "dd/db0/namespaceQT__WARNING__POP.html", [

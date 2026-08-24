@@ -55,8 +55,6 @@ var classVPattern =
     [ "parsePieceNodes", "d4/d43/classVPattern.html#afe3cb10fbcfb0ef0e97b16d96d07cfd0", null ],
     [ "ParsePiecePatternInfo", "d4/d43/classVPattern.html#a0fb26939b0a6a28b564bf66581adc3e3", null ],
     [ "ParsePointElement", "d4/d43/classVPattern.html#aaef8a3722c447c2d7e9c9adde9394cdd", null ],
-    [ "parseReferenceLineElement", "d4/d43/classVPattern.html#a9de83f9ddfddecfde877241ca843314b", null ],
-    [ "parseReferenceLines", "d4/d43/classVPattern.html#afebeaabbb44a4a5c27522e62ad20c1fd", null ],
     [ "ParseSplineElement", "d4/d43/classVPattern.html#ad2ca1a2ee7f939b9ee9799a91b60c3a4", null ],
     [ "ParseToolAlongLine", "d4/d43/classVPattern.html#a501ad3f05a9e9ce8ef305ca6a18c69b7", null ],
     [ "ParseToolArc", "d4/d43/classVPattern.html#a98d701ff524aef0e429f098f9c7fd802", null ],
